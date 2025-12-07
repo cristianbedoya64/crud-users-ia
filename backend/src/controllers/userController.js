@@ -1,5 +1,5 @@
 // userController.js
-const { User } = require('../models');
+const { User, AuditLog } = require('../models');
 
 module.exports = {
   async list(req, res) {
@@ -17,6 +17,12 @@ module.exports = {
         return res.status(409).json({ error: 'El email ya está registrado.' });
       }
       const user = await User.create({ name, email, password });
+      // Registrar evento de auditoría
+      await AuditLog.create({
+        userId: user.id,
+        action: 'create_user',
+        details: `Usuario creado: ${user.name} (${user.email})`
+      });
       res.status(201).json({ message: 'Usuario creado exitosamente.', user });
     } catch (err) {
       res.status(500).json({ error: 'Error al crear usuario.', details: err.message });
@@ -34,6 +40,12 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ error: 'Usuario no encontrado.' });
       }
+      // Registrar evento de auditoría
+      await AuditLog.create({
+        userId: user.id,
+        action: 'update_user',
+        details: `Usuario actualizado: ${user.name} (${user.email})`
+      });
       res.json({ message: 'Usuario actualizado exitosamente.', user });
     } catch (err) {
       res.status(500).json({ error: 'Error al actualizar usuario.', details: err.message });
@@ -41,7 +53,16 @@ module.exports = {
   },
   async delete(req, res) {
     const { id } = req.params;
+    const user = await User.findByPk(id);
     await User.destroy({ where: { id } });
+    // Registrar evento de auditoría
+    if (user) {
+      await AuditLog.create({
+        userId: user.id,
+        action: 'delete_user',
+        details: `Usuario eliminado: ${user.name} (${user.email})`
+      });
+    }
     res.status(204).send();
   }
 };

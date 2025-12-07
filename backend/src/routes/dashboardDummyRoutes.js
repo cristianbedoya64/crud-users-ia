@@ -2,12 +2,30 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/audit', (req, res) => {
-  res.json([
-    { action: 'login', details: 'Usuario admin inició sesión', createdAt: new Date() },
-    { action: 'create_user', details: 'Se creó usuario Juan', createdAt: new Date() },
-    { action: 'delete_role', details: 'Rol auditor eliminado', createdAt: new Date() }
-  ]);
+const { AuditLog } = require('../models');
+
+// Devuelve los logs reales de la base de datos
+router.get('/audit', async (req, res) => {
+  try {
+    const logs = await AuditLog.findAll({ order: [['createdAt', 'DESC']] });
+    res.json(logs);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al consultar auditoría.', details: err.message });
+  }
+});
+
+// Endpoint para registrar eventos desde otras secciones
+router.post('/audit', async (req, res) => {
+  try {
+    const { userId, action, details } = req.body;
+    if (!userId || !action) {
+      return res.status(400).json({ error: 'userId y action son obligatorios.' });
+    }
+    const log = await AuditLog.create({ userId, action, details });
+    res.status(201).json(log);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al registrar auditoría.', details: err.message });
+  }
 });
 
 router.get('/security-alerts', (req, res) => {
