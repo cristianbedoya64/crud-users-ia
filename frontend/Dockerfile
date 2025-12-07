@@ -1,0 +1,13 @@
+# Dockerfile para frontend UARP-AI
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json .
+COPY vite.config.js .
+COPY tailwind.config.js .
+COPY postcss.config.js .
+COPY ./src ./src
+COPY ./public ./public
+RUN npm install
+RUN npm run build
+EXPOSE 5173
+CMD ["npm", "run", "preview"]
