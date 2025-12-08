@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "NoHayMas",
+    "database": "uarp_ai",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}

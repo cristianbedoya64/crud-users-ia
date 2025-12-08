@@ -12,7 +12,22 @@ const dashboardDummyRoutes = require('./routes/dashboardDummyRoutes');
 
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173', // Vite dev
+  'http://localhost:3000', // React dev
+  'https://uarp-frontend.com' // Producción (ajusta según dominio real)
+];
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permitir peticiones sin origin (como Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('No permitido por CORS'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
@@ -20,6 +35,7 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api', dashboardDummyRoutes);
 app.use('/api/ia-panel', iaPanelRoutes);
+app.use('/api/audit', require('./routes/auditLogRoutes'));
 
 app.get('/', (req, res) => res.send('UARP-AI Backend Running'));
 

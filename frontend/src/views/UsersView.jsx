@@ -1,24 +1,47 @@
 
 import { useState, useEffect } from 'react';
-import { Card, Table, Button, TextInput, Group, Title, Box, Text } from '@mantine/core';
+import { Card, Table, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack } from '@mantine/core';
+import { Loader } from '@mantine/core';
+import { Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 export default function UsersView() {
   const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [roles, setRoles] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingRoles, setLoadingRoles] = useState(false);
+  const [form, setForm] = useState({ documentId: '', name: '', email: '', password: '', roles: [] });
+  const [editModal, setEditModal] = useState(false);
+  const [editUser, setEditUser] = useState(null);
+  // Obtener roles disponibles
+  const fetchRoles = () => {
+    setLoadingRoles(true);
+    fetch('http://localhost:3000/api/roles')
+      .then(res => res.json())
+      .then(data => setRoles(data))
+      .catch(err => console.error(err))
+      .finally(() => setLoadingRoles(false));
+  };
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   const fetchUsers = () => {
+    setLoadingUsers(true);
     fetch('http://localhost:3000/api/users')
       .then(res => res.json())
-      .then(data => setUsers(data))
-      .catch(err => console.error(err));
+      .then(data => {
+        console.log('Usuarios recibidos:', data);
+        data.forEach(u => console.log('Usuario:', u, 'Roles:', u.Roles));
+        setUsers(data);
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoadingUsers(false));
   };
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
 
   function validateEmail(email) {
@@ -26,11 +49,58 @@ export default function UsersView() {
   }
 
   function handleAdd() {
-    if (!form.name || !form.email || !form.password) {
+    if (!form.documentId || !form.name || !form.email || !form.password) {
       notifications.show({
         color: 'red',
         title: 'Error',
         message: 'Todos los campos son obligatorios.',
+        withCloseButton: true,
+        autoClose: 5000,
+        styles: theme => ({
+          root: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            position: 'fixed',
+            zIndex: 9999,
+            minWidth: 320,
+            boxShadow: theme.shadows.xl,
+            borderRadius: theme.radius.lg,
+          }
+        })
+      });
+      return;
+    }
+    // ...existing code...
+    if (!form.roles || form.roles.length === 0) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'Debes seleccionar al menos un rol.',
+        withCloseButton: true,
+        autoClose: 5000,
+        styles: theme => ({
+          root: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            position: 'fixed',
+            zIndex: 9999,
+            minWidth: 320,
+            boxShadow: theme.shadows.xl,
+            borderRadius: theme.radius.lg,
+          }
+        })
+      });
+      return;
+    }
+    // Validación de contraseña segura (minúscula, mayúscula, número y símbolo)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!passwordRegex.test(form.password)) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula, un número y un símbolo.',
         withCloseButton: true,
         autoClose: 5000,
         styles: theme => ({
@@ -73,7 +143,7 @@ export default function UsersView() {
     fetch('http://localhost:3000/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
+      body: JSON.stringify({ ...form, roles: form.roles.map(r => Number(r)) })
     })
       .then(async res => {
         const data = await res.json();
@@ -117,7 +187,8 @@ export default function UsersView() {
               }
             })
           });
-          setForm({ name: '', email: '', password: '' });
+          setForm({ name: '', email: '', password: '', roles: [] });
+          // Si el backend devuelve el usuario como data.user, refresca la lista correctamente
           fetchUsers();
         }
       })
@@ -212,17 +283,91 @@ export default function UsersView() {
       }));
   }
 
+  // Editar usuario (abrir modal)
+  function handleEdit(user) {
+    setEditUser(user);
+    setForm({
+      documentId: user.documentId || '',
+      name: user.name,
+      email: user.email,
+      password: '',
+      roles: user.Roles ? user.Roles.map(r => r.id.toString()) : []
+    });
+    setEditModal(true);
+  }
+
+  // Guardar edición
+  function handleUpdate() {
+        // Validación de formato de documento (solo números, 6-12 dígitos)
+        const docRegex = /^\d{6,12}$/;
+        if (!docRegex.test(form.documentId)) {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: 'El documento debe ser solo números y tener entre 6 y 12 dígitos.',
+            withCloseButton: true,
+            autoClose: 5000,
+            styles: theme => ({
+              root: {
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                position: 'fixed',
+                zIndex: 9999,
+                minWidth: 320,
+                boxShadow: theme.shadows.xl,
+                borderRadius: theme.radius.lg,
+              }
+            })
+          });
+          return;
+        }
+    fetch(`http://localhost:3000/api/users/${editUser.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, roles: form.roles.map(r => Number(r)) })
+    })
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          notifications.show({ color: 'red', title: 'Error', message: data.error || 'Error al actualizar usuario.' });
+        } else {
+          notifications.show({ color: 'green', title: 'Éxito', message: data.message || 'Usuario actualizado.' });
+          setEditModal(false);
+          setEditUser(null);
+          setForm({ name: '', email: '', password: '', roles: [] });
+          fetchUsers();
+        }
+      })
+      .catch(() => notifications.show({ color: 'red', title: 'Error', message: 'Error de red.' }));
+  }
+
+  // Log de depuración para ver la estructura de los usuarios antes de renderizar
+  console.log('Renderizando tabla de usuarios. users:', users.map(u => ({ id: u.id, name: u.name, Roles: u.Roles })));
   return (
-    <Box maw={600} mx="auto">
+    <Box maw={700} mx="auto" role="main" aria-label="Gestión de usuarios">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
-        <Title order={3} mb="md">Gestión de Usuarios</Title>
+        <Title order={3} mb="md" id="gestion-usuarios-title">Gestión de Usuarios</Title>
         <Group mb="md" grow>
+          <TextInput
+            label="Documento"
+            name="documentId"
+            value={form.documentId}
+            onChange={handleChange}
+            placeholder="Número de documento"
+            aria-label="Documento"
+            aria-required="true"
+            id="documentId-input"
+          />
           <TextInput
             label="Nombre"
             name="name"
             value={form.name}
             onChange={handleChange}
             placeholder="Nombre"
+            aria-label="Nombre"
+            aria-required="true"
+            id="name-input"
           />
           <TextInput
             label="Email"
@@ -230,6 +375,9 @@ export default function UsersView() {
             value={form.email}
             onChange={handleChange}
             placeholder="Email"
+            aria-label="Email"
+            aria-required="true"
+            id="email-input"
           />
           <TextInput
             label="Contraseña"
@@ -238,6 +386,20 @@ export default function UsersView() {
             value={form.password}
             onChange={handleChange}
             placeholder="Contraseña"
+            aria-label="Contraseña"
+            aria-required="true"
+            id="password-input"
+          />
+          <MultiSelect
+            label="Roles"
+            data={roles.map(r => ({ value: r.id.toString(), label: r.name }))}
+            value={form.roles}
+            onChange={roles => setForm({ ...form, roles })}
+            placeholder="Selecciona roles"
+            clearable
+            aria-label="Roles"
+            aria-required="true"
+            id="roles-input"
           />
           <Button color="blue" onClick={handleAdd} mt={22}>
             Registrar
@@ -245,37 +407,101 @@ export default function UsersView() {
         </Group>
       </Card>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
-        <Title order={4} mb="md">Lista de Usuarios</Title>
-        <Table highlightOnHover withColumnBorders striped>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length === 0 ? (
-              <tr>
-                <td colSpan={3}>
-                  <Text color="dimmed" align="center">No hay usuarios registrados.</Text>
-                </td>
-              </tr>
-            ) : (
-              users.map(user => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>
-                      Eliminar
-                    </Button>
+        <Title order={4} mb="md" id="lista-usuarios-title">Lista de Usuarios</Title>
+        {loadingUsers ? (
+          <Group position="center" py="xl">
+            <Loader size="lg" color="blue" />
+          </Group>
+        ) : (
+          <Table highlightOnHover withColumnBorders striped>
+            <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+            </thead>
+            <tbody>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={6}>
+                    <Text color="dimmed" align="center">No hay usuarios registrados.</Text>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
+              ) : (
+                users.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.documentId}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{Array.isArray(user.Roles) && user.Roles.length > 0 ? user.Roles.map(r => r.name).join(', ') : <Text color="dimmed">Sin roles</Text>}</td>
+                    <td>
+                      <Tooltip label="Editar usuario" withArrow position="top">
+                        <Button color="yellow" size="xs" onClick={() => handleEdit(user)} mr={8} aria-label="Editar usuario">
+                          Editar
+                        </Button>
+                      </Tooltip>
+                      <Tooltip label="Eliminar usuario" withArrow position="top">
+                        <Button color="red" size="xs" onClick={() => handleDelete(user.id)} aria-label="Eliminar usuario">
+                          Eliminar
+                        </Button>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        )}
+            <Modal opened={editModal} onClose={() => setEditModal(false)} title="Editar Usuario" centered>
+              <Stack>
+                <TextInput
+                  label="Documento"
+                  name="documentId"
+                  value={form.documentId}
+                  onChange={handleChange}
+                  placeholder="Número de documento"
+                />
+                <TextInput
+                  label="Nombre"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Nombre"
+                />
+                <TextInput
+                  label="Email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                />
+                <TextInput
+                  label="Contraseña (dejar vacío para no cambiar)"
+                  name="password"
+                  type="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Contraseña"
+                />
+                <MultiSelect
+                  label="Roles"
+                  data={roles.map(r => ({ value: r.id.toString(), label: r.name }))}
+                  value={form.roles}
+                  onChange={roles => setForm({ ...form, roles })}
+                  placeholder="Selecciona roles"
+                  clearable
+                />
+                <Group position="right">
+                  <Button color="blue" onClick={handleUpdate}>Guardar</Button>
+                  <Button variant="outline" onClick={() => setEditModal(false)}>Cancelar</Button>
+                </Group>
+              </Stack>
+            </Modal>
       </Card>
     </Box>
   );
