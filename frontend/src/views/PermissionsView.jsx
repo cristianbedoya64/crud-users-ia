@@ -206,7 +206,7 @@ export default function PermissionsView() {
   }
 
   return (
-    <Box maw={600} mx="auto">
+      <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Permisos</Title>
         <Group mb="md" grow>

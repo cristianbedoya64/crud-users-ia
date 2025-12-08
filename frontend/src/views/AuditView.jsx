@@ -22,7 +22,7 @@ export default function AuditView() {
   }, []);
 
   return (
-    <Card shadow="md" padding="lg" radius="md" withBorder maw={600} mx="auto">
+    <Card shadow="md" padding={{ base: 'sm', sm: 'lg' }} radius="md" withBorder maw={600} mx="auto" px={{ base: 'xs', sm: 'md' }} mt="xl">
       <Title order={3} mb="md">Auditoría</Title>
       {loading ? (
         <Loader />

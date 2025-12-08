@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Card, Title, Text, Loader, Group } from '@mantine/core';
+import { Card, Title, Text, Loader, Group, Box, Stack } from '@mantine/core';
 import DashboardSummary from '../components/DashboardSummary';
 import UserStatusSummary from '../components/UserStatusSummary';
 import UsersByRoleChart from '../components/UsersByRoleChart';
@@ -33,7 +33,7 @@ export default function DashboardView() {
     anomalies: '',
     predictions: ''
   });
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -125,8 +125,8 @@ export default function DashboardView() {
         // Accesos por módulo (real, si hay endpoint)
         try {
           const moduleRes = await fetch('http://localhost:3000/api/module-access');
-          const moduleAccess = await moduleRes.json();
-          setModuleAccess(moduleAccess);
+          const moduleData = await moduleRes.json();
+          setModuleAccess(moduleData);
         } catch {
           setModuleAccess([]);
         }
@@ -164,43 +164,72 @@ export default function DashboardView() {
           });
         }
       } catch (err) {
-        // fallback
+        setError('Error al cargar el panel. Intenta recargar la página.');
         setTotals({ users: 0, roles: 0, permissions: 0, logs: 0 });
         setUsersByRole([]);
         setRecentLogs([]);
         setTopPerms([]);
       }
-      setLoading(false);
+      finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
 
   if (loading) {
-    return <Group justify="center" align="center" h={400}><Loader size="xl" /></Group>;
+    return (
+      <Box maw={600} mx="auto" py="xl" style={{ textAlign: 'center' }}>
+        <Loader size="lg" />
+        <Text mt="md">Cargando panel...</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box maw={600} mx="auto" py="xl" style={{ textAlign: 'center' }}>
+        <Text color="red" size="lg" fw={700}>
+          {error}
+        </Text>
+        <Text mt="md" color="dimmed">Si el problema persiste, revisa la consola o contacta soporte.</Text>
+      </Box>
+    );
   }
 
   return (
-    <div style={{ marginLeft: 240, transition: 'margin 0.3s' }}>
-      <Card shadow="md" padding="xl" radius="lg" withBorder>
-        <Title order={3} mb="md">Dashboard</Title>
-        <Text color="dimmed" mb="xl">Bienvenido al dashboard principal. Aquí puedes ver el resumen y métricas del sistema.</Text>
-        <DashboardSummary totals={totals} />
-        <UserStatusSummary {...userStatus} />
-        <Group align="flex-start" grow mb="xl">
-          <UsersByRoleChart data={usersByRole} />
-          <UserGrowthChart data={userGrowth} />
-          <ModuleAccessChart data={moduleAccess} />
+    <Box maw={1000} mx="auto" px={{ base: 12, sm: 24, md: 32 }} py="xl" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Title order={2} mb="md" align="center">Panel de Control</Title>
+      <Stack spacing="md">
+        <Group grow wrap="wrap">
+          <DashboardSummary totals={totals || { users: 0, roles: 0, permissions: 0, logs: 0 }} />
+          <UserStatusSummary
+            active={(userStatus && userStatus.active) || 0}
+            inactive={(userStatus && userStatus.inactive) || 0}
+            pending={(userStatus && userStatus.pending) || 0}
+          />
         </Group>
-        <Group align="flex-start" grow mb="xl">
-          <LastLogins logins={lastLogins} />
-          <SecurityAlerts alerts={securityAlerts} />
-          <ChangeHistory changes={changeHistory} />
+        <Group grow wrap="wrap">
+          <UsersByRoleChart data={usersByRole || []} />
+          <UserGrowthChart data={userGrowth || []} />
         </Group>
-        <SystemStatus status={systemStatus} />
-        <RecentActivity logs={recentLogs} />
-        <TopPermissions permissions={topPerms} />
-        <AIPanel {...aiData} />
-      </Card>
-    </div>
+        <Group grow wrap="wrap">
+          <ModuleAccessChart data={moduleAccess || []} />
+          <SystemStatus status={systemStatus || { api: 'online', ia: 'online', cloud: 'online' }} />
+        </Group>
+        <Group grow wrap="wrap">
+          <RecentActivity logs={recentLogs || []} />
+          <TopPermissions perms={topPerms || []} />
+        </Group>
+        <Group grow wrap="wrap">
+          <LastLogins logins={lastLogins || []} />
+          <SecurityAlerts alerts={securityAlerts || []} />
+        </Group>
+        <Group grow wrap="wrap">
+          <ChangeHistory history={changeHistory || []} />
+          <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} />
+        </Group>
+      </Stack>
+    </Box>
   );
 }

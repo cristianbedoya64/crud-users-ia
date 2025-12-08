@@ -43,9 +43,15 @@ const PORT = process.env.PORT || 3000;
 
 sequelize.authenticate()
   .then(() => {
-    console.log('Connected to PostgreSQL');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Connected to PostgreSQL');
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    } else {
+      app.listen(PORT);
+    }
   })
   .catch(err => {
-    console.error('Unable to connect to DB:', err);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Unable to connect to DB:', err);
+    }
   });

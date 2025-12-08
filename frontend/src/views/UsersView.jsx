@@ -6,6 +6,8 @@ import { Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 export default function UsersView() {
+    const [search, setSearch] = useState('');
+    const [roleFilter, setRoleFilter] = useState('');
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
@@ -345,7 +347,7 @@ export default function UsersView() {
   // Log de depuración para ver la estructura de los usuarios antes de renderizar
   console.log('Renderizando tabla de usuarios. users:', users.map(u => ({ id: u.id, name: u.name, Roles: u.Roles })));
   return (
-    <Box maw={700} mx="auto" role="main" aria-label="Gestión de usuarios">
+    <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md" id="gestion-usuarios-title">Gestión de Usuarios</Title>
         <Group mb="md" grow>
@@ -358,6 +360,7 @@ export default function UsersView() {
             aria-label="Documento"
             aria-required="true"
             id="documentId-input"
+            w={{ base: '100%', sm: 150, md: 180 }}
           />
           <TextInput
             label="Nombre"
@@ -368,6 +371,7 @@ export default function UsersView() {
             aria-label="Nombre"
             aria-required="true"
             id="name-input"
+            w={{ base: '100%', sm: 150, md: 180 }}
           />
           <TextInput
             label="Email"
@@ -378,6 +382,7 @@ export default function UsersView() {
             aria-label="Email"
             aria-required="true"
             id="email-input"
+            w={{ base: '100%', sm: 180, md: 220 }}
           />
           <TextInput
             label="Contraseña"
@@ -389,6 +394,7 @@ export default function UsersView() {
             aria-label="Contraseña"
             aria-required="true"
             id="password-input"
+            w={{ base: '100%', sm: 150, md: 180 }}
           />
           <MultiSelect
             label="Roles"
@@ -400,13 +406,33 @@ export default function UsersView() {
             aria-label="Roles"
             aria-required="true"
             id="roles-input"
+            w={{ base: '100%', sm: 180, md: 220 }}
           />
-          <Button color="blue" onClick={handleAdd} mt={22}>
+          <Button color="blue" onClick={handleAdd} mt={{ base: 8, sm: 22 }} w={{ base: '100%', sm: 120 }}>
             Registrar
           </Button>
         </Group>
       </Card>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
+                <Group mb="md">
+                  <TextInput
+                    label="Buscar por documento o nombre"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    placeholder="Buscar..."
+                    aria-label="Buscar usuario"
+                    w={250}
+                  />
+                  <MultiSelect
+                    label="Filtrar por rol"
+                    data={roles.map(r => ({ value: r.name, label: r.name }))}
+                    value={roleFilter ? [roleFilter] : []}
+                    onChange={arr => setRoleFilter(arr[0] || '')}
+                    placeholder="Rol"
+                    clearable
+                    w={200}
+                  />
+                </Group>
         <Title order={4} mb="md" id="lista-usuarios-title">Lista de Usuarios</Title>
         {loadingUsers ? (
           <Group position="center" py="xl">
@@ -416,12 +442,12 @@ export default function UsersView() {
           <Table highlightOnHover withColumnBorders striped>
             <thead>
                   <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Documento</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Roles</th>
-                    <th scope="col">Acciones</th>
+                    <th scope="col" style={{ minWidth: 40 }}>ID</th>
+                    <th scope="col" style={{ minWidth: 100 }}>Documento</th>
+                    <th scope="col" style={{ minWidth: 120 }}>Nombre</th>
+                    <th scope="col" style={{ minWidth: 160 }}>Email</th>
+                    <th scope="col" style={{ minWidth: 120 }}>Roles</th>
+                    <th scope="col" style={{ minWidth: 120 }}>Acciones</th>
                   </tr>
             </thead>
             <tbody>
@@ -432,27 +458,35 @@ export default function UsersView() {
                   </td>
                 </tr>
               ) : (
-                users.map(user => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.documentId}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{Array.isArray(user.Roles) && user.Roles.length > 0 ? user.Roles.map(r => r.name).join(', ') : <Text color="dimmed">Sin roles</Text>}</td>
-                    <td>
-                      <Tooltip label="Editar usuario" withArrow position="top">
-                        <Button color="yellow" size="xs" onClick={() => handleEdit(user)} mr={8} aria-label="Editar usuario">
-                          Editar
-                        </Button>
-                      </Tooltip>
-                      <Tooltip label="Eliminar usuario" withArrow position="top">
-                        <Button color="red" size="xs" onClick={() => handleDelete(user.id)} aria-label="Eliminar usuario">
-                          Eliminar
-                        </Button>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))
+                users
+                  .filter(user => {
+                    const term = search.toLowerCase();
+                    const matchesDoc = user.documentId && user.documentId.toLowerCase().includes(term);
+                    const matchesName = user.name && user.name.toLowerCase().includes(term);
+                    const matchesRole = roleFilter ? (user.Roles && user.Roles.some(r => r.name === roleFilter)) : true;
+                    return (matchesDoc || matchesName) && matchesRole;
+                  })
+                  .map(user => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.documentId}</td>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{Array.isArray(user.Roles) && user.Roles.length > 0 ? user.Roles.map(r => r.name).join(', ') : <Text color="dimmed">Sin roles</Text>}</td>
+                      <td>
+                        <Tooltip label="Editar usuario" withArrow position="top">
+                          <Button color="yellow" size="xs" onClick={() => handleEdit(user)} mr={8} aria-label="Editar usuario">
+                            Editar
+                          </Button>
+                        </Tooltip>
+                        <Tooltip label="Eliminar usuario" withArrow position="top">
+                          <Button color="red" size="xs" onClick={() => handleDelete(user.id)} aria-label="Eliminar usuario">
+                            Eliminar
+                          </Button>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  ))
               )}
             </tbody>
           </Table>

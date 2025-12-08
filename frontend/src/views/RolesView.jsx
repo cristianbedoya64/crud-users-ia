@@ -327,7 +327,7 @@ export default function RolesView() {
   }
 
   return (
-    <Box maw={700} mx="auto">
+    <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Roles</Title>
         <Group mb="md" grow>
