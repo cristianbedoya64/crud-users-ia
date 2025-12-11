@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+// import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import { Card, Title, Text, Loader, Group, Box, Stack } from '@mantine/core';
 import DashboardSummary from '../components/DashboardSummary';
 import UserStatusSummary from '../components/UserStatusSummary';
@@ -40,7 +41,8 @@ export default function DashboardView() {
       try {
         // Fetch users
         const usersRes = await fetch('http://localhost:3000/api/users');
-        const users = await usersRes.json();
+        const usersData = await usersRes.json();
+        const users = Array.isArray(usersData) ? usersData : usersData.users || [];
         // Fetch roles
         const rolesRes = await fetch('http://localhost:3000/api/roles');
         const roles = await rolesRes.json();
@@ -228,7 +230,8 @@ export default function DashboardView() {
         <Group grow wrap="wrap">
           <ChangeHistory history={changeHistory || []} />
           <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} />
-        </Group>
+          </Group>
+          {/* El formulario de asignar permisos se movió a PermissionsView */}
       </Stack>
     </Box>
   );

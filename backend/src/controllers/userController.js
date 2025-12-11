@@ -1,14 +1,52 @@
 // userController.js
 const { User, Role, UserRole, AuditLog } = require('../models');
+const { Op } = require('sequelize');
 
 module.exports = {
   async list(req, res) {
-    const users = await User.findAll({
-      include: [{ model: Role, through: { attributes: [] } }]
-    });
-    // Log para depuración: mostrar estructura de usuarios y roles
-    console.log('USERS API RESPONSE:', users.map(u => ({ id: u.id, name: u.name, Roles: u.Roles })));
-    res.json(users);
+    try {
+      const { page = 1, limit = 20, search = '', status } = req.query;
+      const offset = (parseInt(page) - 1) * parseInt(limit);
+      const where = {};
+      if (search) {
+        where[Op.or] = [
+          { name: { [Op.like]: `%${search}%` } },
+          { email: { [Op.like]: `%${search}%` } },
+          { documentId: { [Op.like]: `%${search}%` } }
+        ];
+      }
+      if (status) {
+        where.status = status;
+      } else {
+        where.status = 'active';
+      }
+      const { count, rows } = await User.findAndCountAll({
+        where,
+        include: [{ model: Role, through: { attributes: [] } }],
+        offset,
+        limit: parseInt(limit)
+      });
+      res.json({
+        total: count,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        users: rows
+      });
+    } catch (err) {
+      res.status(500).json({ error: 'Error al listar usuarios.', details: err.message });
+    }
+  },
+  async detail(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await User.findByPk(id, { include: [{ model: Role, through: { attributes: [] } }] });
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado.' });
+      }
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ error: 'Error al obtener detalle de usuario.', details: err.message });
+    }
   },
   async create(req, res) {
     try {
@@ -76,7 +114,8 @@ module.exports = {
       const bcrypt = require('bcrypt');
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const createdUser = await User.create({ documentId, name, email, password: hashedPassword });
+      const createdBy = req.user ? req.user.id : null;
+      const createdUser = await User.create({ documentId, name, email, password: hashedPassword, createdBy });
       // Recuperar instancia con métodos de asociación
       const user = await User.findByPk(createdUser.id);
       // Asignar roles si se envían
@@ -151,12 +190,15 @@ module.exports = {
       // Validación de contraseña segura (si se envía y no está vacía)
       const updateData = { documentId, name, email };
       if (password && password.trim() !== '') {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
         if (!passwordRegex.test(password)) {
-          return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo.' });
+          return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula, un número y un símbolo.' });
         }
-        updateData.password = password;
+        const bcrypt = require('bcrypt');
+        const saltRounds = 10;
+        updateData.password = await bcrypt.hash(password, saltRounds);
       }
+      updateData.updatedBy = req.user ? req.user.id : null;
       await User.update(updateData, { where: { id } });
       const user = await User.findByPk(id);
       // Actualizar roles si se envían
@@ -177,18 +219,38 @@ module.exports = {
       res.status(500).json({ error: 'Error al actualizar usuario.', details: err.message });
     }
   },
-  async delete(req, res) {
+  async restore(req, res) {
     const { id } = req.params;
     const user = await User.findByPk(id);
-    await User.destroy({ where: { id } });
-    // Registrar evento de auditoría
-    if (user) {
-      await AuditLog.create({
-        userId: user.id,
-        action: 'delete_user',
-        details: `Usuario eliminado: ${user.name} (${user.email})`
-      });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
-    res.status(204).send();
-  }
-};
+    await User.update({ status: 'active' }, { where: { id } });
+    await AuditLog.create({
+      userId: user.id,
+      action: 'restore_user',
+      details: `Usuario restaurado: ${user.name} (${user.email})`,
+      createdBy: req.user ? req.user.id : null
+    });
+    res.status(200).json({ message: 'Usuario restaurado correctamente.' });
+  },
+    // Soft delete user
+    deleteUser: async (req, res) => {
+      try {
+        const { id } = req.params;
+        const user = await User.findByPk(id);
+        if (!user) {
+          return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+        await User.update({ status: 'inactive' }, { where: { id } });
+        await AuditLog.create({
+          userId: user.id,
+          action: 'delete_user',
+          details: `Usuario desactivado (soft delete): ${user.name} (${user.email})`
+        });
+        res.status(200).json({ message: 'Usuario desactivado correctamente.' });
+      } catch (error) {
+        res.status(500).json({ error: 'Error al desactivar el usuario.' });
+      }
+    }
+  };

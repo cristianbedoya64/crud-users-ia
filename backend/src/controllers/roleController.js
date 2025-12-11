@@ -16,7 +16,8 @@ module.exports = {
       if (exists) {
         return res.status(409).json({ error: 'El rol ya existe.' });
       }
-      const role = await Role.create({ name, description });
+      const createdBy = req.user ? req.user.id : (userId || null);
+      const role = await Role.create({ name, description, createdBy });
       // Auditoría
       if (userId) {
         await AuditLog.create({
@@ -37,7 +38,8 @@ module.exports = {
       if (!name) {
         return res.status(400).json({ error: 'El nombre del rol es obligatorio.' });
       }
-      await Role.update({ name, description }, { where: { id } });
+      const updatedBy = req.user ? req.user.id : (userId || null);
+      await Role.update({ name, description, updatedBy }, { where: { id } });
       const role = await Role.findByPk(id);
       if (!role) {
         return res.status(404).json({ error: 'Rol no encontrado.' });

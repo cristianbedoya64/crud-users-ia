@@ -1,5 +1,6 @@
 // server.js
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -9,9 +10,12 @@ const roleRoutes = require('./routes/roleRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 const iaPanelRoutes = require('./routes/iaPanelRoutes');
 const dashboardDummyRoutes = require('./routes/dashboardDummyRoutes');
+const userRoleRoutes = require('./routes/userRoleRoutes');
 
 
+const rateLimit = require('./middleware/rateLimit');
 const app = express();
+app.use(helmet());
 const allowedOrigins = [
   'http://localhost:5173', // Vite dev
   'http://localhost:3000', // React dev
@@ -28,9 +32,13 @@ app.use(cors({
   },
   credentials: true
 }));
+const logFailedAccess = require('./middleware/logFailedAccess');
+app.use(rateLimit);
+app.use(logFailedAccess);
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/user-roles', userRoleRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api', dashboardDummyRoutes);

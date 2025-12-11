@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack } from '@mantine/core';
+import DOMPurify from 'dompurify';
 import { Loader } from '@mantine/core';
 import { Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -26,7 +27,7 @@ export default function UsersView() {
   };
 
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: DOMPurify.sanitize(e.target.value) });
   }
 
   const fetchUsers = () => {
@@ -35,8 +36,14 @@ export default function UsersView() {
       .then(res => res.json())
       .then(data => {
         console.log('Usuarios recibidos:', data);
-        data.forEach(u => console.log('Usuario:', u, 'Roles:', u.Roles));
-        setUsers(data);
+        if (Array.isArray(data)) {
+          setUsers(data);
+        } else if (Array.isArray(data.users)) {
+          setUsers(data.users);
+        } else {
+          console.error('La respuesta de /api/users no es un array:', data);
+          setUsers([]);
+        }
       })
       .catch(err => console.error(err))
       .finally(() => setLoadingUsers(false));
@@ -46,53 +53,13 @@ export default function UsersView() {
     fetchRoles();
   }, []);
 
-  function validateEmail(email) {
-    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-  }
-
   function handleAdd() {
     if (!form.documentId || !form.name || !form.email || !form.password) {
       notifications.show({
         color: 'red',
         title: 'Error',
         message: 'Todos los campos son obligatorios.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
-      });
-      return;
-    }
-    // ...existing code...
-    if (!form.roles || form.roles.length === 0) {
-      notifications.show({
-        color: 'red',
-        title: 'Error',
-        message: 'Debes seleccionar al menos un rol.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
+        autoClose: 4000
       });
       return;
     }
@@ -400,7 +367,7 @@ export default function UsersView() {
             label="Roles"
             data={roles.map(r => ({ value: r.id.toString(), label: r.name }))}
             value={form.roles}
-            onChange={roles => setForm({ ...form, roles })}
+            onChange={roles => setForm({ ...form, roles: roles.map(r => DOMPurify.sanitize(r)) })}
             placeholder="Selecciona roles"
             clearable
             aria-label="Roles"

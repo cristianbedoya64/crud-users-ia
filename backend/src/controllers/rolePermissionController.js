@@ -18,7 +18,15 @@ module.exports = {
     const { permissionIds } = req.body; // Array de IDs
     const role = await Role.findByPk(roleId);
     if (!role) return res.status(404).json({ error: 'Role not found' });
+    const updatedBy = req.user ? req.user.id : null;
     await role.setPermissions(permissionIds);
+    const { AuditLog } = require('../models');
+    await AuditLog.create({
+      userId: updatedBy,
+      action: 'assign_permission',
+      details: `Permisos asignados a rol ${roleId}: ${JSON.stringify(permissionIds)}`,
+      createdBy: updatedBy
+    });
     const updated = await role.getPermissions();
     res.json(updated);
   },
@@ -28,7 +36,15 @@ module.exports = {
     const { roleId, permissionId } = req.params;
     const role = await Role.findByPk(roleId);
     if (!role) return res.status(404).json({ error: 'Role not found' });
+    const updatedBy = req.user ? req.user.id : null;
     await role.removePermission(permissionId);
+    const { AuditLog } = require('../models');
+    await AuditLog.create({
+      userId: updatedBy,
+      action: 'remove_permission',
+      details: `Permiso ${permissionId} removido de rol ${roleId}`,
+      createdBy: updatedBy
+    });
     const updated = await role.getPermissions();
     res.json(updated);
   }

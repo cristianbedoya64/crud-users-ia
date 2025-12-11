@@ -1,59 +1,45 @@
 
 import { useState, useEffect } from 'react';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text, Modal, Checkbox, Stack, Loader } from '@mantine/core';
+import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 
 
 export default function RolesView() {
-  const [roles, setRoles] = useState([]);
   const [roleName, setRoleName] = useState('');
+  const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
   const [rolePerms, setRolePerms] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [loadingPerms, setLoadingPerms] = useState(false);
   const [saving, setSaving] = useState(false);
-
-  // Fetch all roles
-  const fetchRoles = () => {
-    fetch('http://localhost:3000/api/roles')
-      .then(res => res.json())
-      .then(data => setRoles(data))
-      .catch(err => console.error(err));
-  };
-  // Fetch all permissions
-  const fetchPermissions = () => {
-    fetch('http://localhost:3000/api/permissions')
-      .then(res => res.json())
-      .then(data => setPermissions(data))
-      .catch(err => console.error(err));
-  };
-
   useEffect(() => {
     fetchRoles();
     fetchPermissions();
   }, []);
-
+  function fetchPermissions() {
+    fetch('http://localhost:3000/api/permissions')
+      .then(res => res.json())
+      .then(data => setPermissions(data))
+      .catch(err => console.error(err));
+  }
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+  function fetchRoles() {
+    fetch('http://localhost:3000/api/roles')
+      .then(res => res.json())
+      .then(data => setRoles(data))
+      .catch(err => console.error(err));
+  }
   function handleAdd() {
     if (!roleName) {
       notifications.show({
         color: 'red',
         title: 'Error',
         message: 'El nombre del rol es obligatorio.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
+        autoClose: 4000
       });
       return;
     }
@@ -69,65 +55,29 @@ export default function RolesView() {
             color: 'red',
             title: 'Error',
             message: data.error || 'Error al crear rol.',
-            withCloseButton: true,
-            autoClose: 5000,
-            styles: theme => ({
-              root: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                position: 'fixed',
-                zIndex: 9999,
-                minWidth: 320,
-                boxShadow: theme.shadows.xl,
-                borderRadius: theme.radius.lg,
-              }
-            })
+            autoClose: 4000
           });
-        } else {
-          notifications.show({
-            color: 'green',
-            title: 'Éxito',
-            message: data.message || 'Rol creado exitosamente.',
-            withCloseButton: true,
-            autoClose: 4000,
-            styles: theme => ({
-              root: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                position: 'fixed',
-                zIndex: 9999,
-                minWidth: 320,
-                boxShadow: theme.shadows.xl,
-                borderRadius: theme.radius.lg,
-              }
-            })
-          });
-          setRoleName('');
-          fetchRoles();
+          return;
         }
+        notifications.show({
+          color: 'green',
+          title: 'Rol creado',
+          message: 'El rol se creó correctamente.',
+          autoClose: 3000
+        });
+        setRoleName('');
+        fetchRoles();
       })
-      .catch(err => notifications.show({
-        color: 'red',
-        title: 'Error',
-        message: 'Error de red al crear rol.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
-      }));
+      .catch(() => {
+        notifications.show({
+          color: 'red',
+          title: 'Error de red',
+          message: 'No se pudo conectar al servidor.',
+          autoClose: 4000
+        });
+      });
   }
+  // ...existing code...
 
   function handleDelete(id) {
     fetch(`http://localhost:3000/api/roles/${id}`, {
@@ -334,7 +284,7 @@ export default function RolesView() {
           <TextInput
             label="Nombre del Rol"
             value={roleName}
-            onChange={e => setRoleName(e.target.value)}
+            onChange={e => setRoleName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del rol"
           />
           <Button color="blue" onClick={handleAdd} mt={22}>

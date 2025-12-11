@@ -16,7 +16,8 @@ module.exports = {
       if (exists) {
         return res.status(409).json({ error: 'El permiso ya existe.' });
       }
-      const permission = await Permission.create({ name, description });
+      const createdBy = req.user ? req.user.id : (userId || null);
+      const permission = await Permission.create({ name, description, createdBy });
       // Auditoría
       if (userId) {
         await AuditLog.create({
@@ -37,7 +38,8 @@ module.exports = {
       if (!name) {
         return res.status(400).json({ error: 'El nombre del permiso es obligatorio.' });
       }
-      await Permission.update({ name, description }, { where: { id } });
+      const updatedBy = req.user ? req.user.id : (userId || null);
+      await Permission.update({ name, description, updatedBy }, { where: { id } });
       const permission = await Permission.findByPk(id);
       if (!permission) {
         return res.status(404).json({ error: 'Permiso no encontrado.' });

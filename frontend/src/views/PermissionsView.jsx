@@ -1,6 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text } from '@mantine/core';
+import DOMPurify from 'dompurify';
+import AssignPermissionsForm from '../components/AssignPermissionsForm';
+import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
 import { notifications } from '@mantine/notifications';
 
 export default function PermissionsView() {
@@ -20,20 +23,7 @@ export default function PermissionsView() {
         color: 'red',
         title: 'Error',
         message: 'El nombre del permiso es obligatorio.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
+        autoClose: 4000
       });
       return;
     }
@@ -49,90 +39,29 @@ export default function PermissionsView() {
             color: 'red',
             title: 'Error',
             message: data.error || 'Error al crear permiso.',
-            withCloseButton: true,
-            autoClose: 5000,
-            styles: theme => ({
-              root: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                position: 'fixed',
-                zIndex: 9999,
-                minWidth: 320,
-                boxShadow: theme.shadows.xl,
-                borderRadius: theme.radius.lg,
-              }
-            })
+            autoClose: 4000
           });
-        } else {
-          notifications.show({
-            color: 'green',
-            title: 'Éxito',
-            message: data.message || 'Permiso creado exitosamente.',
-            withCloseButton: true,
-            autoClose: 4000,
-            styles: theme => ({
-              root: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                position: 'fixed',
-                zIndex: 9999,
-                minWidth: 320,
-                boxShadow: theme.shadows.xl,
-                borderRadius: theme.radius.lg,
-              }
-            })
-          });
-          if (data.permission) {
-            setPermissions([...permissions, data.permission]);
-          } else {
-            notifications.show({
-              color: 'yellow',
-              title: 'Advertencia',
-              message: 'El backend no devolvió el permiso creado. Se recargará la lista.',
-              withCloseButton: true,
-              autoClose: 4000,
-              styles: theme => ({
-                root: {
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  position: 'fixed',
-                  zIndex: 9999,
-                  minWidth: 320,
-                  boxShadow: theme.shadows.xl,
-                  borderRadius: theme.radius.lg,
-                }
-              })
-            });
-            // Recargar lista de permisos
-            fetch('http://localhost:3000/api/permissions')
-              .then(res => res.json())
-              .then(data => setPermissions(data));
-          }
-          setPermName('');
+          return;
         }
+        notifications.show({
+          color: 'green',
+          title: 'Permiso creado',
+          message: 'El permiso se creó correctamente.',
+          autoClose: 3000
+        });
+        setPermName('');
+        fetch('http://localhost:3000/api/permissions')
+          .then(res => res.json())
+          .then(data => setPermissions(data));
       })
-      .catch(err => notifications.show({
-        color: 'red',
-        title: 'Error',
-        message: 'Error de red al crear permiso.',
-        withCloseButton: true,
-        autoClose: 5000,
-        styles: theme => ({
-          root: {
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            position: 'fixed',
-            zIndex: 9999,
-            minWidth: 320,
-            boxShadow: theme.shadows.xl,
-            borderRadius: theme.radius.lg,
-          }
-        })
-      }));
+      .catch(() => {
+        notifications.show({
+          color: 'red',
+          title: 'Error de red',
+          message: 'No se pudo conectar al servidor.',
+          autoClose: 4000
+        });
+      });
   }
 
   function handleDelete(id) {
@@ -206,14 +135,15 @@ export default function PermissionsView() {
   }
 
   return (
-      <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+    <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+      <PermissionsReferenceTable />
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Permisos</Title>
         <Group mb="md" grow>
           <TextInput
             label="Nombre del Permiso"
             value={permName}
-            onChange={e => setPermName(e.target.value)}
+            onChange={e => setPermName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del permiso"
           />
           <Button color="blue" onClick={handleAdd} mt={22}>
@@ -221,37 +151,44 @@ export default function PermissionsView() {
           </Button>
         </Group>
       </Card>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
-        <Title order={4} mb="md">Lista de Permisos</Title>
-        <Table highlightOnHover withColumnBorders striped>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {permissions.length === 0 ? (
+      <Group align="flex-start" mt={20}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder style={{ flex: 1 }}>
+          <Title order={4} mb="md">Lista de Permisos</Title>
+          <Table highlightOnHover withColumnBorders striped>
+            <thead>
               <tr>
-                <td colSpan={2}>
-                  <Text color="dimmed" align="center">No hay permisos registrados.</Text>
-                </td>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              permissions.map(perm => (
-                <tr key={perm.id}>
-                  <td>{perm.name}</td>
-                  <td>
-                    <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
-                      Eliminar
-                    </Button>
+            </thead>
+            <tbody>
+              {permissions.length === 0 ? (
+                <tr>
+                  <td colSpan={2}>
+                    <Text color="dimmed" align="center">No hay permisos registrados.</Text>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
-      </Card>
+              ) : (
+                permissions.map(perm => (
+                  <tr key={perm.id}>
+                    <td>{perm.name}</td>
+                    <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
+                    <td>
+                      <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
+                        Eliminar
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </Card>
+        <Card shadow="sm" padding="lg" radius="md" withBorder style={{ flex: 1, minWidth: 400 }}>
+          <AssignPermissionsForm />
+        </Card>
+      </Group>
     </Box>
   );
 }

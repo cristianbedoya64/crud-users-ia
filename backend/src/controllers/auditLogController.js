@@ -9,7 +9,8 @@ module.exports = {
       if (!userId || !action) {
         return res.status(400).json({ error: 'userId y action son obligatorios.' });
       }
-      const log = await AuditLog.create({ userId, action, details });
+      const createdBy = req.user ? req.user.id : userId;
+      const log = await AuditLog.create({ userId, action, details, createdBy });
       res.status(201).json(log);
     } catch (err) {
       res.status(500).json({ error: 'Error al registrar auditoría.', details: err.message });
