@@ -1,3 +1,4 @@
+
 # Components
 
 Este directorio contiene los componentes reutilizables del frontend, organizados en subcarpetas:
@@ -6,4 +7,13 @@ Este directorio contiene los componentes reutilizables del frontend, organizados
 - **tables/**: Tablas para mostrar y gestionar listas de entidades.
 - **modals/**: Modales para confirmaciones, edición y visualización adicional.
 
-La organización modular permite mantener el código limpio, escalable y profesional, facilitando la reutilización y el mantenimiento en proyectos empresariales.
+## Ejemplo
+```jsx
+// UserTable.jsx
+export default function UserTable({ users }) {
+	return <table>{/* ... */}</table>;
+}
+```
+
+## Recomendaciones
+Mantén los componentes desacoplados y reutilizables. Documenta las props principales.
