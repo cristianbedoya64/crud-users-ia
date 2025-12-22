@@ -16,6 +16,14 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 2. Configura las variables de entorno según los archivos `.env.example`.
 3. Utiliza Docker para despliegue si lo prefieres (`docker-compose.yml`).
 
+## Arranque rápido (Docker)
+- Una sola orden: `./start.sh` (levanta frontend, backend, IA y PostgreSQL en segundo plano). En Codespaces expone puertos 3000/5173/5001 como públicos para evitar problemas de CORS.
+- Alternativa Makefile:
+	- `make up` levanta los servicios.
+	- `make down` detiene y elimina contenedores.
+	- `make logs` sigue logs de backend y frontend.
+	- `make ps` lista contenedores.
+
 ## Módulos
 - **Gestión de usuarios, roles y permisos**
 - **Panel de IA y Data Science**
