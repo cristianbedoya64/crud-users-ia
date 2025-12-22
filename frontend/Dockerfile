@@ -11,5 +11,6 @@ COPY ./public ./public
 COPY index.html ./
 RUN npm install
 RUN npm run build
+ENV NODE_ENV=production
 EXPOSE 5173
 CMD ["npm", "run", "preview"]

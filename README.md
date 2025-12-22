@@ -24,6 +24,11 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 	- `make logs` sigue logs de backend y frontend.
 	- `make ps` lista contenedores.
 
+### Seguridad Postgres
+- Por defecto, el puerto de Postgres **no está expuesto** fuera de los contenedores (ver `docker-compose.yml`).
+- Si necesitas conectarte desde tu máquina local para desarrollo, descomenta la línea `ports: - "5432:5432"` en el servicio `postgres`.
+- **En producción** (DigitalOcean App Platform o Droplet), nunca expongas el puerto 5432 a internet. Usa Managed PostgreSQL o firewall para restringir acceso solo a los servicios autorizados.
+
 ## Módulos
 - **Gestión de usuarios, roles y permisos**
 - **Panel de IA y Data Science**

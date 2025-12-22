@@ -20,5 +20,7 @@ EXPOSE 3000
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
+# Set production environment
+ENV NODE_ENV=production
 # Start the server
 CMD ["npm", "start"]

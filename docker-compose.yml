@@ -10,7 +10,8 @@ services:
       - DB_USER=postgres
       - DB_PASS=NoHayMas
       - DB_NAME=uarp_ai
-      - SKIP_AUTH=true
+      - NODE_ENV=production
+      # - SKIP_AUTH=true  # Solo para pruebas locales, eliminar o poner en false en producción
     depends_on:
       - postgres
       - ia-panel
@@ -20,6 +21,7 @@ services:
       - "5173:5173"
     environment:
       - VITE_API_URL=http://backend:3000
+      - NODE_ENV=production
     depends_on:
       - backend
   ia-panel:
@@ -32,8 +34,8 @@ services:
       POSTGRES_DB: uarp_ai
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: NoHayMas
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"  # Solo exponer en desarrollo local si es necesario
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
