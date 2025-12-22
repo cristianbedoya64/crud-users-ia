@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { API_BASE } from '../apiConfig';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
@@ -11,7 +12,7 @@ export default function PermissionsView() {
   const [permName, setPermName] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/permissions')
+    fetch(`${API_BASE}/api/permissions`)
       .then(res => res.json())
       .then(data => setPermissions(data))
       .catch(err => console.error(err));
@@ -27,7 +28,7 @@ export default function PermissionsView() {
       });
       return;
     }
-    fetch('http://localhost:3000/api/permissions', {
+    fetch(`${API_BASE}/api/permissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: permName })
@@ -50,7 +51,7 @@ export default function PermissionsView() {
           autoClose: 3000
         });
         setPermName('');
-        fetch('http://localhost:3000/api/permissions')
+        fetch(`${API_BASE}/api/permissions`)
           .then(res => res.json())
           .then(data => setPermissions(data));
       })
@@ -65,7 +66,7 @@ export default function PermissionsView() {
   }
 
   function handleDelete(id) {
-    fetch(`http://localhost:3000/api/permissions/${id}`, {
+    fetch(`${API_BASE}/api/permissions/${id}`, {
       method: 'DELETE'
     })
       .then(async res => {

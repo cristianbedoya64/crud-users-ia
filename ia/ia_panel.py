@@ -44,4 +44,5 @@ def ia_panel():
         return jsonify({'error': 'IA error', 'details': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=5001)
+    # Bind to all interfaces so other containers can reach this service.
+    app.run(host='0.0.0.0', port=5001)

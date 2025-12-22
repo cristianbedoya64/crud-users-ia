@@ -14,6 +14,7 @@ import SystemStatus from '../components/SystemStatus';
 import RecentActivity from '../components/RecentActivity';
 import TopPermissions from '../components/TopPermissions';
 import AIPanel from '../components/AIPanel';
+import { API_BASE } from '../apiConfig';
 
 export default function DashboardView() {
   const [loading, setLoading] = useState(true);
@@ -40,19 +41,19 @@ export default function DashboardView() {
       setLoading(true);
       try {
         // Fetch users
-        const usersRes = await fetch('http://localhost:3000/api/users');
+        const usersRes = await fetch(`${API_BASE}/api/users`);
         const usersData = await usersRes.json();
         const users = Array.isArray(usersData) ? usersData : usersData.users || [];
         // Fetch roles
-        const rolesRes = await fetch('http://localhost:3000/api/roles');
+        const rolesRes = await fetch(`${API_BASE}/api/roles`);
         const roles = await rolesRes.json();
         // Fetch permissions
-        const permsRes = await fetch('http://localhost:3000/api/permissions');
+        const permsRes = await fetch(`${API_BASE}/api/permissions`);
         const perms = await permsRes.json();
         // Fetch logs (dummy)
         let logs = [];
         try {
-          const logsRes = await fetch('http://localhost:3000/api/audit');
+          const logsRes = await fetch(`${API_BASE}/api/audit`);
           logs = await logsRes.json();
         } catch {
           logs = [
@@ -90,7 +91,7 @@ export default function DashboardView() {
 
         // Alertas de seguridad (real, si hay endpoint)
         try {
-          const alertsRes = await fetch('http://localhost:3000/api/security-alerts');
+          const alertsRes = await fetch(`${API_BASE}/api/security-alerts`);
           const alerts = await alertsRes.json();
           setSecurityAlerts(alerts);
         } catch {
@@ -99,7 +100,7 @@ export default function DashboardView() {
 
         // Historial de cambios (real, si hay endpoint)
         try {
-          const changesRes = await fetch('http://localhost:3000/api/change-history');
+          const changesRes = await fetch(`${API_BASE}/api/change-history`);
           const changes = await changesRes.json();
           setChangeHistory(changes);
         } catch {
@@ -108,7 +109,7 @@ export default function DashboardView() {
 
         // Estado del sistema (real, si hay endpoint)
         try {
-          const statusRes = await fetch('http://localhost:3000/api/system-status');
+          const statusRes = await fetch(`${API_BASE}/api/system-status`);
           const status = await statusRes.json();
           setSystemStatus(status);
         } catch {
@@ -117,7 +118,7 @@ export default function DashboardView() {
 
         // Tendencia de usuarios (real, si hay endpoint)
         try {
-          const growthRes = await fetch('http://localhost:3000/api/user-growth');
+          const growthRes = await fetch(`${API_BASE}/api/user-growth`);
           const growth = await growthRes.json();
           setUserGrowth(growth);
         } catch {
@@ -126,7 +127,7 @@ export default function DashboardView() {
 
         // Accesos por módulo (real, si hay endpoint)
         try {
-          const moduleRes = await fetch('http://localhost:3000/api/module-access');
+          const moduleRes = await fetch(`${API_BASE}/api/module-access`);
           const moduleData = await moduleRes.json();
           setModuleAccess(moduleData);
         } catch {
@@ -151,7 +152,7 @@ export default function DashboardView() {
 
         // Panel IA real
         try {
-          const iaRes = await fetch('http://localhost:3000/api/ia-panel', {
+          const iaRes = await fetch(`${API_BASE}/api/ia-panel`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({})

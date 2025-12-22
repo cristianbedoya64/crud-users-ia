@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text, Modal, Checkbox, Stack, Loader } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
+import { API_BASE } from '../apiConfig';
 
 
 export default function RolesView() {
@@ -19,16 +20,13 @@ export default function RolesView() {
     fetchPermissions();
   }, []);
   function fetchPermissions() {
-    fetch('http://localhost:3000/api/permissions')
+    fetch(`${API_BASE}/api/permissions`)
       .then(res => res.json())
       .then(data => setPermissions(data))
       .catch(err => console.error(err));
   }
-  useEffect(() => {
-    fetchRoles();
-  }, []);
   function fetchRoles() {
-    fetch('http://localhost:3000/api/roles')
+    fetch(`${API_BASE}/api/roles`)
       .then(res => res.json())
       .then(data => setRoles(data))
       .catch(err => console.error(err));
@@ -43,7 +41,7 @@ export default function RolesView() {
       });
       return;
     }
-    fetch('http://localhost:3000/api/roles', {
+    fetch(`${API_BASE}/api/roles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: roleName })
@@ -80,7 +78,7 @@ export default function RolesView() {
   // ...existing code...
 
   function handleDelete(id) {
-    fetch(`http://localhost:3000/api/roles/${id}`, {
+    fetch(`${API_BASE}/api/roles/${id}`, {
       method: 'DELETE'
     })
       .then(async res => {
@@ -153,7 +151,7 @@ export default function RolesView() {
   function handleShowPerms(role) {
     setSelectedRole(role);
     setLoadingPerms(true);
-    fetch(`http://localhost:3000/api/roles/${role.id}/permissions`)
+    fetch(`${API_BASE}/api/roles/${role.id}/permissions`)
       .then(res => res.json())
       .then(data => {
         setRolePerms(data.map(p => p.id));
@@ -203,7 +201,7 @@ export default function RolesView() {
   // Guardar cambios de permisos
   function handleSavePerms() {
     setSaving(true);
-    fetch(`http://localhost:3000/api/roles/${selectedRole.id}/permissions`, {
+    fetch(`${API_BASE}/api/roles/${selectedRole.id}/permissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ permissionIds: rolePerms })

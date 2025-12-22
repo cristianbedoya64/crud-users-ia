@@ -10,6 +10,7 @@ services:
       - DB_USER=postgres
       - DB_PASS=NoHayMas
       - DB_NAME=uarp_ai
+      - SKIP_AUTH=true
     depends_on:
       - postgres
       - ia-panel
@@ -17,6 +18,8 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:3000
     depends_on:
       - backend
   ia-panel:

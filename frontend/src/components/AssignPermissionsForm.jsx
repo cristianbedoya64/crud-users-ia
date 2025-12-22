@@ -1,5 +1,6 @@
 import DOMPurify from 'dompurify';
 import React, { useState, useEffect } from 'react';
+import { API_BASE } from '../apiConfig';
 import { notifications } from '@mantine/notifications';
 
 export default function AssignPermissionsForm({ onAssigned }) {
@@ -11,10 +12,10 @@ export default function AssignPermissionsForm({ onAssigned }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/roles')
+    fetch(`${API_BASE}/api/roles`)
       .then(res => res.json())
       .then(setRoles);
-    fetch('http://localhost:3000/api/permissions')
+    fetch(`${API_BASE}/api/permissions`)
       .then(res => res.json())
       .then(setPermissions);
   }, []);
@@ -34,7 +35,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch(`http://localhost:3000/api/role-permissions/${selectedRole}/assign`, {
+      const res = await fetch(`${API_BASE}/api/role-permissions/${selectedRole}/assign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permissionIds: selectedPerms })

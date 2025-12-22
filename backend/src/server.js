@@ -15,20 +15,32 @@ const userRoleRoutes = require('./routes/userRoleRoutes');
 
 const rateLimit = require('./middleware/rateLimit');
 const app = express();
+// Behind Codespaces/other proxies we trust the forwarded headers for rate-limit and CORS.
+app.set('trust proxy', 1);
 app.use(helmet());
 const allowedOrigins = [
   'http://localhost:5173', // Vite dev
   'http://localhost:3000', // React dev
   'https://uarp-frontend.com' // Producción (ajusta según dominio real)
 ];
+
+// Allow Codespaces hostnames like https://xxxx-5173.app.github.dev
+function isGithubDevOrigin(origin) {
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'https:' && url.hostname.endsWith('.app.github.dev');
+  } catch (_) {
+    return false;
+  }
+}
+
 app.use(cors({
   origin: function (origin, callback) {
-    // Permitir peticiones sin origin (como Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('No permitido por CORS'), false);
+    if (!origin) return callback(null, true); // Postman/health
+    if (allowedOrigins.includes(origin) || isGithubDevOrigin(origin)) {
+      return callback(null, true);
     }
-    return callback(null, true);
+    return callback(new Error('No permitido por CORS'), false);
   },
   credentials: true
 }));
