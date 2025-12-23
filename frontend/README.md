@@ -1,28 +1,49 @@
 
-# Frontend UARP-AI
 
-Aplicación SPA desarrollada con React, Vite y TailwindCSS.
+# Frontend (React/Vite) - UARP-AI
 
-## Instalación y uso
-1. Copia `.env.example` a `.env` y configura las variables.
-2. Instala dependencias: `npm install`
-3. Inicia el servidor de desarrollo: `npm run dev`
+## Overview / Visión General
+SPA moderna para gestión de usuarios, roles, permisos y dashboard de IA. Usa Vite, React y TailwindCSS.
 
-## Scripts principales
-- `npm run dev`: Inicia el servidor de desarrollo
-- `npm run build`: Compila la aplicación para producción
-- `npm run preview`: Previsualiza el build
+## Features / Características
+- Dashboard con métricas y panel IA
+- CRUD de usuarios, roles, permisos
+- Gráficas y tablas interactivas
+- Notificaciones y validaciones
 
-## Estructura
-- **src/components/**: Componentes reutilizables y empresariales
-- **src/views/**: Vistas principales (Dashboard, Usuarios, Roles, Permisos, Auditoría)
-- **src/layouts/**: Layouts generales (Dashboard, Auth)
-- **src/routes/**: Definición de rutas
-- **public/**: Archivos estáticos
+## Setup / Configuración
+1. Instala dependencias: `npm install`
+2. Configura `.env` (`VITE_API_URL`)
+3. Inicia: `npm run dev` (desarrollo) o `npm run build` + `npm run preview` (producción)
 
-## Dependencias principales
+## Env Vars / Variables de Entorno
+- `VITE_API_URL` (URL del backend)
+- `NODE_ENV` (production/development)
+
+## Main Scripts / Scripts principales
+- `npm run dev`: Start dev server
+- `npm run build`: Build for production
+- `npm run preview`: Preview build
+
+## Structure / Estructura
+- **src/components/**: Reusable/business components
+- **src/views/**: Main views (Dashboard, Users, Roles, Permissions, Audit)
+- **src/layouts/**: General layouts (Dashboard, Auth)
+- **src/routes/**: Route definitions
+- **public/**: Static files
+
+## Dependencies / Dependencias
 - react
 - vite
 - tailwindcss
 
-Consulta los README de cada subcarpeta para detalles específicos.
+## Security / Seguridad
+- Sanitización de inputs / Input sanitization
+- CORS configurado en backend / CORS set in backend
+
+## Testing
+- `npm test` (si hay tests / if available)
+
+## Troubleshooting
+- Verifica conexión API / Check API connection
+- Revisa consola del navegador / Review browser console

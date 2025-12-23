@@ -36,3 +36,6 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 
 ## Documentación
 Consulta la carpeta `docs/` para diagramas de arquitectura y detalles técnicos.
+
+## Despliegue en DigitalOcean / DigitalOcean Deployment
+Consulta la guía completa en [DEPLOY.md](DEPLOY.md) para instrucciones bilingües y mejores prácticas de despliegue cloud.
