@@ -1,7 +1,7 @@
 # Dockerfile for backend (Node.js)
 # Follows Google and OpenAI best practices
 
-FROM node:20-alpine
+FROM node:20-slim
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -16,8 +16,8 @@ COPY . .
 # Expose port (default: 3000)
 EXPOSE 3000
 
-# Use non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Use non-root user for security (Debian syntax)
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 USER appuser
 
 # Set production environment

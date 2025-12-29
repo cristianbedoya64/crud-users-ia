@@ -15,6 +15,7 @@ import RecentActivity from '../components/RecentActivity';
 import TopPermissions from '../components/TopPermissions';
 import AIPanel from '../components/AIPanel';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 
 export default function DashboardView() {
   const [loading, setLoading] = useState(true);
@@ -40,22 +41,24 @@ export default function DashboardView() {
     async function fetchData() {
       setLoading(true);
       try {
+        const toArray = (val) => Array.isArray(val) ? val : [];
         // Fetch users
-        const usersRes = await fetch(`${API_BASE}/api/users`);
+        const usersRes = await authFetch(`${API_BASE}/api/users`);
         const usersData = await usersRes.json();
-        const users = Array.isArray(usersData) ? usersData : usersData.users || [];
+        const users = Array.isArray(usersData) ? usersData : toArray(usersData.users);
         // Fetch roles
-        const rolesRes = await fetch(`${API_BASE}/api/roles`);
-        const roles = await rolesRes.json();
+        const rolesRes = await authFetch(`${API_BASE}/api/roles`);
+        const roles = toArray(await rolesRes.json());
         // Fetch permissions
-        const permsRes = await fetch(`${API_BASE}/api/permissions`);
-        const perms = await permsRes.json();
-        // Fetch logs (dummy)
+        const permsRes = await authFetch(`${API_BASE}/api/permissions`);
+        const perms = toArray(await permsRes.json());
+        // Fetch logs (tolerante: si falla o no es array, usa dummy)
         let logs = [];
         try {
-          const logsRes = await fetch(`${API_BASE}/api/audit`);
-          logs = await logsRes.json();
-        } catch {
+          const logsRes = await authFetch(`${API_BASE}/api/audit`);
+          const maybeLogs = await logsRes.json();
+          logs = toArray(maybeLogs);
+        } catch (err) {
           logs = [
             { action: 'login', details: 'Usuario admin inició sesión', createdAt: new Date() },
             { action: 'create_user', details: 'Se creó usuario Juan', createdAt: new Date() },
@@ -91,8 +94,8 @@ export default function DashboardView() {
 
         // Alertas de seguridad (real, si hay endpoint)
         try {
-          const alertsRes = await fetch(`${API_BASE}/api/security-alerts`);
-          const alerts = await alertsRes.json();
+          const alertsRes = await authFetch(`${API_BASE}/api/security-alerts`);
+          const alerts = toArray(await alertsRes.json());
           setSecurityAlerts(alerts);
         } catch {
           setSecurityAlerts([]);
@@ -100,8 +103,8 @@ export default function DashboardView() {
 
         // Historial de cambios (real, si hay endpoint)
         try {
-          const changesRes = await fetch(`${API_BASE}/api/change-history`);
-          const changes = await changesRes.json();
+          const changesRes = await authFetch(`${API_BASE}/api/change-history`);
+          const changes = toArray(await changesRes.json());
           setChangeHistory(changes);
         } catch {
           setChangeHistory([]);
@@ -109,7 +112,7 @@ export default function DashboardView() {
 
         // Estado del sistema (real, si hay endpoint)
         try {
-          const statusRes = await fetch(`${API_BASE}/api/system-status`);
+          const statusRes = await authFetch(`${API_BASE}/api/system-status`);
           const status = await statusRes.json();
           setSystemStatus(status);
         } catch {
@@ -118,8 +121,8 @@ export default function DashboardView() {
 
         // Tendencia de usuarios (real, si hay endpoint)
         try {
-          const growthRes = await fetch(`${API_BASE}/api/user-growth`);
-          const growth = await growthRes.json();
+          const growthRes = await authFetch(`${API_BASE}/api/user-growth`);
+          const growth = toArray(await growthRes.json());
           setUserGrowth(growth);
         } catch {
           setUserGrowth([]);
@@ -127,8 +130,8 @@ export default function DashboardView() {
 
         // Accesos por módulo (real, si hay endpoint)
         try {
-          const moduleRes = await fetch(`${API_BASE}/api/module-access`);
-          const moduleData = await moduleRes.json();
+          const moduleRes = await authFetch(`${API_BASE}/api/module-access`);
+          const moduleData = toArray(await moduleRes.json());
           setModuleAccess(moduleData);
         } catch {
           setModuleAccess([]);
@@ -152,7 +155,7 @@ export default function DashboardView() {
 
         // Panel IA real
         try {
-          const iaRes = await fetch(`${API_BASE}/api/ia-panel`, {
+          const iaRes = await authFetch(`${API_BASE}/api/ia-panel`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({})

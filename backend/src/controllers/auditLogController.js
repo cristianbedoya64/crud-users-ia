@@ -1,5 +1,6 @@
 // auditLogController.js
 const { AuditLog } = require('../models');
+const { Op } = require('sequelize');
 
 module.exports = {
   // Registrar un evento de auditoría
@@ -32,6 +33,7 @@ module.exports = {
       const logs = await AuditLog.findAll({ where, order: [['createdAt', 'DESC']] });
       res.json(logs);
     } catch (err) {
+      console.error('Error audit list:', err);
       res.status(500).json({ error: 'Error al consultar auditoría.', details: err.message });
     }
   }

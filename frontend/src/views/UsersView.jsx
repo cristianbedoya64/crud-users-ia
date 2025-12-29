@@ -4,6 +4,7 @@ import { Loader, Tooltip } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -21,7 +22,7 @@ export default function UsersView() {
 
   const fetchRoles = () => {
     setLoadingRoles(true);
-    fetch(`${API_BASE}/api/roles`)
+    authFetch(`${API_BASE}/api/roles`)
       .then(res => res.json())
       .then(data => setRoles(data))
       .catch(err => console.error(err))
@@ -30,7 +31,7 @@ export default function UsersView() {
 
   const fetchUsers = () => {
     setLoadingUsers(true);
-    fetch(`${API_BASE}/api/users`)
+    authFetch(`${API_BASE}/api/users`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -49,6 +50,15 @@ export default function UsersView() {
     fetchUsers();
     fetchRoles();
   }, []);
+
+  const showSuccess = (title, message, hint) => {
+    notifications.show({
+      color: 'green',
+      title,
+      message: hint ? `${message} · Sugerencia: ${hint}` : message,
+      withCloseButton: true
+    });
+  };
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: DOMPurify.sanitize(e.target.value) });
@@ -71,7 +81,7 @@ export default function UsersView() {
       notifications.show({ color: 'red', title: 'Error', message: 'Email inválido.' });
       return;
     }
-    fetch(`${API_BASE}/api/users`, {
+    authFetch(`${API_BASE}/api/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, roles: form.roles.map(r => Number(r)) })
@@ -79,7 +89,7 @@ export default function UsersView() {
       .then(async res => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al crear usuario');
-        notifications.show({ color: 'green', title: 'Éxito', message: data.message || 'Usuario creado.' });
+        showSuccess('Usuario creado', data.message || 'Usuario creado.', 'Revisa que tenga los roles correctos y configura MFA si aplica.');
         setForm({ documentId: '', name: '', email: '', password: '', roles: [] });
         fetchUsers();
       })
@@ -87,22 +97,22 @@ export default function UsersView() {
   }
 
   function handleDelete(id) {
-    fetch(`${API_BASE}/api/users/${id}`, { method: 'DELETE' })
+    authFetch(`${API_BASE}/api/users/${id}`, { method: 'DELETE' })
       .then(async res => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al eliminar usuario');
-        notifications.show({ color: 'green', title: 'Éxito', message: 'Usuario eliminado.' });
+        showSuccess('Usuario eliminado', 'Usuario eliminado.', 'Recuerda desactivar accesos SSO y tokens de API si existían.');
         fetchUsers();
       })
       .catch(err => notifications.show({ color: 'red', title: 'Error', message: err.message || 'Error de red' }));
   }
 
   function handleRestore(id) {
-    fetch(`${API_BASE}/api/users/${id}/restore`, { method: 'POST' })
+    authFetch(`${API_BASE}/api/users/${id}/restore`, { method: 'POST' })
       .then(async res => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al restaurar usuario');
-        notifications.show({ color: 'green', title: 'Éxito', message: 'Usuario restaurado.' });
+        showSuccess('Usuario restaurado', 'Usuario restaurado.', 'Valida que su rol siga vigente y solicita cambio de contraseña.');
         fetchUsers();
       })
       .catch(err => notifications.show({ color: 'red', title: 'Error', message: err.message || 'Error de red' }));
@@ -129,7 +139,7 @@ export default function UsersView() {
       notifications.show({ color: 'red', title: 'Error', message: 'Email inválido.' });
       return;
     }
-    fetch(`${API_BASE}/api/users/${editUser.id}`, {
+    authFetch(`${API_BASE}/api/users/${editUser.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, roles: form.roles.map(r => Number(r)) })
@@ -137,7 +147,7 @@ export default function UsersView() {
       .then(async res => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al actualizar usuario');
-        notifications.show({ color: 'green', title: 'Éxito', message: data.message || 'Usuario actualizado.' });
+        showSuccess('Usuario actualizado', data.message || 'Usuario actualizado.', 'Comunica al usuario el cambio y registra auditoría de permisos.');
         setEditModal(false);
         setEditUser(null);
         setForm({ documentId: '', name: '', email: '', password: '', roles: [] });

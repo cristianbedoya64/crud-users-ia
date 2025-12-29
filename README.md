@@ -34,6 +34,12 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 - **Panel de IA y Data Science**
 - **Auditoría y logs de seguridad**
 
+## Autenticación (JWT + Refresh)
+- Endpoints: `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`.
+- Envía `Authorization: Bearer <token>` en cada request (el frontend ya lo hace vía `authFetch`).
+- Tokens configurables con `JWT_SECRET`, `ACCESS_TOKEN_TTL` (por defecto 15m) y `REFRESH_TOKEN_TTL` (por defecto 7d).
+- Usuarios demo creados por `backend/src/seed.js` comparten la contraseña `password` (solo para pruebas, cámbiala en producción).
+
 ## Documentación
 Consulta la carpeta `docs/` para diagramas de arquitectura y detalles técnicos.
 

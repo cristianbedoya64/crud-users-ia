@@ -11,6 +11,7 @@ const permissionRoutes = require('./routes/permissionRoutes');
 const iaPanelRoutes = require('./routes/iaPanelRoutes');
 const dashboardDummyRoutes = require('./routes/dashboardDummyRoutes');
 const userRoleRoutes = require('./routes/userRoleRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 
 
@@ -21,16 +22,29 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // CORS: solo dominios permitidos (ajusta para prod)
-const allowedOrigins = [
+const allowAll = process.env.CORS_ALLOW_ALL !== 'false';
+const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean).concat([
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://uarp-frontend.com', // tu dominio custom si lo tienes
-  'https://miapp.ondigitalocean.app' // dominio público DO (ajusta al real)
-];
+  'https://uarp-frontend.com',
+  'https://miapp.ondigitalocean.app'
+]);
+const isAllowedOrigin = (origin) => {
+  if (allowAll) return true;
+  if (!origin) return true; // Permite Postman/health
+  if (allowedOrigins.includes(origin)) return true;
+  if (origin.includes('app.github.dev')) return true; // Codespaces subdomains (any port)
+  try {
+    const { hostname } = new URL(origin);
+    if (hostname.endsWith('.app.github.dev')) return true; // Codespaces subdomains
+  } catch (err) {
+    return false;
+  }
+  return false;
+};
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Permite Postman/health
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (isAllowedOrigin(origin)) return callback(null, true);
     return callback(new Error('No permitido por CORS'), false);
   },
   credentials: true
@@ -38,8 +52,7 @@ app.use(cors({
 // Preflight OPTIONS
 app.options('*', cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (isAllowedOrigin(origin)) return callback(null, true);
     return callback(new Error('No permitido por CORS'), false);
   },
   credentials: true
@@ -50,6 +63,7 @@ app.use(rateLimit);
 app.use(logFailedAccess);
 app.use(express.json());
 
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/user-roles', userRoleRoutes);
 app.use('/api/roles', roleRoutes);

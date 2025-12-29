@@ -4,7 +4,7 @@ const { AuditLog } = require('../models');
 module.exports = async function logFailedAccess(req, res, next) {
   // Solo registrar si la respuesta es 401 o 403
   res.on('finish', async () => {
-    if ([401, 403].includes(res.statusCode)) {
+    if ([401, 403].includes(res.statusCode) && req.user) {
       try {
         await AuditLog.create({
           userId: req.user ? req.user.id : null,

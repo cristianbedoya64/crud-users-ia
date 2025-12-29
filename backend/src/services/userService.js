@@ -1,7 +1,7 @@
 // userService.js
 const { User, Role, AuditLog } = require('../models');
 const validator = require('validator');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const userService = {
   async list({ page = 1, limit = 20, search = '', status }) {

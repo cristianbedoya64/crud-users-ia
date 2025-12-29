@@ -111,7 +111,7 @@ module.exports = {
       if (existsPassword) {
         return res.status(409).json({ error: 'La contraseña ya está en uso. Elija una diferente.' });
       }
-      const bcrypt = require('bcrypt');
+      const bcrypt = require('bcryptjs');
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const createdBy = req.user ? req.user.id : null;
@@ -194,7 +194,7 @@ module.exports = {
         if (!passwordRegex.test(password)) {
           return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula, un número y un símbolo.' });
         }
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcryptjs');
         const saltRounds = 10;
         updateData.password = await bcrypt.hash(password, saltRounds);
       }

@@ -23,11 +23,30 @@ async function seed() {
       { name: 'read_user', description: 'Ver usuarios' },
       { name: 'update_user', description: 'Editar usuarios' },
       { name: 'delete_user', description: 'Eliminar usuarios' },
-      { name: 'manage_roles', description: 'Gestionar roles' },
+      { name: 'manage_roles', description: 'Gestionar roles y permisos' },
       { name: 'view_audit', description: 'Ver auditoría' }
     ];
     for (const perm of permissions) {
       await Permission.findOrCreate({ where: { name: perm.name }, defaults: perm });
+    }
+
+    // Asignar permisos a roles (matriz básica)
+    const allPermissions = await Permission.findAll();
+    const permMap = Object.fromEntries(allPermissions.map(p => [p.name, p]));
+    const adminRole = await Role.findOne({ where: { name: 'admin' } });
+    const userRole = await Role.findOne({ where: { name: 'user' } });
+    const auditorRole = await Role.findOne({ where: { name: 'auditor' } });
+
+    if (adminRole) {
+      await adminRole.setPermissions(allPermissions);
+    }
+    if (userRole) {
+      const userPerms = ['read_user'].map(name => permMap[name]).filter(Boolean);
+      await userRole.setPermissions(userPerms);
+    }
+    if (auditorRole) {
+      const auditorPerms = ['read_user', 'view_audit'].map(name => permMap[name]).filter(Boolean);
+      await auditorRole.setPermissions(auditorPerms);
     }
 
     // Usuarios de ejemplo
@@ -47,8 +66,23 @@ async function seed() {
       n.toLowerCase().replace(/ /g, '.') + (i+1) + '@demo.com'
     );
     const exampleDocs = exampleNames.map((_, i) => 'DOC' + (1000 + i));
-    // Hash bcrypt válido para todos los usuarios demo (password: Demo123*)
-    const examplePw = '$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36K7d.vMkaW1YB.qx6.u72.';
+    // Hash bcrypt para "password"
+    const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
+
+    // Crear usuario admin fijo para acceso inicial
+    const [adminUser] = await User.findOrCreate({
+      where: { email: 'admin@demo.com' },
+      defaults: {
+        documentId: '00000001',
+        name: 'Admin Demo',
+        email: 'admin@demo.com',
+        password: examplePw,
+        status: 'active'
+      }
+    });
+    if (adminRole) {
+      await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
+    }
 
 
     // Limpiar solo usuarios de ejemplo (emails @demo.com)
