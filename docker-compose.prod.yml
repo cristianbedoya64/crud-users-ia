@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Define VITE_API_URL en tu entorno o en un .env en el root para la interpolación
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - backend
+    ports:
+      - "80:5173"
+    restart: unless-stopped
+
+  ia-panel:
+    build:
+      context: ./ia
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${DB_NAME:-uarp_ai}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-change_me}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
