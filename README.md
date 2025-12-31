@@ -11,18 +11,25 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 - **config/**: Configuración global
 - **migrations/**: Migraciones de base de datos
 
-## Instalación y Uso
-1. Revisa los README de cada módulo para instrucciones específicas de instalación y ejecución.
-2. Configura las variables de entorno según los archivos `.env.example`.
-3. Utiliza Docker para despliegue si lo prefieres (`docker-compose.yml`).
+## Instalación y Uso (local)
+1. Backend: `cd backend && npm install`
+2. Frontend: `cd frontend && npm install`
+3. IA: (opcional) instalar `pip install -r requirements.txt` si aplica
+4. Configura variables de entorno copiando cada `.env.example`
+5. Ejecuta backend: `npm start` (desde `backend/`)
+6. Ejecuta frontend: `npm run dev` (desde `frontend/`)
 
-## Arranque rápido (Docker)
-- Una sola orden: `./start.sh` (levanta frontend, backend, IA y PostgreSQL en segundo plano). En Codespaces expone puertos 3000/5173/5001 como públicos para evitar problemas de CORS.
-- Alternativa Makefile:
-	- `make up` levanta los servicios.
-	- `make down` detiene y elimina contenedores.
-	- `make logs` sigue logs de backend y frontend.
-	- `make ps` lista contenedores.
+### Con Docker Compose
+- `./start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001). En Codespaces expone 3000/5173/5001.
+- Alternativa Makefile: `make up | make down | make logs | make ps`
+
+## Estructura
+- `frontend/`: React + Vite + TailwindCSS (UI Mantine/MUI)
+- `backend/`: Node.js + Express + Sequelize (PostgreSQL)
+- `ia/`: Flask + IsolationForest demo
+- `docs/`: Documentación técnica
+- `config/`: Configuración Sequelize CLI
+- `migrations/`: Migraciones legacy (usar las de `backend/migrations/`)
 
 ### Seguridad Postgres
 - Por defecto, el puerto de Postgres **no está expuesto** fuera de los contenedores (ver `docker-compose.yml`).
@@ -35,13 +42,19 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 - **Auditoría y logs de seguridad**
 
 ## Autenticación (JWT + Refresh)
-- Endpoints: `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`.
-- Envía `Authorization: Bearer <token>` en cada request (el frontend ya lo hace vía `authFetch`).
-- Tokens configurables con `JWT_SECRET`, `ACCESS_TOKEN_TTL` (por defecto 15m) y `REFRESH_TOKEN_TTL` (por defecto 7d).
-- Usuarios demo creados por `backend/src/seed.js` comparten la contraseña `password` (solo para pruebas, cámbiala en producción).
+- Endpoints: `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`
+- Header: `Authorization: Bearer <token>` (frontend usa `authFetch`)
+- Config: `JWT_SECRET` obligatorio en prod; TTL: `ACCESS_TOKEN_TTL=15m`, `REFRESH_TOKEN_TTL=7d`
+- Seed demo crea `admin@demo.com` con contraseña `password` (solo pruebas)
 
 ## Documentación
-Consulta la carpeta `docs/` para diagramas de arquitectura y detalles técnicos.
+- API: [docs/api.md](docs/api.md)
+- Base de datos: [docs/db.md](docs/db.md)
+- Seguridad: [docs/security.md](docs/security.md)
+- Despliegue DO: [DEPLOY.md](DEPLOY.md)
+- Índice docs: [docs/README.md](docs/README.md)
+- Changelog docs: [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
-## Despliegue en DigitalOcean / DigitalOcean Deployment
-Consulta la guía completa en [DEPLOY.md](DEPLOY.md) para instrucciones bilingües y mejores prácticas de despliegue cloud.
+## Despliegue
+- DigitalOcean App Platform: ver [DEPLOY.md](DEPLOY.md)
+- Docker Compose local: `./start.sh` o `docker-compose up -d`

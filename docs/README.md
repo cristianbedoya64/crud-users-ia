@@ -7,6 +7,7 @@ Este módulo contiene la documentación técnica, diagramas y manuales de usuari
 - [API](api.md)
 - [Base de datos](db.md)
 - [Seguridad y configuración](security.md)
+- [Despliegue DigitalOcean](../DEPLOY.md)
 - Changelog de docs: [CHANGELOG.md](CHANGELOG.md)
 
 ## Recomendaciones
