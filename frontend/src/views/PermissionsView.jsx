@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 import { Card, Table, Button, TextInput, Group, Title, Box, Text } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
@@ -11,11 +12,31 @@ export default function PermissionsView() {
   const [permissions, setPermissions] = useState([]);
   const [permName, setPermName] = useState('');
 
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
-    fetch(`${API_BASE}/api/permissions`)
-      .then(res => res.json())
-      .then(data => setPermissions(data))
-      .catch(err => console.error(err));
+    authFetch(`${API_BASE}/api/permissions`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para ver la lista de permisos.'
+                : (data && data.error) || 'No se pudieron cargar los permisos.',
+            autoClose: 4500
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setPermissions(toArray(data)))
+      .catch(err => {
+        console.error(err);
+        setPermissions([]);
+      });
   }, []);
 
   function handleAdd() {
@@ -28,7 +49,7 @@ export default function PermissionsView() {
       });
       return;
     }
-    fetch(`${API_BASE}/api/permissions`, {
+    authFetch(`${API_BASE}/api/permissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: permName })
@@ -51,9 +72,14 @@ export default function PermissionsView() {
           autoClose: 3000
         });
         setPermName('');
-        fetch(`${API_BASE}/api/permissions`)
-          .then(res => res.json())
-          .then(data => setPermissions(data));
+        authFetch(`${API_BASE}/api/permissions`)
+          .then(async res2 => {
+            const data2 = await res2.json().catch(() => null);
+            if (!res2.ok) return [];
+            return data2;
+          })
+          .then(data2 => setPermissions(toArray(data2)))
+          .catch(() => setPermissions([]));
       })
       .catch(() => {
         notifications.show({
@@ -66,7 +92,7 @@ export default function PermissionsView() {
   }
 
   function handleDelete(id) {
-    fetch(`${API_BASE}/api/permissions/${id}`, {
+    authFetch(`${API_BASE}/api/permissions/${id}`, {
       method: 'DELETE'
     })
       .then(async res => {

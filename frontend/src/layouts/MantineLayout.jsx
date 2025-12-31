@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppShell, Group, Text, NavLink, Box } from '@mantine/core';
+import { AppShell, Group, Text, NavLink, Box, Button, Stack } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { label: 'Auditoría', icon: <IconHistory size={20} />, view: 'audit' },
 ];
 
-export default function MantineLayout({ view, setView, children }) {
+export default function MantineLayout({ view, setView, user, onLogout, children }) {
   return (
     <AppShell padding="md">
       <AppShell.Navbar p="xs" style={{ width: 220 }}>
@@ -33,7 +33,16 @@ export default function MantineLayout({ view, setView, children }) {
       </AppShell.Navbar>
       <AppShell.Header>
         <Box h={56} px="md" style={{ background: '#1976d2', display: 'flex', alignItems: 'center' }}>
-          <Text fw={700} size="lg" color="white">UARP-AI Dashboard</Text>
+          <Group style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text fw={700} size="lg" color="white">UARP-AI Dashboard</Text>
+            <Group gap="sm">
+              <Stack gap={0} align="flex-end">
+                <Text fw={600} size="sm" color="white">{user?.name || 'Usuario'}</Text>
+                <Text size="xs" color="white" style={{ opacity: 0.85 }}>{user?.email || ''}</Text>
+              </Stack>
+              <Button size="xs" color="red" variant="white" onClick={onLogout}>Salir</Button>
+            </Group>
+          </Group>
         </Box>
       </AppShell.Header>
       <AppShell.Main>

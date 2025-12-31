@@ -4,6 +4,7 @@ import { Card, Table, Button, TextInput, Group, Title, Box, Text, Modal, Checkbo
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 
 
 export default function RolesView() {
@@ -15,21 +16,60 @@ export default function RolesView() {
   const [modalOpen, setModalOpen] = useState(false);
   const [loadingPerms, setLoadingPerms] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
     fetchRoles();
     fetchPermissions();
   }, []);
   function fetchPermissions() {
-    fetch(`${API_BASE}/api/permissions`)
-      .then(res => res.json())
-      .then(data => setPermissions(data))
-      .catch(err => console.error(err));
+    authFetch(`${API_BASE}/api/permissions`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para ver la lista de permisos.'
+                : (data && data.error) || 'No se pudieron cargar los permisos.',
+            autoClose: 4500
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setPermissions(toArray(data)))
+      .catch(err => {
+        console.error(err);
+        setPermissions([]);
+      });
   }
   function fetchRoles() {
-    fetch(`${API_BASE}/api/roles`)
-      .then(res => res.json())
-      .then(data => setRoles(data))
-      .catch(err => console.error(err));
+    authFetch(`${API_BASE}/api/roles`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para ver la sección de roles (requiere manage_roles).'
+                : (data && data.error) || 'No se pudieron cargar los roles.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setRoles(toArray(data)))
+      .catch(err => {
+        console.error(err);
+        setRoles([]);
+      });
   }
   function handleAdd() {
     if (!roleName) {
@@ -41,7 +81,7 @@ export default function RolesView() {
       });
       return;
     }
-    fetch(`${API_BASE}/api/roles`, {
+    authFetch(`${API_BASE}/api/roles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: roleName })
@@ -78,7 +118,7 @@ export default function RolesView() {
   // ...existing code...
 
   function handleDelete(id) {
-    fetch(`${API_BASE}/api/roles/${id}`, {
+    authFetch(`${API_BASE}/api/roles/${id}`, {
       method: 'DELETE'
     })
       .then(async res => {
@@ -151,10 +191,26 @@ export default function RolesView() {
   function handleShowPerms(role) {
     setSelectedRole(role);
     setLoadingPerms(true);
-    fetch(`${API_BASE}/api/roles/${role.id}/permissions`)
-      .then(res => res.json())
+    authFetch(`${API_BASE}/api/roles/${role.id}/permissions`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para ver/editar permisos de roles.'
+                : (data && data.error) || 'No se pudieron cargar los permisos del rol.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
       .then(data => {
-        setRolePerms(data.map(p => p.id));
+        const safePerms = toArray(data);
+        setRolePerms(safePerms.map(p => p.id));
         setModalOpen(true);
         notifications.show({
           color: 'blue',
@@ -201,7 +257,7 @@ export default function RolesView() {
   // Guardar cambios de permisos
   function handleSavePerms() {
     setSaving(true);
-    fetch(`${API_BASE}/api/roles/${selectedRole.id}/permissions`, {
+    authFetch(`${API_BASE}/api/roles/${selectedRole.id}/permissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ permissionIds: rolePerms })

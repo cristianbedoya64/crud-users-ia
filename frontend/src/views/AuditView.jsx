@@ -2,18 +2,21 @@
 import { useEffect, useState } from 'react';
 import { Card, Title, Text, List, Loader } from '@mantine/core';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 
 export default function AuditView() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
     async function fetchLogs() {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/api/audit`);
+        const res = await authFetch(`${API_BASE}/api/audit`);
         const data = await res.json();
-        setLogs(data);
+        setLogs(toArray(data));
       } catch {
         setLogs([]);
       }

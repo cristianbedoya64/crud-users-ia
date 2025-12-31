@@ -2,7 +2,7 @@
 # IA Panel (Python/Flask) - UARP-AI
 
 ## Visión General / Overview
-Servicio Python para análisis de datos y panel de IA. Expone endpoints para sugerencias, anomalías y predicciones.
+Servicio Python para análisis de datos y panel de IA. Expone `/ia-panel` para sugerencias, anomalías y predicciones.
 
 ## Características / Features
 - API REST Flask
@@ -17,10 +17,14 @@ Servicio Python para análisis de datos y panel de IA. Expone endpoints para sug
 - `test_db_connection.py`: DB connection test
 - `train_ia_model.py`: Model training
 
-## Setup / Configuración
+## Setup / Configuración (local)
 1. Instala dependencias: `pip install -r requirements.txt` (si aplica)
-2. Configura variables de entorno si es necesario
-3. Inicia: `python ia_panel.py` o vía Docker
+2. Define `PORT=5001` si deseas cambiar el puerto
+3. Inicia: `python ia_panel.py`
+
+### Con Docker / Compose
+- Se construye con `ia/Dockerfile`; expone puerto 5001
+- En App Platform usar Web Service con puerto interno 5001
 
 ## Variables de Entorno / Env Vars
 - `PORT` (default: 5001)
@@ -29,9 +33,13 @@ Servicio Python para análisis de datos y panel de IA. Expone endpoints para sug
 - No exponer endpoints sensibles
 - Revisar logs y errores
 
+## Modelo
+- Entrenamiento demo: `python train_ia_model.py` genera `ia_model.pkl`
+- El endpoint carga `ia_model.pkl`; si no existe, responderá error 500
+
 ## Troubleshooting
-- Verifica conexión con backend
-- Revisa logs de Flask
+- Verifica que el backend llame via `IA_PANEL_URL` (por defecto `http://ia-panel:5001/ia-panel` en Docker)
+- Revisa logs de Flask; habilita verbose si necesitas depurar
 
 ---
 

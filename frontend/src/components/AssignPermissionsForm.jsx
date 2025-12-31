@@ -1,6 +1,7 @@
 import DOMPurify from 'dompurify';
 import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
+import { authFetch } from '../apiClient';
 import { notifications } from '@mantine/notifications';
 
 export default function AssignPermissionsForm({ onAssigned }) {
@@ -11,13 +12,47 @@ export default function AssignPermissionsForm({ onAssigned }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
-    fetch(`${API_BASE}/api/roles`)
-      .then(res => res.json())
-      .then(setRoles);
-    fetch(`${API_BASE}/api/permissions`)
-      .then(res => res.json())
-      .then(setPermissions);
+    authFetch(`${API_BASE}/api/roles`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para listar roles (requiere manage_roles).'
+                : (data && data.error) || 'No se pudieron cargar los roles.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setRoles(toArray(data)))
+      .catch(() => setRoles([]));
+    authFetch(`${API_BASE}/api/permissions`)
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para listar permisos.'
+                : (data && data.error) || 'No se pudieron cargar los permisos.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setPermissions(toArray(data)))
+      .catch(() => setPermissions([]));
   }, []);
 
   const handleAssign = async (e) => {
@@ -35,7 +70,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch(`${API_BASE}/api/role-permissions/${selectedRole}/assign`, {
+      const res = await authFetch(`${API_BASE}/api/roles/${selectedRole}/permissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permissionIds: selectedPerms })

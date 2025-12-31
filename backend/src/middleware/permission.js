@@ -16,8 +16,8 @@ module.exports = function(requiredPermission) {
       });
       if (!dbUser) return res.status(401).json({ error: 'Usuario no encontrado.' });
       // Buscar si alguno de los roles tiene el permiso
-      const hasPermission = dbUser.Roles.some(role =>
-        role.Permissions.some(perm => perm.name === requiredPermission)
+      const hasPermission = (dbUser.Roles || []).some(role =>
+        Array.isArray(role.Permissions) && role.Permissions.some(perm => perm.name === requiredPermission)
       );
       if (!hasPermission) {
         return res.status(403).json({ error: 'No tienes el permiso requerido: ' + requiredPermission });

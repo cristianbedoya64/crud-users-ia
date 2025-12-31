@@ -9,12 +9,16 @@ const Permission = require('./Permission')(sequelize, DataTypes);
 const UserRole = require('./UserRole')(sequelize, DataTypes);
 const RolePermission = require('./RolePermission')(sequelize, DataTypes);
 const AuditLog = require('./AuditLog')(sequelize, DataTypes);
+const RefreshToken = require('./RefreshToken')(sequelize, DataTypes);
 
 // Asociaciones
 User.belongsToMany(Role, { through: UserRole, foreignKey: 'userId' });
 Role.belongsToMany(User, { through: UserRole, foreignKey: 'roleId' });
 Role.belongsToMany(Permission, { through: RolePermission, foreignKey: 'roleId' });
 Permission.belongsToMany(Role, { through: RolePermission, foreignKey: 'permissionId' });
+
+RefreshToken.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(RefreshToken, { foreignKey: 'userId' });
 
 module.exports = {
   sequelize,
@@ -24,4 +28,5 @@ module.exports = {
   UserRole,
   RolePermission,
   AuditLog,
+  RefreshToken,
 };

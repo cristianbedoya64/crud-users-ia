@@ -1,11 +1,16 @@
 // dashboardDummyRoutes.js
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
+const permission = require('../middleware/permission');
 
 const { AuditLog } = require('../models');
 
+// Panel requiere usuario autenticado; lectura de auditoría requiere permiso explícito
+router.use(auth());
+
 // Devuelve los logs reales de la base de datos
-router.get('/audit', async (req, res) => {
+router.get('/audit', permission('view_audit'), async (req, res) => {
   try {
     const logs = await AuditLog.findAll({ order: [['createdAt', 'DESC']] });
     res.json(logs);
@@ -15,7 +20,7 @@ router.get('/audit', async (req, res) => {
 });
 
 // Endpoint para registrar eventos desde otras secciones
-router.post('/audit', async (req, res) => {
+router.post('/audit', permission('view_audit'), async (req, res) => {
   try {
     const { userId, action, details } = req.body;
     if (!userId || !action) {

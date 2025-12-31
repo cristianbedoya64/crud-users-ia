@@ -9,7 +9,13 @@ module.exports = function (roles = []) {
     if (!authHeader) return res.status(401).json({ error: 'No autenticado.' });
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.JWT_SECRET || 'supersecret', (err, user) => {
-      if (err) return res.status(403).json({ error: 'Token inválido.' });
+      if (err) {
+        // 401 permite al frontend intentar refresh de sesión.
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ error: 'Token expirado.' });
+        }
+        return res.status(401).json({ error: 'Token inválido.' });
+      }
       req.user = user;
       if (roles.length && (!user.roles || !roles.some(r => user.roles.includes(r)))) {
         return res.status(403).json({ error: 'No autorizado.' });

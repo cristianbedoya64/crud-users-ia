@@ -15,7 +15,11 @@ module.exports = {
           { documentId: { [Op.like]: `%${search}%` } }
         ];
       }
-      if (status) {
+      // status=all devuelve ambos estados; validamos para evitar valores inválidos en el ENUM
+      const allowedStatus = ['active', 'inactive'];
+      if (status === 'all') {
+        where.status = { [Op.in]: allowedStatus };
+      } else if (allowedStatus.includes(status)) {
         where.status = status;
       } else {
         where.status = 'active';
@@ -111,7 +115,7 @@ module.exports = {
       if (existsPassword) {
         return res.status(409).json({ error: 'La contraseña ya está en uso. Elija una diferente.' });
       }
-      const bcrypt = require('bcrypt');
+      const bcrypt = require('bcryptjs');
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const createdBy = req.user ? req.user.id : null;
@@ -194,7 +198,7 @@ module.exports = {
         if (!passwordRegex.test(password)) {
           return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula, un número y un símbolo.' });
         }
-        const bcrypt = require('bcrypt');
+        const bcrypt = require('bcryptjs');
         const saltRounds = 10;
         updateData.password = await bcrypt.hash(password, saltRounds);
       }
