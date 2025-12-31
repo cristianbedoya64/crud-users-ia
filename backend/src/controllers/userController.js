@@ -15,7 +15,11 @@ module.exports = {
           { documentId: { [Op.like]: `%${search}%` } }
         ];
       }
-      if (status) {
+      // status=all devuelve ambos estados; validamos para evitar valores inválidos en el ENUM
+      const allowedStatus = ['active', 'inactive'];
+      if (status === 'all') {
+        where.status = { [Op.in]: allowedStatus };
+      } else if (allowedStatus.includes(status)) {
         where.status = status;
       } else {
         where.status = 'active';

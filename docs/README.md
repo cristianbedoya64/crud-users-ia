@@ -4,10 +4,11 @@
 Este módulo contiene la documentación técnica, diagramas y manuales de usuario del sistema.
 
 ## Índice
-- Arquitectura general
-- Diagramas de flujo y entidad-relación
-- Manuales de instalación y uso
-- Guías de desarrollo y contribución
+- [API](api.md)
+- [Base de datos](db.md)
+- [Seguridad y configuración](security.md)
+- Changelog de docs: [CHANGELOG.md](CHANGELOG.md)
 
 ## Recomendaciones
-Consulta este directorio antes de realizar cambios importantes en la arquitectura o al incorporar nuevos desarrolladores al equipo.
+- Revisa estos documentos antes de cambios de arquitectura o despliegues.
+- Mantén este índice actualizado al agregar nuevos documentos.

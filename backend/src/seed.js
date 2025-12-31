@@ -69,7 +69,17 @@ async function seed() {
     // Hash bcrypt para "password"
     const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
 
-    // Crear usuario admin fijo para acceso inicial
+    // Limpiar solo usuarios demo (emails @demo.com), pero NO el admin de bootstrap
+    await User.destroy({
+      where: {
+        [Op.and]: [
+          { email: { [Op.like]: '%@demo.com' } },
+          { email: { [Op.ne]: 'admin@demo.com' } }
+        ]
+      }
+    });
+
+    // Crear usuario admin fijo para acceso inicial (password = "password")
     const [adminUser] = await User.findOrCreate({
       where: { email: 'admin@demo.com' },
       defaults: {
@@ -83,10 +93,6 @@ async function seed() {
     if (adminRole) {
       await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
     }
-
-
-    // Limpiar solo usuarios de ejemplo (emails @demo.com)
-    await User.destroy({ where: { email: { [Op.like]: '%@demo.com' } } });
 
     // Obtener roles existentes
     const allRoles = await Role.findAll();

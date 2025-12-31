@@ -8,13 +8,15 @@ export default function AuditView() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
     async function fetchLogs() {
       setLoading(true);
       try {
         const res = await authFetch(`${API_BASE}/api/audit`);
         const data = await res.json();
-        setLogs(data);
+        setLogs(toArray(data));
       } catch {
         setLogs([]);
       }

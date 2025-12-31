@@ -12,13 +12,47 @@ export default function AssignPermissionsForm({ onAssigned }) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const toArray = (value) => (Array.isArray(value) ? value : []);
+
   useEffect(() => {
     authFetch(`${API_BASE}/api/roles`)
-      .then(res => res.json())
-      .then(setRoles);
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para listar roles (requiere manage_roles).'
+                : (data && data.error) || 'No se pudieron cargar los roles.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setRoles(toArray(data)))
+      .catch(() => setRoles([]));
     authFetch(`${API_BASE}/api/permissions`)
-      .then(res => res.json())
-      .then(setPermissions);
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: res.status === 403 ? 'yellow' : 'red',
+            title: res.status === 403 ? 'Acceso restringido' : 'Error',
+            message:
+              res.status === 403
+                ? 'No tienes permiso para listar permisos.'
+                : (data && data.error) || 'No se pudieron cargar los permisos.',
+            autoClose: 5000
+          });
+          return [];
+        }
+        return data;
+      })
+      .then(data => setPermissions(toArray(data)))
+      .catch(() => setPermissions([]));
   }, []);
 
   const handleAssign = async (e) => {

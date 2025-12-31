@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import UsersView from './views/UsersView';
 import RolesView from './views/RolesView';
 import PermissionsView from './views/PermissionsView';
@@ -48,7 +49,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme: 'light' }}>
-      <Notifications />
+      <Notifications position="top-center" zIndex={9999} />
       <App />
     </MantineProvider>
   </React.StrictMode>
