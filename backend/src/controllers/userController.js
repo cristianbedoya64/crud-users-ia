@@ -158,6 +158,14 @@ module.exports = {
       if (!documentId || !name || !email) {
         return res.status(400).json({ error: 'Documento, nombre y email son obligatorios.' });
       }
+      const userToUpdate = await User.findByPk(id);
+      // Protección: no permitir modificar el usuario principal ni el admin demo
+      const protectedEmails = ['crisalex64@hotmail.com', 'admin@demo.com'];
+      const protectedIds = [1, 173];
+      const normalizedEmail = userToUpdate?.email?.trim().toLowerCase();
+      if (userToUpdate && (protectedEmails.includes(normalizedEmail) || protectedIds.includes(userToUpdate.id))) {
+        return res.status(403).json({ error: 'No está permitido modificar este usuario protegido.' });
+      }
       // Validación de nombre (no vacío, sin caracteres inválidos)
       const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s'-]+$/;
       if (!nameRegex.test(name)) {
@@ -169,7 +177,6 @@ module.exports = {
         return res.status(400).json({ error: 'El formato del email no es válido.' });
       }
       // Validación de email único (si cambia el email)
-      const userToUpdate = await User.findByPk(id);
       if (!userToUpdate) {
         return res.status(404).json({ error: 'Usuario no encontrado.' });
       }
@@ -246,6 +253,14 @@ module.exports = {
         if (!user) {
           return res.status(404).json({ error: 'Usuario no encontrado.' });
         }
+        // Protección: no permitir eliminar el usuario principal ni el admin demo
+        const protectedEmails = ['crisalex64@hotmail.com', 'admin@demo.com'];
+        const protectedIds = [1, 173];
+        const normalizedEmail = user?.email?.trim().toLowerCase();
+        if (protectedEmails.includes(normalizedEmail) || protectedIds.includes(user.id)) {
+          return res.status(403).json({ error: 'No está permitido eliminar este usuario protegido.' });
+        }
+
         await User.update({ status: 'inactive' }, { where: { id } });
         await AuditLog.create({
           userId: user.id,

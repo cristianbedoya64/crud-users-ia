@@ -219,7 +219,9 @@ export default function UsersView() {
     const matchesEmail = user.email?.toLowerCase().includes(term);
     const matchesRole = roleFilter ? user.Roles?.some(r => r.name === roleFilter) : true;
     const matchesStatus = showInactive ? isInactive : !isInactive;
-    return (matchesDoc || matchesName || matchesEmail || term === '') && matchesRole && matchesStatus;
+    // Ocultar admin demo por email o id
+    const isProtected = (user.email?.trim().toLowerCase() === 'admin@demo.com' || user.id === 173);
+    return !isProtected && (matchesDoc || matchesName || matchesEmail || term === '') && matchesRole && matchesStatus;
   });
 
   return (
@@ -261,9 +263,11 @@ export default function UsersView() {
             </thead>
             <tbody>
               {filteredUsers.length === 0 ? (
-                <tr><td colSpan={6}><Text color="dimmed" align="center">No hay usuarios registrados.</Text></td></tr>
+                <tr><td colSpan={7}><Text color="dimmed" align="center">No hay usuarios registrados.</Text></td></tr>
               ) : (
-                filteredUsers.map(user => (
+                filteredUsers.map(user => {
+                  const isInactive = (user.status || '').toLowerCase() === 'inactive';
+                  return (
                   <tr key={user.id}>
                     <td>{user.id}</td>
                     <td>{user.documentId}</td>
@@ -277,21 +281,25 @@ export default function UsersView() {
                     <td>{Array.isArray(user.Roles) && user.Roles.length > 0 ? user.Roles.map(r => r.name).join(', ') : <Text color="dimmed">Sin roles</Text>}</td>
                     <td>
                       <Group gap={8}>
-                        <Tooltip label="Editar usuario" withArrow position="top">
-                          <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
-                        </Tooltip>
-                        <Tooltip label="Eliminar usuario" withArrow position="top">
-                          <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>Eliminar</Button>
-                        </Tooltip>
-                        {(user.status || '').toLowerCase() === 'inactive' && (
+                        {isInactive ? (
                           <Tooltip label="Restaurar usuario" withArrow position="top">
                             <Button color="green" size="xs" variant="outline" onClick={() => handleRestore(user.id)}>Restaurar</Button>
                           </Tooltip>
+                        ) : (
+                          <>
+                            <Tooltip label="Editar usuario" withArrow position="top">
+                              <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
+                            </Tooltip>
+                            <Tooltip label="Eliminar usuario" withArrow position="top">
+                              <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>Eliminar</Button>
+                            </Tooltip>
+                          </>
                         )}
                       </Group>
                     </td>
                   </tr>
-                ))
+                  );
+                })
               )}
             </tbody>
           </Table>

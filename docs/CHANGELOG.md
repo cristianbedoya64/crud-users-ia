@@ -1,9 +1,9 @@
 # Docs Changelog
 
 ## 2025-12-31
-- Añadido `docs/api.md` (spec inicial de endpoints y permisos).
-- Añadido `docs/db.md` (entidades, relaciones, migraciones/seeds).
-- Añadido `docs/security.md` (CORS, env críticos, políticas, IA).
-- Creado este changelog para seguimiento de documentación.
-- Ampliado `DEPLOY.md` con pasos detallados en DigitalOcean App Platform y Docker/Droplet.
-- Actualizados README raíz, backend, frontend, IA, índice docs y creado `frontend/src/README.md`.
+Ampliado `DEPLOY.md` con pasos detallados en DigitalOcean App Platform, Docker/Droplet y nueva sección para `docker-compose.prod.yml`.
+Actualizados README raíz, backend, frontend, IA, índice docs y creado `frontend/src/README.md`.
+## 2026-01-14
+- Unificados y ampliados `.env.example` raíz y backend.
+- Añadido `RESTORE_BACKUP.md` (guía de restauración y actualización).
+- Índice docs actualizado.
