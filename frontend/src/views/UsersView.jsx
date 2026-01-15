@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack, Badge, Switch } from '@mantine/core';
+import { Card, Table, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack, Badge, Switch, Accordion } from '@mantine/core';
 import { Loader, Tooltip } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
@@ -224,6 +224,10 @@ export default function UsersView() {
     return !isProtected && (matchesDoc || matchesName || matchesEmail || term === '') && matchesRole && matchesStatus;
   });
 
+  const currentTitle = showInactive ? 'Usuarios inactivos' : 'Usuarios activos';
+  const currentCount = filteredUsers.length;
+  const sectionColor = showInactive ? 'red' : 'green';
+
   return (
     <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
@@ -249,60 +253,64 @@ export default function UsersView() {
         {loadingUsers ? (
           <Group position="center" py="xl"><Loader size="lg" color="blue" /></Group>
         ) : (
-          <Table highlightOnHover withColumnBorders striped>
-            <thead>
-              <tr>
-                <th style={{ minWidth: 40 }}>ID</th>
-                <th style={{ minWidth: 100 }}>Documento</th>
-                <th style={{ minWidth: 120 }}>Nombre</th>
-                <th style={{ minWidth: 160 }}>Email</th>
-                <th style={{ minWidth: 100 }}>Estado</th>
-                <th style={{ minWidth: 120 }}>Roles</th>
-                <th style={{ minWidth: 140 }}>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length === 0 ? (
-                <tr><td colSpan={7}><Text color="dimmed" align="center">No hay usuarios registrados.</Text></td></tr>
-              ) : (
-                filteredUsers.map(user => {
-                  const isInactive = (user.status || '').toLowerCase() === 'inactive';
-                  return (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.documentId}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      <Badge color={(user.status || '').toLowerCase() === 'inactive' ? 'red' : 'green'} variant="light">
-                        {(user.status || 'activo').toLowerCase() === 'inactive' ? 'inactivo' : 'activo'}
-                      </Badge>
-                    </td>
-                    <td>{Array.isArray(user.Roles) && user.Roles.length > 0 ? user.Roles.map(r => r.name).join(', ') : <Text color="dimmed">Sin roles</Text>}</td>
-                    <td>
-                      <Group gap={8}>
-                        {isInactive ? (
-                          <Tooltip label="Restaurar usuario" withArrow position="top">
-                            <Button color="green" size="xs" variant="outline" onClick={() => handleRestore(user.id)}>Restaurar</Button>
-                          </Tooltip>
-                        ) : (
-                          <>
-                            <Tooltip label="Editar usuario" withArrow position="top">
-                              <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
-                            </Tooltip>
-                            <Tooltip label="Eliminar usuario" withArrow position="top">
-                              <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>Eliminar</Button>
-                            </Tooltip>
-                          </>
-                        )}
-                      </Group>
-                    </td>
-                  </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </Table>
+          <Accordion defaultValue="usuarios" chevronPosition="left" variant="contained" radius="md">
+            <Accordion.Item value="usuarios">
+              <Accordion.Control>
+                <Group gap="xs">
+                  <Text fw={600}>{currentTitle}</Text>
+                  <Badge color={sectionColor} variant="filled">{currentCount}</Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {filteredUsers.length === 0 ? (
+                  <Text color="dimmed" align="center" py="md">No hay usuarios registrados.</Text>
+                ) : (
+                  <Stack gap="sm">
+                    {filteredUsers.map(user => {
+                      const isInactive = (user.status || '').toLowerCase() === 'inactive';
+                      const rolesText = Array.isArray(user.Roles) && user.Roles.length > 0
+                        ? user.Roles.map(r => r.name).join(', ')
+                        : 'Sin roles';
+                      return (
+                        <Card key={user.id} withBorder radius="md" shadow="xs" p="md">
+                          <Group position="apart" align="start" mb="xs">
+                            <Group gap="sm" align="center">
+                              <Badge variant="light" color="gray">ID {user.id}</Badge>
+                              <Text fw={600}>{user.name}</Text>
+                            </Group>
+                            <Badge color={isInactive ? 'red' : 'green'} variant="light">
+                              {isInactive ? 'inactivo' : 'activo'}
+                            </Badge>
+                          </Group>
+                          <Group gap="lg" align="center" wrap="wrap">
+                            <Text size="sm"><Text span fw={600}>Documento:</Text> {user.documentId || '—'}</Text>
+                            <Text size="sm"><Text span fw={600}>Email:</Text> {user.email}</Text>
+                            <Text size="sm"><Text span fw={600}>Roles:</Text> {rolesText}</Text>
+                          </Group>
+                          <Group gap={8} mt="md">
+                            {isInactive ? (
+                              <Tooltip label="Restaurar usuario" withArrow position="top">
+                                <Button color="green" size="xs" variant="outline" onClick={() => handleRestore(user.id)}>Restaurar</Button>
+                              </Tooltip>
+                            ) : (
+                              <>
+                                <Tooltip label="Editar usuario" withArrow position="top">
+                                  <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
+                                </Tooltip>
+                                <Tooltip label="Eliminar usuario" withArrow position="top">
+                                  <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>Eliminar</Button>
+                                </Tooltip>
+                              </>
+                            )}
+                          </Group>
+                        </Card>
+                      );
+                    })}
+                  </Stack>
+                )}
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
         )}
 
         <Modal opened={editModal} onClose={() => setEditModal(false)} title="Editar Usuario" centered>
