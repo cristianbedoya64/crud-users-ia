@@ -69,6 +69,16 @@ async function seed() {
     // Hash bcrypt para "password"
     const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
 
+    // Usuarios demo existentes (excepto el admin) para limpiar tokens previos
+    const demoUsers = await User.findAll({
+      where: {
+        [Op.and]: [
+          { email: { [Op.like]: '%@demo.com' } },
+          { email: { [Op.ne]: 'admin@demo.com' } }
+        ]
+      }
+    });
+
     // Eliminar refresh tokens de usuarios demo antes de borrar los usuarios demo
     if (demoUsers.length > 0) {
       for (const user of demoUsers) {
