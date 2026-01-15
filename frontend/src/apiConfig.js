@@ -1,5 +1,8 @@
-// Centralized API base URL, overridable via VITE_API_URL
-let apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// Centralized API base URL.
+// Vite envs are baked at build-time; for Docker deployments where the browser
+// cannot resolve internal hostnames (e.g. "backend"), we also derive the URL
+// from window.location at runtime.
+let apiBase = import.meta.env.VITE_API_URL || '';
 
 // In Codespaces the frontend is served over HTTPS on a hostname like
 // xxxx-5173.app.github.dev while the backend is exposed on port 3000
@@ -11,6 +14,18 @@ if (typeof window !== 'undefined') {
 	if (protocol === 'https:' && isGithubDev) {
 		const rewrittenHost = hostname.replace(/-(5173|4173)\./, '-3000.');
 		apiBase = `${protocol}//${rewrittenHost}`;
+	} else {
+		const needsRuntimeDerivation =
+			!apiBase ||
+			apiBase.includes('http://backend:3000') ||
+			apiBase.includes('https://backend:3000') ||
+			apiBase.includes('http://localhost:3000') ||
+			apiBase.includes('https://localhost:3000');
+
+		if (needsRuntimeDerivation) {
+			const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+			apiBase = isLocal ? 'http://localhost:3000' : `${protocol}//${hostname}:3000`;
+		}
 	}
 }
 

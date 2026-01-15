@@ -2,6 +2,7 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package.json .
+COPY .env .env
 COPY .env.production .env.production
 COPY vite.config.js .
 COPY tailwind.config.js .
