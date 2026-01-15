@@ -11,6 +11,7 @@ services:
       - DB_PASS=NoHayMas
       - DB_NAME=uarp_ai
       - NODE_ENV=production
+      - CORS_ALLOW_ALL=true
       - JWT_SECRET=${JWT_SECRET:-supersecret}
       # - SKIP_AUTH=true  # Solo para pruebas locales, eliminar o poner en false en producción
     depends_on:
