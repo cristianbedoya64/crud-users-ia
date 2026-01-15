@@ -7,6 +7,8 @@ async function seed() {
   try {
     await sequelize.sync();
 
+    const RESET_DEMO = process.env.SEED_RESET_DEMO === 'true';
+
     // Roles básicos
     const roles = [
       { name: 'admin', description: 'Administrador del sistema' },
@@ -69,38 +71,24 @@ async function seed() {
     // Hash bcrypt para "password"
     const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
 
-    // Usuarios demo existentes (excepto el admin) para limpiar tokens previos
-    const demoUsers = await User.findAll({
-      where: {
-        [Op.and]: [
-          { email: { [Op.like]: '%@demo.com' } },
-          { email: { [Op.ne]: 'admin@demo.com' } }
-        ]
-      }
-    });
-
-    // Eliminar refresh tokens de usuarios demo antes de borrar los usuarios demo
-    if (demoUsers.length > 0) {
-      for (const user of demoUsers) {
-        await RefreshToken.destroy({ where: { userId: user.id } });
+    // Opcional: resetear usuarios demo para repoblar en entornos de prueba
+    if (RESET_DEMO) {
+      const demoUsers = await User.findAll({
+        where: {
+          [Op.and]: [
+            { email: { [Op.like]: '%@demo.com' } },
+            { email: { [Op.ne]: 'admin@demo.com' } }
+          ]
+        },
+        attributes: ['id']
+      });
+      const demoUserIds = demoUsers.map(u => u.id);
+      if (demoUserIds.length > 0) {
+        await RefreshToken.destroy({ where: { userId: { [Op.in]: demoUserIds } } });
+        await UserRole.destroy({ where: { userId: { [Op.in]: demoUserIds } } });
+        await User.destroy({ where: { id: { [Op.in]: demoUserIds } } });
       }
     }
-
-    // Eliminar refresh tokens del usuario admin demo antes de borrar el usuario admin demo
-    const adminDemoUser = await User.findOne({ where: { email: 'admin@demo.com' } });
-    if (adminDemoUser) {
-      await RefreshToken.destroy({ where: { userId: adminDemoUser.id } });
-    }
-
-    // Limpiar solo usuarios demo (emails @demo.com), pero NO el admin de bootstrap
-    await User.destroy({
-      where: {
-        [Op.and]: [
-          { email: { [Op.like]: '%@demo.com' } },
-          { email: { [Op.ne]: 'admin@demo.com' } }
-        ]
-      }
-    });
 
     // Crear usuario admin fijo para acceso inicial (password = "password")
     const [adminUser] = await User.findOrCreate({
@@ -117,13 +105,13 @@ async function seed() {
       await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
     }
 
-    // Crear usuario usuariodemo fijo para acceso especial (password = "password")
+    // Crear usuario usuariodemo fijo (password = "password")
     const [usuariodemoUser] = await User.findOrCreate({
-      where: { email: 'usuariodemo' },
+      where: { email: 'usuariodemo@demo.com' },
       defaults: {
         documentId: '00000002',
         name: 'Usuario Demo',
-        email: 'usuariodemo',
+        email: 'usuariodemo@demo.com',
         password: examplePw,
         status: 'active'
       }
@@ -139,19 +127,26 @@ async function seed() {
     let success = 0;
     for (let i = 0; i < exampleNames.length; i++) {
       try {
-        const user = await User.create({
-          documentId: exampleDocs[i],
-          name: exampleNames[i],
-          email: exampleEmails[i],
-          password: examplePw,
-          status: i % 3 === 0 ? 'inactive' : 'active',
-          createdBy: null,
-          updatedBy: null
+        const [user, created] = await User.findOrCreate({
+          where: { email: exampleEmails[i] },
+          defaults: {
+            documentId: exampleDocs[i],
+            name: exampleNames[i],
+            email: exampleEmails[i],
+            password: examplePw,
+            status: i % 3 === 0 ? 'inactive' : 'active',
+            createdBy: null,
+            updatedBy: null
+          }
         });
-        const randomRole = allRoles[Math.floor(Math.random() * allRoles.length)];
-        await UserRole.create({ userId: user.id, roleId: randomRole.id });
-        success++;
-        console.log(`Usuario demo insertado: ${user.name} (${user.email}) con rol ${randomRole?.name}`);
+        if (created) {
+          const randomRole = allRoles[Math.floor(Math.random() * allRoles.length)];
+          if (randomRole) {
+            await UserRole.findOrCreate({ where: { userId: user.id, roleId: randomRole.id } });
+          }
+          success++;
+          console.log(`Usuario demo insertado: ${user.name} (${user.email}) con rol ${randomRole?.name}`);
+        }
       } catch (err) {
         console.error(`Error insertando usuario demo ${exampleNames[i]}: ${err.message}`);
         if (err.stack) console.error(err.stack);
