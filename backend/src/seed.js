@@ -1,6 +1,6 @@
 // seed.js
 // Script para poblar roles y permisos básicos en la base de datos
-const { sequelize, Role, Permission, User, UserRole } = require('./models');
+const { sequelize, Role, Permission, User, UserRole, RefreshToken } = require('./models');
 const { Op } = require('sequelize');
 
 async function seed() {
@@ -69,6 +69,19 @@ async function seed() {
     // Hash bcrypt para "password"
     const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
 
+    // Eliminar refresh tokens de usuarios demo antes de borrar los usuarios demo
+    if (demoUsers.length > 0) {
+      for (const user of demoUsers) {
+        await RefreshToken.destroy({ where: { userId: user.id } });
+      }
+    }
+
+    // Eliminar refresh tokens del usuario admin demo antes de borrar el usuario admin demo
+    const adminDemoUser = await User.findOne({ where: { email: 'admin@demo.com' } });
+    if (adminDemoUser) {
+      await RefreshToken.destroy({ where: { userId: adminDemoUser.id } });
+    }
+
     // Limpiar solo usuarios demo (emails @demo.com), pero NO el admin de bootstrap
     await User.destroy({
       where: {
@@ -92,6 +105,21 @@ async function seed() {
     });
     if (adminRole) {
       await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
+    }
+
+    // Crear usuario usuariodemo fijo para acceso especial (password = "password")
+    const [usuariodemoUser] = await User.findOrCreate({
+      where: { email: 'usuariodemo' },
+      defaults: {
+        documentId: '00000002',
+        name: 'Usuario Demo',
+        email: 'usuariodemo',
+        password: examplePw,
+        status: 'active'
+      }
+    });
+    if (adminRole) {
+      await UserRole.findOrCreate({ where: { userId: usuariodemoUser.id, roleId: adminRole.id } });
     }
 
     // Obtener roles existentes
