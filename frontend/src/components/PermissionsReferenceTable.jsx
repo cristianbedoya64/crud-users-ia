@@ -1,4 +1,4 @@
-import { Card, Table, Title, Text } from '@mantine/core';
+import { Card, Table, Title, Text, ScrollArea } from '@mantine/core';
 
 // Tabla de referencia de permisos y endpoints protegidos
 const PERMISSIONS_REFERENCE = [
@@ -29,28 +29,30 @@ export default function PermissionsReferenceTable() {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder mb="lg">
       <Title order={4} mb="md">Referencia de Permisos y Endpoints Protegidos</Title>
-      <Table highlightOnHover withColumnBorders striped>
-        <thead>
-          <tr>
-            <th>Permiso</th>
-            <th>Descripción</th>
-            <th>Endpoints Protegidos</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PERMISSIONS_REFERENCE.map(perm => (
-            <tr key={perm.name}>
-              <td><b>{perm.name}</b></td>
-              <td>{perm.description}</td>
-              <td>
-                {perm.endpoints.map(ep => (
-                  <Text key={ep} size="sm">{ep}</Text>
-                ))}
-              </td>
+      <ScrollArea type="auto">
+        <Table highlightOnHover withColumnBorders striped style={{ minWidth: 560 }}>
+          <thead>
+            <tr>
+              <th>Permiso</th>
+              <th>Descripción</th>
+              <th>Endpoints Protegidos</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {PERMISSIONS_REFERENCE.map(perm => (
+              <tr key={perm.name}>
+                <td><b>{perm.name}</b></td>
+                <td>{perm.description}</td>
+                <td>
+                  {perm.endpoints.map(ep => (
+                    <Text key={ep} size="sm">{ep}</Text>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </ScrollArea>
     </Card>
   );
 }

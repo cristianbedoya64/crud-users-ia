@@ -3,7 +3,7 @@ import { IconUsers, IconShield, IconKey, IconHistory } from '@tabler/icons-react
 
 export default function DashboardSummary({ totals }) {
   return (
-    <SimpleGrid cols={4} spacing="lg" mb="xl">
+    <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg" mb="xl">
       <Card shadow="md" radius="md" withBorder>
         <Group>
           <ThemeIcon color="blue" size={40} radius="md"><IconUsers size={28} /></ThemeIcon>

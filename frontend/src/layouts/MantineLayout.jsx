@@ -1,6 +1,7 @@
 import React from 'react';
-import { AppShell, Group, Text, NavLink, Box, Button, Stack } from '@mantine/core';
+import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
 const navItems = [
   { label: 'Dashboard', icon: <IconDashboard size={20} />, view: 'dashboard' },
@@ -11,9 +12,16 @@ const navItems = [
 ];
 
 export default function MantineLayout({ view, setView, user, onLogout, children }) {
+  const [opened, { toggle, close }] = useDisclosure(false);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
-    <AppShell padding="md">
-      <AppShell.Navbar p="xs" style={{ width: 220 }}>
+    <AppShell
+      padding="md"
+      navbar={{ width: 220, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      header={{ height: 56 }}
+    >
+      <AppShell.Navbar p="xs">
         <Box mb="md" style={{ display: 'flex', justifyContent: 'center' }}>
           <Text fw={700} size="lg" color="blue.9">UARP-AI</Text>
         </Box>
@@ -24,7 +32,10 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
               label={item.label}
               leftSection={item.icon}
               active={view === item.view}
-              onClick={() => setView(item.view)}
+              onClick={() => {
+                setView(item.view);
+                if (isMobile) close();
+              }}
               color="blue"
               style={{ marginBottom: 8 }}
             />
@@ -34,7 +45,12 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
       <AppShell.Header>
         <Box h={56} px="md" style={{ background: '#1976d2', display: 'flex', alignItems: 'center' }}>
           <Group style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text fw={700} size="lg" color="white">UARP-AI Dashboard</Text>
+            <Group gap="sm">
+              {isMobile && (
+                <Burger opened={opened} onClick={toggle} size="sm" color="white" />
+              )}
+              <Text fw={700} size="lg" color="white">UARP-AI Dashboard</Text>
+            </Group>
             <Group gap="sm">
               <Stack gap={0} align="flex-end">
                 <Text fw={600} size="sm" color="white">{user?.name || 'Usuario'}</Text>
@@ -46,9 +62,9 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
         </Box>
       </AppShell.Header>
       <AppShell.Main>
-        <Group p="md">
+        <Box p={{ base: 'xs', sm: 'md' }}>
           {children}
-        </Group>
+        </Box>
       </AppShell.Main>
     </AppShell>
   );

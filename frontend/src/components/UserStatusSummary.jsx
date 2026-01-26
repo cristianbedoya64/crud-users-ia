@@ -3,7 +3,7 @@ import { IconUserCheck, IconUserX, IconClock } from '@tabler/icons-react';
 
 export default function UserStatusSummary({ active, inactive, pending }) {
   return (
-    <SimpleGrid cols={3} spacing="lg" mb="xl">
+    <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" mb="xl">
       <Card shadow="md" radius="md" withBorder>
         <Group>
           <ThemeIcon color="green" size={40} radius="md"><IconUserCheck size={28} /></ThemeIcon>

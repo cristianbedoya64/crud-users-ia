@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Card, Table, Button, TextInput, Group, Title, Box, Text, Modal, Checkbox, Stack, Loader } from '@mantine/core';
+import { Card, Table, Button, TextInput, Title, Box, Text, Modal, Checkbox, Stack, Loader, SimpleGrid, ScrollArea } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
@@ -334,54 +334,57 @@ export default function RolesView() {
     <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Roles</Title>
-        <Group mb="md" grow>
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" mb="md">
           <TextInput
             label="Nombre del Rol"
             value={roleName}
             onChange={e => setRoleName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del rol"
+            w="100%"
           />
-          <Button color="blue" onClick={handleAdd} mt={22}>
+          <Button color="blue" onClick={handleAdd} mt={{ base: 0, sm: 22 }} w={{ base: '100%', sm: 'auto' }}>
             Registrar
           </Button>
-        </Group>
+        </SimpleGrid>
       </Card>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Title order={4} mb="md">Lista de Roles</Title>
-        <Table highlightOnHover withColumnBorders striped>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Permisos</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {roles.length === 0 ? (
+        <ScrollArea type="auto">
+          <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
+            <thead>
               <tr>
-                <td colSpan={3}>
-                  <Text color="dimmed" align="center">No hay roles registrados.</Text>
-                </td>
+                <th>Nombre</th>
+                <th>Permisos</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              roles.map(role => (
-                <tr key={role.id}>
-                  <td>{role.name}</td>
-                  <td>
-                    <Button size="xs" variant="light" onClick={() => handleShowPerms(role)}>
-                      Ver/Editar Permisos
-                    </Button>
-                  </td>
-                  <td>
-                    <Button color="red" size="xs" onClick={() => handleDelete(role.id)}>
-                      Eliminar
-                    </Button>
+            </thead>
+            <tbody>
+              {roles.length === 0 ? (
+                <tr>
+                  <td colSpan={3}>
+                    <Text color="dimmed" align="center">No hay roles registrados.</Text>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
+              ) : (
+                roles.map(role => (
+                  <tr key={role.id}>
+                    <td>{role.name}</td>
+                    <td>
+                      <Button size="xs" variant="light" onClick={() => handleShowPerms(role)}>
+                        Ver/Editar Permisos
+                      </Button>
+                    </td>
+                    <td>
+                      <Button color="red" size="xs" onClick={() => handleDelete(role.id)}>
+                        Eliminar
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </ScrollArea>
       </Card>
 
       <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title={selectedRole ? `Permisos de ${selectedRole.name}` : ''} size="lg">

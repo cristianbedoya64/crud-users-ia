@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Arranca todos los servicios en segundo plano
-DockerComposeCmd="docker-compose"
-${DockerComposeCmd} up -d
+# Arranca todos los servicios en segundo plano (incluye override de desarrollo si existe)
+DockerComposeCmd="docker compose"
+${DockerComposeCmd} up -d --build
 
 # Si estamos en Codespaces, expone puertos para evitar bloqueos/CORS por túnel privado
 if [[ -n "${CODESPACE_NAME:-}" ]]; then

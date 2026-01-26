@@ -107,11 +107,11 @@ export default function AssignPermissionsForm({ onAssigned }) {
   };
 
   return (
-    <form onSubmit={handleAssign} style={{ padding: 20, border: '1px solid #eee', borderRadius: 8, background: '#fafafa', maxWidth: 400 }}>
+    <form onSubmit={handleAssign} style={{ padding: 20, border: '1px solid #eee', borderRadius: 8, background: '#fafafa', width: '100%' }}>
       <h3>Asignar Permisos a Rol</h3>
       <div>
         <label>Rol:</label>
-        <select value={selectedRole} onChange={e => setSelectedRole(DOMPurify.sanitize(e.target.value))} required>
+        <select value={selectedRole} onChange={e => setSelectedRole(DOMPurify.sanitize(e.target.value))} required style={{ width: '100%' }}>
           <option value="">Selecciona un rol</option>
           {roles.map(role => (
             <option key={role.id} value={role.id}>{role.name}</option>
@@ -145,7 +145,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
           ))}
         </div>
       </div>
-      <button type="submit" disabled={loading} style={{ marginTop: 15 }}>
+      <button type="submit" disabled={loading} style={{ marginTop: 15, width: '100%' }}>
         {loading ? 'Asignando...' : 'Asignar Permisos'}
       </button>
       {message && <div style={{ marginTop: 10, color: message.includes('correctamente') ? 'green' : 'red' }}>{message}</div>}

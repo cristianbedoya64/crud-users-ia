@@ -5,7 +5,7 @@ export default function SystemStatus({ status }) {
   return (
     <Card shadow="md" radius="md" withBorder mb="xl">
       <Title order={4} mb="md">Estado del Sistema</Title>
-      <Group>
+      <Group wrap="wrap">
         <ThemeIcon color={status.api === 'online' ? 'green' : 'red'} radius="xl"><IconServer size={22} /></ThemeIcon>
         <Text>API: {status.api}</Text>
         <ThemeIcon color={status.ia === 'online' ? 'green' : 'red'} radius="xl"><IconRobot size={22} /></ThemeIcon>

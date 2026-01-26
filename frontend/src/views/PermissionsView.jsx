@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-import { Card, Table, Button, TextInput, Group, Title, Box, Text } from '@mantine/core';
+import { Card, Table, Button, TextInput, Title, Box, Text, SimpleGrid, ScrollArea } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
@@ -166,56 +166,59 @@ export default function PermissionsView() {
       <PermissionsReferenceTable />
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Permisos</Title>
-        <Group mb="md" grow>
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" mb="md">
           <TextInput
             label="Nombre del Permiso"
             value={permName}
             onChange={e => setPermName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del permiso"
+            w="100%"
           />
-          <Button color="blue" onClick={handleAdd} mt={22}>
+          <Button color="blue" onClick={handleAdd} mt={{ base: 0, sm: 22 }} w={{ base: '100%', sm: 'auto' }}>
             Registrar
           </Button>
-        </Group>
+        </SimpleGrid>
       </Card>
-      <Group align="flex-start" mt={20}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder style={{ flex: 1 }}>
+      <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md" mt={20}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Title order={4} mb="md">Lista de Permisos</Title>
-          <Table highlightOnHover withColumnBorders striped>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {permissions.length === 0 ? (
+          <ScrollArea type="auto">
+            <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
+              <thead>
                 <tr>
-                  <td colSpan={2}>
-                    <Text color="dimmed" align="center">No hay permisos registrados.</Text>
-                  </td>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Acciones</th>
                 </tr>
-              ) : (
-                permissions.map(perm => (
-                  <tr key={perm.id}>
-                    <td>{perm.name}</td>
-                    <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
-                    <td>
-                      <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
-                        Eliminar
-                      </Button>
+              </thead>
+              <tbody>
+                {permissions.length === 0 ? (
+                  <tr>
+                    <td colSpan={3}>
+                      <Text color="dimmed" align="center">No hay permisos registrados.</Text>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
+                ) : (
+                  permissions.map(perm => (
+                    <tr key={perm.id}>
+                      <td>{perm.name}</td>
+                      <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
+                      <td>
+                        <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
+                          Eliminar
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
         </Card>
-        <Card shadow="sm" padding="lg" radius="md" withBorder style={{ flex: 1, minWidth: 400 }}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
           <AssignPermissionsForm />
         </Card>
-      </Group>
+      </SimpleGrid>
     </Box>
   );
 }

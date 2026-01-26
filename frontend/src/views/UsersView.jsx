@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Table, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack, Badge, Switch, Accordion } from '@mantine/core';
+import { Card, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, Stack, Badge, Switch, Accordion, SimpleGrid } from '@mantine/core';
 import { Loader, Tooltip } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
@@ -232,23 +232,27 @@ export default function UsersView() {
     <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Usuarios</Title>
-        <Group mb="md" grow>
-          <TextInput label="Documento" name="documentId" value={form.documentId} onChange={handleChange} placeholder="Número de documento" aria-label="Documento" w={{ base: '100%', sm: 150, md: 180 }} />
-          <TextInput label="Nombre" name="name" value={form.name} onChange={handleChange} placeholder="Nombre" aria-label="Nombre" w={{ base: '100%', sm: 150, md: 180 }} />
-          <TextInput label="Email" name="email" value={form.email} onChange={handleChange} placeholder="Email" aria-label="Email" w={{ base: '100%', sm: 180, md: 220 }} />
-          <TextInput label="Contraseña" name="password" type="password" value={form.password} onChange={handleChange} placeholder="Contraseña" aria-label="Contraseña" w={{ base: '100%', sm: 150, md: 180 }} />
-          <MultiSelect label="Roles" data={roles.map(r => ({ value: r.id.toString(), label: r.name }))} value={form.roles} onChange={roles => setForm({ ...form, roles: roles.map(r => DOMPurify.sanitize(r)) })} placeholder="Selecciona roles" clearable aria-label="Roles" w={{ base: '100%', sm: 180, md: 220 }} />
-          <Button color="blue" onClick={handleAdd} loading={creating} disabled={editModal} mt={{ base: 8, sm: 22 }} w={{ base: '100%', sm: 120 }} type="button">Registrar</Button>
-          <Button variant="default" onClick={resetCreateForm} disabled={creating || editModal} mt={{ base: 8, sm: 22 }} w={{ base: '100%', sm: 120 }} type="button">Limpiar</Button>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="sm">
+          <TextInput label="Documento" name="documentId" value={form.documentId} onChange={handleChange} placeholder="Número de documento" aria-label="Documento" w="100%" />
+          <TextInput label="Nombre" name="name" value={form.name} onChange={handleChange} placeholder="Nombre" aria-label="Nombre" w="100%" />
+          <TextInput label="Email" name="email" value={form.email} onChange={handleChange} placeholder="Email" aria-label="Email" w="100%" />
+          <TextInput label="Contraseña" name="password" type="password" value={form.password} onChange={handleChange} placeholder="Contraseña" aria-label="Contraseña" w="100%" />
+          <MultiSelect label="Roles" data={roles.map(r => ({ value: r.id.toString(), label: r.name }))} value={form.roles} onChange={roles => setForm({ ...form, roles: roles.map(r => DOMPurify.sanitize(r)) })} placeholder="Selecciona roles" clearable aria-label="Roles" w="100%" />
+        </SimpleGrid>
+        <Group justify="flex-end" wrap="wrap">
+          <Button color="blue" onClick={handleAdd} loading={creating} disabled={editModal} mt={{ base: 8, sm: 0 }} w={{ base: '100%', sm: 120 }} type="button">Registrar</Button>
+          <Button variant="default" onClick={resetCreateForm} disabled={creating || editModal} mt={{ base: 8, sm: 0 }} w={{ base: '100%', sm: 120 }} type="button">Limpiar</Button>
         </Group>
       </Card>
 
       <Card shadow="sm" padding="lg" radius="md" withBorder>
-        <Group mb="md">
-          <TextInput label="Buscar por documento o nombre" value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar..." aria-label="Buscar usuario" w={250} />
-          <MultiSelect label="Filtrar por rol" data={roles.map(r => ({ value: r.name, label: r.name }))} value={roleFilter ? [roleFilter] : []} onChange={arr => setRoleFilter(arr[0] || '')} placeholder="Rol" clearable w={200} />
-          <Switch label="Mostrar inactivos" checked={showInactive} onChange={e => setShowInactive(e.currentTarget.checked)} aria-label="Mostrar usuarios inactivos" />
-        </Group>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="md">
+          <TextInput label="Buscar por documento o nombre" value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar..." aria-label="Buscar usuario" w="100%" />
+          <MultiSelect label="Filtrar por rol" data={roles.map(r => ({ value: r.name, label: r.name }))} value={roleFilter ? [roleFilter] : []} onChange={arr => setRoleFilter(arr[0] || '')} placeholder="Rol" clearable w="100%" />
+          <Box pt={{ base: 0, sm: 24 }}>
+            <Switch label="Mostrar inactivos" checked={showInactive} onChange={e => setShowInactive(e.currentTarget.checked)} aria-label="Mostrar usuarios inactivos" />
+          </Box>
+        </SimpleGrid>
         <Title order={4} mb="md">Lista de Usuarios</Title>
         {loadingUsers ? (
           <Group position="center" py="xl"><Loader size="lg" color="blue" /></Group>
