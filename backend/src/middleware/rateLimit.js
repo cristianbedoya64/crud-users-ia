@@ -7,6 +7,10 @@ const limiter = rateLimit({
   message: 'Demasiadas peticiones desde esta IP, intenta de nuevo más tarde.',
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Evitar rate limit en endpoints demo usados por el dashboard
+    return req.path.startsWith('/api/demo');
+  }
 });
 
 module.exports = limiter;

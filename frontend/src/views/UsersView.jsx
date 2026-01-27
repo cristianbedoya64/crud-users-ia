@@ -5,9 +5,7 @@ import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+import { isValidEmail, isValidPassword } from '../utils/validation';
 
 export default function UsersView() {
   const [search, setSearch] = useState('');
@@ -104,7 +102,7 @@ export default function UsersView() {
   }
 
   function validateEmail(email) {
-    return emailRegex.test(email);
+    return isValidEmail(email);
   }
 
   function handleAdd() {
@@ -117,7 +115,7 @@ export default function UsersView() {
       showError('Faltan datos', `Completa: ${missing.join(', ')}.`);
       return;
     }
-    if (!passwordRegex.test(form.password)) {
+    if (!isValidPassword(form.password)) {
       showError('Contraseña inválida', 'Debe tener 8+ caracteres e incluir mayúscula, minúscula, número y símbolo.');
       return;
     }

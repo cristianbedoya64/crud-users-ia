@@ -17,11 +17,13 @@ export default function PermissionsView() {
   const [editingPerm, setEditingPerm] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [editingDescription, setEditingDescription] = useState('');
+  const [loadingPermissions, setLoadingPermissions] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const toArray = (value) => (Array.isArray(value) ? value : []);
 
   useEffect(() => {
+    setLoadingPermissions(true);
     authFetch(`${API_BASE}/api/permissions`)
       .then(async res => {
         const data = await res.json().catch(() => null);
@@ -43,7 +45,8 @@ export default function PermissionsView() {
       .catch(err => {
         console.error(err);
         setPermissions([]);
-      });
+      })
+      .finally(() => setLoadingPermissions(false));
   }, []);
 
   function handleAdd() {
@@ -258,7 +261,9 @@ export default function PermissionsView() {
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md" mt={20}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Title order={4} mb="md">Lista de Permisos</Title>
-          {isMobile ? (
+          {loadingPermissions ? (
+            <Text color="dimmed" align="center">Cargando permisos...</Text>
+          ) : isMobile ? (
             <Stack gap="sm">
               {permissions.length === 0 ? (
                 <Text color="dimmed" align="center">No hay permisos registrados.</Text>

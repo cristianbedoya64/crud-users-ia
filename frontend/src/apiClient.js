@@ -3,7 +3,8 @@ import { getAccessToken, refreshTokens, clearTokens, getRefreshToken } from './a
 
 // authFetch agrega el Authorization header y, si hay 401 y refresh token, intenta refrescar una vez.
 export async function authFetch(url, options = {}) {
-  const opts = { ...options, headers: { ...(options.headers || {}) } };
+  const { silent, ...fetchOptions } = options || {};
+  const opts = { ...fetchOptions, headers: { ...(fetchOptions.headers || {}) } };
   const accessToken = getAccessToken();
   if (accessToken) {
     opts.headers.Authorization = `Bearer ${accessToken}`;
@@ -19,7 +20,9 @@ export async function authFetch(url, options = {}) {
       response = await fetch(url, retryOpts);
     } catch (err) {
       clearTokens();
-      notifications.show({ color: 'red', title: 'Sesión expirada', message: err.message || 'No se pudo refrescar la sesión.' });
+      if (!silent) {
+        notifications.show({ color: 'red', title: 'Sesión expirada', message: err.message || 'No se pudo refrescar la sesión.' });
+      }
       throw err;
     }
   }
@@ -33,7 +36,9 @@ export async function authFetch(url, options = {}) {
     } catch (err) {
       // cuerpo no JSON: mantenemos message por defecto
     }
-    notifications.show({ color: 'red', title: 'Error', message });
+    if (!silent) {
+      notifications.show({ color: 'red', title: 'Error', message });
+    }
     const error = new Error(message);
     error.status = response.status;
     error.data = data;

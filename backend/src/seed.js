@@ -91,34 +91,47 @@ async function seed() {
     }
 
     // Crear usuario admin fijo para acceso inicial (password = "password")
-    const [adminUser] = await User.findOrCreate({
-      where: { email: 'admin@demo.com' },
-      defaults: {
-        documentId: '00000001',
-        name: 'Admin Demo',
-        email: 'admin@demo.com',
-        password: examplePw,
-        status: 'active'
+      async function ensureDemoUser({ email, documentId, name }) {
+        const existing = await User.findOne({
+          where: {
+            [Op.or]: [
+              { email },
+              { documentId }
+            ]
+          }
+        });
+        if (existing) {
+          await existing.update({ email, documentId, name, password: examplePw, status: 'active' });
+          return existing;
+        }
+        return User.create({
+          documentId,
+          name,
+          email,
+          password: examplePw,
+          status: 'active'
+        });
       }
-    });
-    if (adminRole) {
-      await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
-    }
 
-    // Crear usuario usuariodemo fijo (password = "password")
-    const [usuariodemoUser] = await User.findOrCreate({
-      where: { email: 'usuariodemo@demo.com' },
-      defaults: {
-        documentId: '00000002',
-        name: 'Usuario Demo',
-        email: 'usuariodemo@demo.com',
-        password: examplePw,
-        status: 'active'
+      // Crear usuario admin fijo para acceso inicial (password = "password")
+      const adminUser = await ensureDemoUser({
+        email: 'admin@demo.com',
+        documentId: '00000001',
+        name: 'Admin Demo'
+      });
+      if (adminRole) {
+        await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
       }
-    });
-    if (adminRole) {
-      await UserRole.findOrCreate({ where: { userId: usuariodemoUser.id, roleId: adminRole.id } });
-    }
+
+      // Crear usuario usuariodemo fijo (password = "password")
+      const usuariodemoUser = await ensureDemoUser({
+        email: 'usuariodemo@demo.com',
+        documentId: '00000002',
+        name: 'Usuario Demo'
+      });
+      if (adminRole) {
+        await UserRole.findOrCreate({ where: { userId: usuariodemoUser.id, roleId: adminRole.id } });
+      }
 
     // Obtener roles existentes
     const allRoles = await Role.findAll();

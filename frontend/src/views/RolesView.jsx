@@ -19,6 +19,8 @@ export default function RolesView() {
   const [editingRole, setEditingRole] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [editingDescription, setEditingDescription] = useState('');
+  const [loadingRoles, setLoadingRoles] = useState(false);
+  const [loadingPermissions, setLoadingPermissions] = useState(false);
   const [loadingPerms, setLoadingPerms] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -29,6 +31,7 @@ export default function RolesView() {
     fetchPermissions();
   }, []);
   function fetchPermissions() {
+    setLoadingPermissions(true);
     authFetch(`${API_BASE}/api/permissions`)
       .then(async res => {
         const data = await res.json().catch(() => null);
@@ -50,9 +53,11 @@ export default function RolesView() {
       .catch(err => {
         console.error(err);
         setPermissions([]);
-      });
+      })
+      .finally(() => setLoadingPermissions(false));
   }
   function fetchRoles() {
+    setLoadingRoles(true);
     authFetch(`${API_BASE}/api/roles`)
       .then(async res => {
         const data = await res.json().catch(() => null);
@@ -74,7 +79,8 @@ export default function RolesView() {
       .catch(err => {
         console.error(err);
         setRoles([]);
-      });
+      })
+      .finally(() => setLoadingRoles(false));
   }
   function handleAdd() {
     if (!roleName) {
@@ -416,49 +422,53 @@ export default function RolesView() {
       </Card>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Title order={4} mb="md">Lista de Roles</Title>
-        <ScrollArea type="auto">
-          <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Permisos</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {roles.length === 0 ? (
+        {loadingRoles ? (
+          <Loader />
+        ) : (
+          <ScrollArea type="auto">
+            <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
+              <thead>
                 <tr>
-                  <td colSpan={3}>
-                    <Text color="dimmed" align="center">No hay roles registrados.</Text>
-                  </td>
+                  <th>Nombre</th>
+                  <th>Permisos</th>
+                  <th>Acciones</th>
                 </tr>
-              ) : (
-                roles.map(role => (
-                  <tr key={role.id}>
-                    <td>{role.name}</td>
-                    <td>
-                      <Button size="xs" variant="light" onClick={() => handleShowPerms(role)}>
-                        Ver/Editar Permisos
-                      </Button>
-                    </td>
-                    <td>
-                      <Button color="yellow" size="xs" mr={8} onClick={() => handleEdit(role)}>
-                        Editar
-                      </Button>
-                      <Button color="red" size="xs" onClick={() => handleDelete(role.id)}>
-                        Eliminar
-                      </Button>
+              </thead>
+              <tbody>
+                {roles.length === 0 ? (
+                  <tr>
+                    <td colSpan={3}>
+                      <Text color="dimmed" align="center">No hay roles registrados.</Text>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
-        </ScrollArea>
+                ) : (
+                  roles.map(role => (
+                    <tr key={role.id}>
+                      <td>{role.name}</td>
+                      <td>
+                        <Button size="xs" variant="light" onClick={() => handleShowPerms(role)}>
+                          Ver/Editar Permisos
+                        </Button>
+                      </td>
+                      <td>
+                        <Button color="yellow" size="xs" mr={8} onClick={() => handleEdit(role)}>
+                          Editar
+                        </Button>
+                        <Button color="red" size="xs" onClick={() => handleDelete(role.id)}>
+                          Eliminar
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
+        )}
       </Card>
 
       <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title={selectedRole ? `Permisos de ${selectedRole.name}` : ''} size="lg">
-        {loadingPerms ? (
+        {loadingPerms || loadingPermissions ? (
           <Loader />
         ) : (
           <Stack>

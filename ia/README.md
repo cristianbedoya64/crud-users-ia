@@ -36,6 +36,7 @@ Servicio Python para análisis de datos y panel de IA. Expone `/ia-panel` para s
 ## Modelo
 - Entrenamiento demo: `python train_ia_model.py` genera `ia_model.pkl`
 - El endpoint carga `ia_model.pkl`; si no existe, responderá error 500
+ - El frontend muestra "IA no disponible" y marca el panel como demo si el modelo no está cargado
 
 ## Troubleshooting
 - Verifica que el backend llame via `IA_PANEL_URL` (por defecto `http://ia-panel:5001/ia-panel` en Docker)

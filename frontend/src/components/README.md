@@ -9,9 +9,9 @@ Este directorio contiene los componentes reutilizables del frontend, organizados
 
 ## Ejemplo
 ```jsx
-// UserTable.jsx
-export default function UserTable({ users }) {
-	return <table>{/* ... */}</table>;
+// DashboardSummary.jsx
+export default function DashboardSummary({ totals }) {
+	return <div>{/* ... */}</div>;
 }
 ```
 

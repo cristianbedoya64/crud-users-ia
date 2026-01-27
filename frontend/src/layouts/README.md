@@ -1,19 +1,16 @@
 
 # Layouts
 
-Este directorio contiene los layouts principales del sistema:
+Este directorio contiene el layout principal del sistema:
 
-- **DashboardLayout.jsx**: Estructura visual y funcional del dashboard corporativo (sidebar, header, contenido).
-- **AuthLayout.jsx**: Layout para pantallas de autenticación (login, registro, recuperación).
+- **MantineLayout.jsx**: Layout activo con navegación y header (Mantine).
 
 ## Ejemplo
 ```jsx
-// DashboardLayout.jsx
-export default function DashboardLayout({ children }) {
+// MantineLayout.jsx
+export default function MantineLayout({ children }) {
 	return (
-		<div className="dashboard">
-			{/* sidebar, header, children */}
-		</div>
+		<div>{children}</div>
 	);
 }
 ```

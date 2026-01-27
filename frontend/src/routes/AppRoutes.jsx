@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Card, Title, Text, Button, Stack, Group } from '@mantine/core';
 import MantineLayout from '../layouts/MantineLayout';
 import DashboardView from '../views/DashboardView';
 import UsersView from '../views/UsersView';
@@ -31,6 +32,21 @@ function RequireAuth({ isAuthed }) {
   return <Outlet />;
 }
 
+function Lobby({ onContinue, onLogout }) {
+  return (
+    <Card shadow="md" padding="lg" radius="md" withBorder maw={420} mx="auto" mt="xl">
+      <Stack>
+        <Title order={3}>Bienvenido</Title>
+        <Text c="dimmed" size="sm">Tu sesión está activa. Puedes continuar o cerrar sesión.</Text>
+        <Group justify="flex-end" wrap="wrap">
+          <Button variant="default" onClick={onLogout}>Cerrar sesión</Button>
+          <Button color="blue" onClick={onContinue}>Continuar</Button>
+        </Group>
+      </Stack>
+    </Card>
+  );
+}
+
 function AuthenticatedLayout({ currentUser, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,13 +64,14 @@ function AuthenticatedLayout({ currentUser, onLogout }) {
 }
 
 export default function AppRoutes({ isAuthed, currentUser, onLogin, onLogout }) {
+  const navigate = useNavigate();
   return (
     <Routes>
       <Route
         path="/login"
         element={
           isAuthed
-            ? <Navigate to="/dashboard" replace />
+            ? <Lobby onContinue={() => navigate('/dashboard')} onLogout={onLogout} />
             : <LoginView onLogin={onLogin} />
         }
       />
@@ -65,8 +82,8 @@ export default function AppRoutes({ isAuthed, currentUser, onLogin, onLogout }) 
           <Route path="/roles" element={<RolesView />} />
           <Route path="/permissions" element={<PermissionsView />} />
           <Route path="/audit" element={<AuditView />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Route>
     </Routes>

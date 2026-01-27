@@ -16,6 +16,7 @@ import TopPermissions from '../components/TopPermissions';
 import AIPanel from '../components/AIPanel';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
+import { getAccessToken } from '../auth';
 
 export default function DashboardView() {
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ export default function DashboardView() {
     anomalies: '',
     predictions: ''
   });
+  const [aiStatus, setAIStatus] = useState({ status: 'available', message: '', isDemo: false });
   const [error, setError] = useState(null);
   useEffect(() => {
     async function fetchData() {
@@ -167,21 +169,37 @@ export default function DashboardView() {
           setTopPerms(perms.map(p => ({ name: p.name, count: 0 })));
         }
 
-        // Panel IA real
+        // Panel IA real (fallback silencioso)
         try {
-          const iaRes = await authFetch(`${API_BASE}/api/ia-panel`, {
+          const accessToken = getAccessToken();
+          const iaRes = await fetch(`${API_BASE}/api/ia-panel`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {})
+            },
             body: JSON.stringify({})
           });
-          const iaPanel = await iaRes.json();
-          setAIData(iaPanel);
+          if (!iaRes.ok) {
+            const errData = await iaRes.json().catch(() => ({}));
+            const details = errData?.details || errData?.error || '';
+            const isMissingModel = typeof details === 'string' && details.includes('ia_model');
+            setAIStatus({
+              status: 'unavailable',
+              message: isMissingModel
+                ? 'IA no disponible: modelo demo no cargado.'
+                : 'IA no disponible temporalmente.',
+              isDemo: isMissingModel
+            });
+            setAIData({ suggestions: '', anomalies: '', predictions: '' });
+          } else {
+            const iaPanel = await iaRes.json();
+            setAIData(iaPanel);
+            setAIStatus({ status: 'available', message: '', isDemo: false });
+          }
         } catch {
-          setAIData({
-            suggestions: 'No disponible',
-            anomalies: 'No disponible',
-            predictions: 'No disponible'
-          });
+          setAIStatus({ status: 'unavailable', message: 'IA no disponible temporalmente.', isDemo: false });
+          setAIData({ suggestions: '', anomalies: '', predictions: '' });
         }
       } catch (err) {
         setError('Error al cargar el panel. Intenta recargar la página.');
@@ -247,7 +265,7 @@ export default function DashboardView() {
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <ChangeHistory changes={changeHistory || []} isDemo />
-          <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} />
+          <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} status={aiStatus.status} message={aiStatus.message} isDemo={aiStatus.isDemo} />
         </SimpleGrid>
           {/* El formulario de asignar permisos se movió a PermissionsView */}
       </Stack>
