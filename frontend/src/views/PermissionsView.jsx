@@ -2,15 +2,17 @@
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-import { Card, Table, Button, TextInput, Title, Box, Text, SimpleGrid, ScrollArea } from '@mantine/core';
+import { Card, Table, Button, TextInput, Title, Box, Text, SimpleGrid, ScrollArea, Stack, Group, Badge } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
 import { notifications } from '@mantine/notifications';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function PermissionsView() {
   const [permissions, setPermissions] = useState([]);
   const [permName, setPermName] = useState('');
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const toArray = (value) => (Array.isArray(value) ? value : []);
 
@@ -182,38 +184,63 @@ export default function PermissionsView() {
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md" mt={20}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Title order={4} mb="md">Lista de Permisos</Title>
-          <ScrollArea type="auto">
-            <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {permissions.length === 0 ? (
+          {isMobile ? (
+            <Stack gap="sm">
+              {permissions.length === 0 ? (
+                <Text color="dimmed" align="center">No hay permisos registrados.</Text>
+              ) : (
+                permissions.map(perm => (
+                  <Card key={perm.id} withBorder radius="md" p="sm">
+                    <Stack gap={6}>
+                      <Group justify="space-between" align="center">
+                        <Text fw={600}>{perm.name}</Text>
+                        <Badge size="sm" variant="light">ID {perm.id}</Badge>
+                      </Group>
+                      <Text size="sm" color="dimmed">
+                        {perm.description || 'Sin descripción'}
+                      </Text>
+                      <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
+                        Eliminar
+                      </Button>
+                    </Stack>
+                  </Card>
+                ))
+              )}
+            </Stack>
+          ) : (
+            <ScrollArea type="auto">
+              <Table highlightOnHover withColumnBorders striped style={{ minWidth: 520 }}>
+                <thead>
                   <tr>
-                    <td colSpan={3}>
-                      <Text color="dimmed" align="center">No hay permisos registrados.</Text>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
                   </tr>
-                ) : (
-                  permissions.map(perm => (
-                    <tr key={perm.id}>
-                      <td>{perm.name}</td>
-                      <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
-                      <td>
-                        <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
-                          Eliminar
-                        </Button>
+                </thead>
+                <tbody>
+                  {permissions.length === 0 ? (
+                    <tr>
+                      <td colSpan={3}>
+                        <Text color="dimmed" align="center">No hay permisos registrados.</Text>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </Table>
-          </ScrollArea>
+                  ) : (
+                    permissions.map(perm => (
+                      <tr key={perm.id}>
+                        <td>{perm.name}</td>
+                        <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
+                        <td>
+                          <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
+                            Eliminar
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </Table>
+            </ScrollArea>
+          )}
         </Card>
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <AssignPermissionsForm />
