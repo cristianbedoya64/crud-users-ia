@@ -23,7 +23,7 @@ export default function DashboardView() {
   const [usersByRole, setUsersByRole] = useState([]);
   const [recentLogs, setRecentLogs] = useState([]);
   const [topPerms, setTopPerms] = useState([]);
-  // Paneles simulados
+  // Paneles demo (datos de ejemplo)
   const [userStatus, setUserStatus] = useState({ active: 0, inactive: 0, pending: 0 });
   const [lastLogins, setLastLogins] = useState([]);
   const [securityAlerts, setSecurityAlerts] = useState([]);
@@ -52,18 +52,14 @@ export default function DashboardView() {
         // Fetch permissions
         const permsRes = await authFetch(`${API_BASE}/api/permissions`);
         const perms = toArray(await permsRes.json());
-        // Fetch logs (tolerante: si falla o no es array, usa dummy)
+        // Fetch logs (real)
         let logs = [];
         try {
           const logsRes = await authFetch(`${API_BASE}/api/audit`);
           const maybeLogs = await logsRes.json();
           logs = toArray(maybeLogs);
         } catch (err) {
-          logs = [
-            { action: 'login', details: 'Usuario admin inició sesión', createdAt: new Date() },
-            { action: 'create_user', details: 'Se creó usuario Juan', createdAt: new Date() },
-            { action: 'delete_role', details: 'Rol auditor eliminado', createdAt: new Date() }
-          ];
+          logs = [];
         }
 
         // Totales
@@ -92,66 +88,84 @@ export default function DashboardView() {
             .map(u => ({ user: u.name, date: u.lastLogin }))
         );
 
-        // Alertas de seguridad (real, si hay endpoint)
+        // Alertas de seguridad (demo)
         try {
-          const alertsRes = await authFetch(`${API_BASE}/api/security-alerts`);
+          const alertsRes = await authFetch(`${API_BASE}/api/demo/security-alerts`);
           const alerts = toArray(await alertsRes.json());
           setSecurityAlerts(alerts);
         } catch {
           setSecurityAlerts([]);
         }
 
-        // Historial de cambios (real, si hay endpoint)
+        // Historial de cambios (demo)
         try {
-          const changesRes = await authFetch(`${API_BASE}/api/change-history`);
+          const changesRes = await authFetch(`${API_BASE}/api/demo/change-history`);
           const changes = toArray(await changesRes.json());
           setChangeHistory(changes);
         } catch {
           setChangeHistory([]);
         }
 
-        // Estado del sistema (real, si hay endpoint)
+        // Estado del sistema (demo)
         try {
-          const statusRes = await authFetch(`${API_BASE}/api/system-status`);
+          const statusRes = await authFetch(`${API_BASE}/api/demo/system-status`);
           const status = await statusRes.json();
           setSystemStatus(status);
         } catch {
           setSystemStatus({ api: 'online', ia: 'online', cloud: 'online' });
         }
 
-        // Tendencia de usuarios (real, si hay endpoint)
+        // Tendencia de usuarios (demo)
         try {
-          const growthRes = await authFetch(`${API_BASE}/api/user-growth`);
+          const growthRes = await authFetch(`${API_BASE}/api/demo/user-growth`);
           const growth = toArray(await growthRes.json());
           setUserGrowth(growth);
         } catch {
           setUserGrowth([]);
         }
 
-        // Accesos por módulo (real, si hay endpoint)
+        // Accesos por módulo (demo)
         try {
-          const moduleRes = await authFetch(`${API_BASE}/api/module-access`);
+          const moduleRes = await authFetch(`${API_BASE}/api/demo/module-access`);
           const moduleData = toArray(await moduleRes.json());
           setModuleAccess(moduleData);
         } catch {
           setModuleAccess([]);
         }
 
-        // Users by role (dummy grouping)
+        // Users by role (real)
         const roleMap = {};
-        roles.forEach(r => roleMap[r.name] = 0);
+        roles.forEach(r => { roleMap[r.name] = 0; });
+        let noRoleCount = 0;
         users.forEach(u => {
-          // Dummy: assign random role
-          const role = roles[Math.floor(Math.random() * roles.length)];
-          if (role) roleMap[role.name]++;
+          const userRoles = u.Roles || u.roles || [];
+          if (!Array.isArray(userRoles) || userRoles.length === 0) {
+            noRoleCount += 1;
+            return;
+          }
+          userRoles.forEach(r => {
+            const roleName = r?.name || r;
+            if (!roleName) return;
+            if (!(roleName in roleMap)) roleMap[roleName] = 0;
+            roleMap[roleName] += 1;
+          });
         });
+        if (noRoleCount > 0) {
+          roleMap['Sin rol'] = noRoleCount;
+        }
         setUsersByRole(Object.entries(roleMap).map(([role, value]) => ({ role, value })));
 
         // Recent logs
         setRecentLogs(logs);
 
-        // Top permissions (dummy)
-        setTopPerms(perms.slice(0, 5).map(p => ({ name: p.name, count: Math.floor(Math.random() * 20) + 1 })));
+        // Top permissions (real)
+        try {
+          const topPermsRes = await authFetch(`${API_BASE}/api/dashboard/top-permissions`);
+          const topPermsData = toArray(await topPermsRes.json());
+          setTopPerms(topPermsData);
+        } catch {
+          setTopPerms(perms.map(p => ({ name: p.name, count: 0 })));
+        }
 
         // Panel IA real
         try {
@@ -217,22 +231,22 @@ export default function DashboardView() {
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <UsersByRoleChart data={usersByRole || []} />
-          <UserGrowthChart data={userGrowth || []} />
+          <UserGrowthChart data={userGrowth || []} isDemo />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <ModuleAccessChart data={moduleAccess || []} />
-          <SystemStatus status={systemStatus || { api: 'online', ia: 'online', cloud: 'online' }} />
+          <ModuleAccessChart data={moduleAccess || []} isDemo />
+          <SystemStatus status={systemStatus || { api: 'online', ia: 'online', cloud: 'online' }} isDemo />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <RecentActivity logs={recentLogs || []} />
-          <TopPermissions perms={topPerms || []} />
+          <TopPermissions permissions={topPerms || []} />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <LastLogins logins={lastLogins || []} />
-          <SecurityAlerts alerts={securityAlerts || []} />
+          <SecurityAlerts alerts={securityAlerts || []} isDemo />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <ChangeHistory history={changeHistory || []} />
+          <ChangeHistory changes={changeHistory || []} isDemo />
           <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} />
         </SimpleGrid>
           {/* El formulario de asignar permisos se movió a PermissionsView */}

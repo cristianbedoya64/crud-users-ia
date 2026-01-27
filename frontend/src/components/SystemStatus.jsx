@@ -1,10 +1,13 @@
-import { Card, Title, Group, ThemeIcon, Text } from '@mantine/core';
+import { Card, Title, Group, ThemeIcon, Text, Badge } from '@mantine/core';
 import { IconServer, IconCloud, IconRobot } from '@tabler/icons-react';
 
-export default function SystemStatus({ status }) {
+export default function SystemStatus({ status, isDemo = false }) {
   return (
     <Card shadow="md" radius="md" withBorder mb="xl">
-      <Title order={4} mb="md">Estado del Sistema</Title>
+      <Group justify="space-between" align="center" mb="md">
+        <Title order={4}>Estado del Sistema</Title>
+        {isDemo && <Badge color="gray" variant="light">Demo</Badge>}
+      </Group>
       <Group wrap="wrap">
         <ThemeIcon color={status.api === 'online' ? 'green' : 'red'} radius="xl"><IconServer size={22} /></ThemeIcon>
         <Text>API: {status.api}</Text>

@@ -44,13 +44,16 @@ Guía rápida de endpoints. Todas las rutas (salvo login/refresh/logout) requier
 ## Panel IA
 - POST `/api/ia-panel` – Auth – Body libre `{ num_roles?, is_admin?, activity_score? }` → proxy a Flask `/ia-panel` y retorna `{ suggestions, anomalies, predictions }`
 
-## Dashboard (dummy/backoffice)
+## Dashboard (demo/backoffice)
 - GET `/api/audit` – Ver arriba (usado por dashboard)
-- GET `/api/security-alerts` – Dummy (no protegido por permiso específico; sí auth)
-- GET `/api/change-history` – Dummy
-- GET `/api/system-status` – Dummy
-- GET `/api/user-growth` – Dummy
-- GET `/api/module-access` – Dummy
+- GET `/api/demo/security-alerts` – Demo (auth)
+- GET `/api/demo/change-history` – Demo
+- GET `/api/demo/system-status` – Demo
+- GET `/api/demo/user-growth` – Demo
+- GET `/api/demo/module-access` – Demo
+
+## Dashboard (real)
+- GET `/api/dashboard/top-permissions` – Aggregación real de permisos más usados
 
 ## Matriz de permisos (base)
 - `create_user`, `read_user`, `update_user`, `delete_user`

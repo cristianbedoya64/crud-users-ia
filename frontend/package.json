@@ -8,7 +8,6 @@
     "preview": "vite preview --host 0.0.0.0 --port 5173"
   },
   "dependencies": {
-    "dompurify": "^3.0.8",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mantine/core": "^8.3.9",
@@ -21,8 +20,10 @@
     "@tabler/icons": "^3.35.0",
     "@tabler/icons-react": "^3.35.0",
     "dayjs": "^1.11.19",
+    "dompurify": "^3.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.28.0",
     "recharts": "^3.5.1"
   },
   "devDependencies": {

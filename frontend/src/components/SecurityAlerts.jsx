@@ -1,10 +1,13 @@
-import { Card, Title, List, Text, ThemeIcon } from '@mantine/core';
+import { Card, Title, List, Text, ThemeIcon, Group, Badge } from '@mantine/core';
 import { IconAlertTriangle } from '@tabler/icons-react';
 
-export default function SecurityAlerts({ alerts }) {
+export default function SecurityAlerts({ alerts, isDemo = false }) {
   return (
     <Card shadow="md" radius="md" withBorder mb="xl">
-      <Title order={4} mb="md">Alertas de Seguridad</Title>
+      <Group justify="space-between" align="center" mb="md">
+        <Title order={4}>Alertas de Seguridad</Title>
+        {isDemo && <Badge color="gray" variant="light">Demo</Badge>}
+      </Group>
       <List spacing="xs" size="sm">
         {alerts.length === 0 ? (
           <Text color="dimmed">No hay alertas recientes.</Text>

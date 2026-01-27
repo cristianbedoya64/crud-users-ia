@@ -20,7 +20,7 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 6. Ejecuta frontend: `npm run dev` (desde `frontend/`)
 
 ### Con Docker Compose
-- `./start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001). En Codespaces expone 3000/5173/5001.
+- `./start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001) y ejecuta el seed automático para credenciales demo. En Codespaces expone 3000/5173/5001.
 - Alternativa Makefile: `make up | make down | make logs | make ps`
 
 ## Estructura

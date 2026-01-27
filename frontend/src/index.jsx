@@ -1,47 +1,70 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import UsersView from './views/UsersView';
-import RolesView from './views/RolesView';
-import PermissionsView from './views/PermissionsView';
-import DashboardView from './views/DashboardView';
-import AuditView from './views/AuditView';
-import LoginView from './views/LoginView';
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import MantineLayout from './layouts/MantineLayout';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import { getAccessToken, logout as authLogout } from './auth';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
+import { getAccessToken, getRefreshToken, refreshTokens, logout as authLogout, getStoredUser, setStoredUser, clearStoredUser } from './auth';
 
 function App() {
-  const [view, setView] = useState('users');
-  const [isAuthed, setIsAuthed] = useState(!!getAccessToken());
-  const [currentUser, setCurrentUser] = useState(null);
-  if (!isAuthed) {
-    return <LoginView onLogin={(data) => { setIsAuthed(true); setCurrentUser(data?.user || null); }} />;
+  const [isAuthed, setIsAuthed] = useState(!!getAccessToken() || !!getRefreshToken());
+  const [currentUser, setCurrentUser] = useState(getStoredUser());
+  const [hydrating, setHydrating] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function rehydrate() {
+      try {
+        if (getRefreshToken()) {
+          if (!getAccessToken() || !currentUser) {
+            const data = await refreshTokens();
+            if (cancelled) return;
+            setIsAuthed(true);
+            setCurrentUser(data?.user || null);
+            setStoredUser(data?.user || null);
+          } else {
+            setIsAuthed(true);
+          }
+        } else if (getAccessToken()) {
+          setIsAuthed(true);
+        } else {
+          setIsAuthed(false);
+        }
+      } catch {
+        if (cancelled) return;
+        setIsAuthed(false);
+        setCurrentUser(null);
+        clearStoredUser();
+      } finally {
+        if (!cancelled) setHydrating(false);
+      }
+    }
+    rehydrate();
+    return () => { cancelled = true; };
+  }, []);
+
+  if (hydrating) {
+    return null;
   }
 
-  let content = null;
-  if (view === 'dashboard') content = <DashboardView />;
-  if (view === 'users') content = <UsersView />;
-  if (view === 'roles') content = <RolesView />;
-  if (view === 'permissions') content = <PermissionsView />;
-  if (view === 'audit') content = <AuditView />;
-
   return (
-    <MantineLayout
-      view={view}
-      setView={setView}
-      user={currentUser}
+    <AppRoutes
+      isAuthed={isAuthed}
+      currentUser={currentUser}
+      onLogin={(data) => {
+        setIsAuthed(true);
+        setCurrentUser(data?.user || null);
+        setStoredUser(data?.user || null);
+      }}
       onLogout={() => {
         authLogout();
         setIsAuthed(false);
         setCurrentUser(null);
+        clearStoredUser();
       }}
-    >
-      {content}
-    </MantineLayout>
+    />
   );
 }
 
@@ -50,7 +73,9 @@ root.render(
   <React.StrictMode>
     <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme: 'light' }}>
       <Notifications position="top-center" zIndex={9999} />
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </MantineProvider>
   </React.StrictMode>
 );

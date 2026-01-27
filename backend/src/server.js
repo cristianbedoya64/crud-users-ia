@@ -10,6 +10,7 @@ const roleRoutes = require('./routes/roleRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 const iaPanelRoutes = require('./routes/iaPanelRoutes');
 const dashboardDummyRoutes = require('./routes/dashboardDummyRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const userRoleRoutes = require('./routes/userRoleRoutes');
 const authRoutes = require('./routes/authRoutes');
 
@@ -68,7 +69,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/user-roles', userRoleRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/permissions', permissionRoutes);
+app.use('/api/demo', dashboardDummyRoutes);
 app.use('/api', dashboardDummyRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/ia-panel', iaPanelRoutes);
 app.use('/api/audit', require('./routes/auditLogRoutes'));
 
