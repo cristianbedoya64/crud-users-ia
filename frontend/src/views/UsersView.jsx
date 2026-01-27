@@ -21,6 +21,8 @@ export default function UsersView() {
   const [form, setForm] = useState({ documentId: '', name: '', email: '', password: '', roles: [] });
   const [editModal, setEditModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const resetCreateForm = () => {
     setForm({ documentId: '', name: '', email: '', password: '', roles: [] });
@@ -83,6 +85,8 @@ export default function UsersView() {
   }, []);
 
   useEffect(() => {
+    setSearch('');
+    setRoleFilter('');
     fetchUsers(showInactive ? 'inactive' : 'active');
   }, [showInactive]);
 
@@ -142,11 +146,19 @@ export default function UsersView() {
       .finally(() => setCreating(false));
   }
 
-  function handleDelete(id) {
-    authFetch(`${API_BASE}/api/users/${id}`, { method: 'DELETE' })
+  function handleDelete(user) {
+    setUserToDelete(user);
+    setDeleteModalOpen(true);
+  }
+
+  function confirmDelete() {
+    if (!userToDelete) return;
+    authFetch(`${API_BASE}/api/users/${userToDelete.id}`, { method: 'DELETE' })
       .then(() => {
         showSuccess('Usuario eliminado', 'Usuario eliminado.', 'Recuerda desactivar accesos SSO y tokens de API si existían.');
         fetchUsers(showInactive ? 'inactive' : 'active');
+        setDeleteModalOpen(false);
+        setUserToDelete(null);
       })
       .catch(err => {
         console.error(err);
@@ -302,7 +314,7 @@ export default function UsersView() {
                                   <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
                                 </Tooltip>
                                 <Tooltip label="Eliminar usuario" withArrow position="top">
-                                  <Button color="red" size="xs" onClick={() => handleDelete(user.id)}>Eliminar</Button>
+                                  <Button color="red" size="xs" onClick={() => handleDelete(user)}>Eliminar</Button>
                                 </Tooltip>
                               </>
                             )}
@@ -327,6 +339,17 @@ export default function UsersView() {
             <Group position="right">
               <Button color="blue" onClick={handleUpdate}>Guardar</Button>
               <Button variant="outline" onClick={() => setEditModal(false)}>Cancelar</Button>
+            </Group>
+          </Stack>
+        </Modal>
+
+        <Modal opened={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} title="Confirmar eliminación" centered>
+          <Stack>
+            <Text>¿Seguro que deseas desactivar al usuario <Text span fw={600}>{userToDelete?.name}</Text>?</Text>
+            <Text size="sm" color="dimmed">Esta acción es reversible desde la vista de inactivos.</Text>
+            <Group justify="flex-end">
+              <Button variant="default" onClick={() => setDeleteModalOpen(false)}>Cancelar</Button>
+              <Button color="red" onClick={confirmDelete}>Eliminar</Button>
             </Group>
           </Stack>
         </Modal>

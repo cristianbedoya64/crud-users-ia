@@ -7,3 +7,9 @@ Actualizados README raíz, backend, frontend, IA, índice docs y creado `fronten
 - Unificados y ampliados `.env.example` raíz y backend.
 - Añadido `RESTORE_BACKUP.md` (guía de restauración y actualización).
 - Índice docs actualizado.
+
+## 2026-01-27
+- Roles: edición de roles y permisos sin salir de la vista.
+- Permisos: edición con nombre/descripción y acciones en lista.
+- Auditoría: filtros por usuario, acción y fecha; muestra `createdBy`.
+- Usuarios: confirmación de eliminación y limpieza de filtros al alternar inactivos.

@@ -138,7 +138,8 @@ module.exports = {
       await AuditLog.create({
         userId: user.id,
         action: 'create_user',
-        details: `Usuario creado: ${user.name} (${user.email})`
+        details: `Usuario creado: ${user.name} (${user.email})`,
+        createdBy: req.user ? req.user.id : null
       });
       // Devolver usuario con roles
       const userWithRoles = await User.findByPk(user.id, { include: [{ model: Role, through: { attributes: [] } }] });
@@ -221,7 +222,8 @@ module.exports = {
       await AuditLog.create({
         userId: user.id,
         action: 'update_user',
-        details: `Usuario actualizado: ${user.name} (${user.email})`
+        details: `Usuario actualizado: ${user.name} (${user.email})`,
+        createdBy: req.user ? req.user.id : null
       });
       // Devolver usuario con roles
       const userWithRoles = await User.findByPk(user.id, { include: [{ model: Role, through: { attributes: [] } }] });
@@ -265,7 +267,8 @@ module.exports = {
         await AuditLog.create({
           userId: user.id,
           action: 'delete_user',
-          details: `Usuario desactivado (soft delete): ${user.name} (${user.email})`
+          details: `Usuario desactivado (soft delete): ${user.name} (${user.email})`,
+          createdBy: req.user ? req.user.id : null
         });
         res.status(200).json({ message: 'Usuario desactivado correctamente.' });
       } catch (error) {

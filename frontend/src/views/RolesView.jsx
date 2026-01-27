@@ -9,11 +9,16 @@ import { authFetch } from '../apiClient';
 
 export default function RolesView() {
   const [roleName, setRoleName] = useState('');
+  const [roleDescription, setRoleDescription] = useState('');
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [selectedRole, setSelectedRole] = useState(null);
   const [rolePerms, setRolePerms] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRole, setEditingRole] = useState(null);
+  const [editingName, setEditingName] = useState('');
+  const [editingDescription, setEditingDescription] = useState('');
   const [loadingPerms, setLoadingPerms] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -84,7 +89,7 @@ export default function RolesView() {
     authFetch(`${API_BASE}/api/roles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: roleName })
+      body: JSON.stringify({ name: roleName, description: roleDescription })
     })
       .then(async res => {
         const data = await res.json();
@@ -104,6 +109,7 @@ export default function RolesView() {
           autoClose: 3000
         });
         setRoleName('');
+        setRoleDescription('');
         fetchRoles();
       })
       .catch(() => {
@@ -185,6 +191,60 @@ export default function RolesView() {
           }
         })
       }));
+  }
+
+  function handleEdit(role) {
+    setEditingRole(role);
+    setEditingName(role?.name || '');
+    setEditingDescription(role?.description || '');
+    setEditModalOpen(true);
+  }
+
+  function handleUpdateRole() {
+    if (!editingRole) return;
+    if (!editingName) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'El nombre del rol es obligatorio.',
+        autoClose: 4000
+      });
+      return;
+    }
+    authFetch(`${API_BASE}/api/roles/${editingRole.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: editingName, description: editingDescription })
+    })
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: (data && data.error) || 'Error al actualizar rol.',
+            autoClose: 4000
+          });
+          return;
+        }
+        notifications.show({
+          color: 'green',
+          title: 'Rol actualizado',
+          message: 'El rol se actualizó correctamente.',
+          autoClose: 3000
+        });
+        setEditModalOpen(false);
+        setEditingRole(null);
+        fetchRoles();
+      })
+      .catch(() => {
+        notifications.show({
+          color: 'red',
+          title: 'Error de red',
+          message: 'No se pudo conectar al servidor.',
+          autoClose: 4000
+        });
+      });
   }
 
   // Mostrar permisos de un rol
@@ -334,12 +394,19 @@ export default function RolesView() {
     <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Roles</Title>
-        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" mb="md">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="md">
           <TextInput
             label="Nombre del Rol"
             value={roleName}
             onChange={e => setRoleName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del rol"
+            w="100%"
+          />
+          <TextInput
+            label="Descripción"
+            value={roleDescription}
+            onChange={e => setRoleDescription(DOMPurify.sanitize(e.target.value))}
+            placeholder="Descripción (opcional)"
             w="100%"
           />
           <Button color="blue" onClick={handleAdd} mt={{ base: 0, sm: 22 }} w={{ base: '100%', sm: 'auto' }}>
@@ -375,6 +442,9 @@ export default function RolesView() {
                       </Button>
                     </td>
                     <td>
+                      <Button color="yellow" size="xs" mr={8} onClick={() => handleEdit(role)}>
+                        Editar
+                      </Button>
                       <Button color="red" size="xs" onClick={() => handleDelete(role.id)}>
                         Eliminar
                       </Button>
@@ -411,6 +481,24 @@ export default function RolesView() {
             </Button>
           </Stack>
         )}
+      </Modal>
+
+      <Modal opened={editModalOpen} onClose={() => setEditModalOpen(false)} title="Editar rol" centered>
+        <Stack>
+          <TextInput
+            label="Nombre"
+            value={editingName}
+            onChange={e => setEditingName(DOMPurify.sanitize(e.target.value))}
+            placeholder="Nombre del rol"
+          />
+          <TextInput
+            label="Descripción"
+            value={editingDescription}
+            onChange={e => setEditingDescription(DOMPurify.sanitize(e.target.value))}
+            placeholder="Descripción (opcional)"
+          />
+          <Button color="blue" onClick={handleUpdateRole}>Guardar</Button>
+        </Stack>
       </Modal>
     </Box>
   );

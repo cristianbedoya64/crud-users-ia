@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-import { Card, Table, Button, TextInput, Title, Box, Text, SimpleGrid, ScrollArea, Stack, Group, Badge } from '@mantine/core';
+import { Card, Table, Button, TextInput, Title, Box, Text, SimpleGrid, ScrollArea, Stack, Group, Badge, Modal } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
@@ -12,6 +12,11 @@ import { useMediaQuery } from '@mantine/hooks';
 export default function PermissionsView() {
   const [permissions, setPermissions] = useState([]);
   const [permName, setPermName] = useState('');
+  const [permDescription, setPermDescription] = useState('');
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingPerm, setEditingPerm] = useState(null);
+  const [editingName, setEditingName] = useState('');
+  const [editingDescription, setEditingDescription] = useState('');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const toArray = (value) => (Array.isArray(value) ? value : []);
@@ -54,7 +59,7 @@ export default function PermissionsView() {
     authFetch(`${API_BASE}/api/permissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: permName })
+      body: JSON.stringify({ name: permName, description: permDescription })
     })
       .then(async res => {
         const data = await res.json();
@@ -74,6 +79,7 @@ export default function PermissionsView() {
           autoClose: 3000
         });
         setPermName('');
+        setPermDescription('');
         authFetch(`${API_BASE}/api/permissions`)
           .then(async res2 => {
             const data2 = await res2.json().catch(() => null);
@@ -163,17 +169,85 @@ export default function PermissionsView() {
       }));
   }
 
+  function handleEdit(perm) {
+    setEditingPerm(perm);
+    setEditingName(perm?.name || '');
+    setEditingDescription(perm?.description || '');
+    setEditModalOpen(true);
+  }
+
+  function handleUpdate() {
+    if (!editingPerm) return;
+    if (!editingName) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'El nombre del permiso es obligatorio.',
+        autoClose: 4000
+      });
+      return;
+    }
+    authFetch(`${API_BASE}/api/permissions/${editingPerm.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: editingName, description: editingDescription })
+    })
+      .then(async res => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: (data && data.error) || 'Error al actualizar permiso.',
+            autoClose: 4000
+          });
+          return;
+        }
+        notifications.show({
+          color: 'green',
+          title: 'Permiso actualizado',
+          message: 'El permiso se actualizó correctamente.',
+          autoClose: 3000
+        });
+        setEditModalOpen(false);
+        setEditingPerm(null);
+        authFetch(`${API_BASE}/api/permissions`)
+          .then(async res2 => {
+            const data2 = await res2.json().catch(() => null);
+            if (!res2.ok) return [];
+            return data2;
+          })
+          .then(data2 => setPermissions(toArray(data2)))
+          .catch(() => setPermissions([]));
+      })
+      .catch(() => {
+        notifications.show({
+          color: 'red',
+          title: 'Error de red',
+          message: 'No se pudo conectar al servidor.',
+          autoClose: 4000
+        });
+      });
+  }
+
   return (
     <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <PermissionsReferenceTable />
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Permisos</Title>
-        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" mb="md">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="md">
           <TextInput
             label="Nombre del Permiso"
             value={permName}
             onChange={e => setPermName(DOMPurify.sanitize(e.target.value))}
             placeholder="Nombre del permiso"
+            w="100%"
+          />
+          <TextInput
+            label="Descripción"
+            value={permDescription}
+            onChange={e => setPermDescription(DOMPurify.sanitize(e.target.value))}
+            placeholder="Descripción (opcional)"
             w="100%"
           />
           <Button color="blue" onClick={handleAdd} mt={{ base: 0, sm: 22 }} w={{ base: '100%', sm: 'auto' }}>
@@ -199,9 +273,14 @@ export default function PermissionsView() {
                       <Text size="sm" color="dimmed">
                         {perm.description || 'Sin descripción'}
                       </Text>
-                      <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
-                        Eliminar
-                      </Button>
+                      <Group gap="xs">
+                        <Button color="yellow" size="xs" onClick={() => handleEdit(perm)}>
+                          Editar
+                        </Button>
+                        <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
+                          Eliminar
+                        </Button>
+                      </Group>
                     </Stack>
                   </Card>
                 ))
@@ -230,6 +309,9 @@ export default function PermissionsView() {
                         <td>{perm.name}</td>
                         <td>{perm.description || <Text color="dimmed">Sin descripción</Text>}</td>
                         <td>
+                          <Button color="yellow" size="xs" mr={8} onClick={() => handleEdit(perm)}>
+                            Editar
+                          </Button>
                           <Button color="red" size="xs" onClick={() => handleDelete(perm.id)}>
                             Eliminar
                           </Button>
@@ -246,6 +328,24 @@ export default function PermissionsView() {
           <AssignPermissionsForm />
         </Card>
       </SimpleGrid>
+
+      <Modal opened={editModalOpen} onClose={() => setEditModalOpen(false)} title="Editar permiso" centered>
+        <Stack>
+          <TextInput
+            label="Nombre"
+            value={editingName}
+            onChange={e => setEditingName(DOMPurify.sanitize(e.target.value))}
+            placeholder="Nombre del permiso"
+          />
+          <TextInput
+            label="Descripción"
+            value={editingDescription}
+            onChange={e => setEditingDescription(DOMPurify.sanitize(e.target.value))}
+            placeholder="Descripción (opcional)"
+          />
+          <Button color="blue" onClick={handleUpdate}>Guardar</Button>
+        </Stack>
+      </Modal>
     </Box>
   );
 }

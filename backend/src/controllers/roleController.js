@@ -23,7 +23,8 @@ module.exports = {
         await AuditLog.create({
           userId,
           action: 'create_role',
-          details: `Rol creado: ${role.name}`
+          details: `Rol creado: ${role.name}`,
+          createdBy: req.user ? req.user.id : userId
         });
       }
       res.status(201).json({ message: 'Rol creado exitosamente.', role });
@@ -49,7 +50,8 @@ module.exports = {
         await AuditLog.create({
           userId,
           action: 'update_role',
-          details: `Rol actualizado: ${role.name}`
+          details: `Rol actualizado: ${role.name}`,
+          createdBy: req.user ? req.user.id : userId
         });
       }
       res.json({ message: 'Rol actualizado exitosamente.', role });
@@ -67,7 +69,8 @@ module.exports = {
       await AuditLog.create({
         userId,
         action: 'delete_role',
-        details: `Rol eliminado: ${role.name}`
+        details: `Rol eliminado: ${role.name}`,
+        createdBy: req.user ? req.user.id : userId
       });
     }
     res.status(204).send();

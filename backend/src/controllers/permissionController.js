@@ -23,7 +23,8 @@ module.exports = {
         await AuditLog.create({
           userId,
           action: 'create_permission',
-          details: `Permiso creado: ${permission.name}`
+          details: `Permiso creado: ${permission.name}`,
+          createdBy: req.user ? req.user.id : userId
         });
       }
       res.status(201).json({ message: 'Permiso creado exitosamente.', permission });
@@ -49,7 +50,8 @@ module.exports = {
         await AuditLog.create({
           userId,
           action: 'update_permission',
-          details: `Permiso actualizado: ${permission.name}`
+          details: `Permiso actualizado: ${permission.name}`,
+          createdBy: req.user ? req.user.id : userId
         });
       }
       res.json({ message: 'Permiso actualizado exitosamente.', permission });
@@ -67,7 +69,8 @@ module.exports = {
       await AuditLog.create({
         userId,
         action: 'delete_permission',
-        details: `Permiso eliminado: ${permission.name}`
+        details: `Permiso eliminado: ${permission.name}`,
+        createdBy: req.user ? req.user.id : userId
       });
     }
     res.status(204).send();

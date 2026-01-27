@@ -11,7 +11,8 @@ module.exports = function(action, getDetails) {
           await AuditLog.create({
             userId: req.user.id,
             action,
-            details: typeof getDetails === 'function' ? getDetails(req, res) : getDetails
+            details: typeof getDetails === 'function' ? getDetails(req, res) : getDetails,
+            createdBy: req.user.id
           });
         } catch (err) {
           // No romper el flujo por error de auditoría
