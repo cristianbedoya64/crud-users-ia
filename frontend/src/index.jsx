@@ -85,10 +85,22 @@ const theme = createTheme({
   },
   components: {
     Card: {
-      defaultProps: { shadow: 'md', radius: 'md', withBorder: true }
+      defaultProps: { shadow: 'md', radius: 'md', withBorder: true },
+      styles: theme => ({
+        root: {
+          backgroundColor: '#ffffff',
+          borderColor: theme.colors.gray[2],
+          transition: 'transform 120ms ease, box-shadow 120ms ease'
+        }
+      })
     },
     Button: {
-      defaultProps: { radius: 'md' }
+      defaultProps: { radius: 'md' },
+      styles: () => ({
+        root: {
+          transition: 'transform 120ms ease, box-shadow 120ms ease'
+        }
+      })
     },
     TextInput: {
       defaultProps: { radius: 'md' }
@@ -100,7 +112,24 @@ const theme = createTheme({
       defaultProps: { radius: 'md' }
     },
     Table: {
-      defaultProps: { highlightOnHover: true, withColumnBorders: true, striped: true }
+      defaultProps: { highlightOnHover: true, withColumnBorders: true, striped: true },
+      styles: theme => ({
+        table: {
+          borderRadius: theme.radius.md,
+          overflow: 'hidden'
+        },
+        thead: {
+          backgroundColor: theme.colors.gray[0]
+        }
+      })
+    },
+    NavLink: {
+      styles: theme => ({
+        root: {
+          borderRadius: theme.radius.md,
+          transition: 'background-color 120ms ease, color 120ms ease, transform 120ms ease'
+        }
+      })
     }
   }
 });

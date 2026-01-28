@@ -19,6 +19,7 @@
     "@mui/system": "^7.3.5",
     "@tabler/icons": "^3.35.0",
     "@tabler/icons-react": "^3.35.0",
+    "bootstrap": "^5.3.3",
     "dayjs": "^1.11.19",
     "dompurify": "^3.0.8",
     "react": "^18.2.0",
