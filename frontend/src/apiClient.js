@@ -1,6 +1,9 @@
 import { notifications } from '@mantine/notifications';
 import { getAccessToken, refreshTokens, clearTokens, getRefreshToken } from './auth';
 
+const AUTH_ERROR_COOLDOWN_MS = 5000;
+let lastAuthErrorAt = 0;
+
 // authFetch agrega el Authorization header y, si hay 401 y refresh token, intenta refrescar una vez.
 export async function authFetch(url, options = {}) {
   const { silent, ...fetchOptions } = options || {};
@@ -37,7 +40,15 @@ export async function authFetch(url, options = {}) {
       // cuerpo no JSON: mantenemos message por defecto
     }
     if (!silent) {
-      notifications.show({ color: 'red', title: 'Error', message });
+      if (response.status === 401) {
+        const now = Date.now();
+        if (now - lastAuthErrorAt > AUTH_ERROR_COOLDOWN_MS) {
+          lastAuthErrorAt = now;
+          notifications.show({ id: 'auth-error', color: 'red', title: 'Error', message });
+        }
+      } else {
+        notifications.show({ color: 'red', title: 'Error', message });
+      }
     }
     const error = new Error(message);
     error.status = response.status;

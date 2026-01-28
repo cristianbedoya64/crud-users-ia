@@ -3,58 +3,143 @@
 
 Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science.
 
+
+# UARP-AI
+# UARP-AI
+
+API RESTful + SPA + Panel IA para gestión de usuarios, roles, permisos y auditoría. Stack: Node.js, React, PostgreSQL, Flask IA. Despliegue en DigitalOcean App Platform o Docker Compose.
+RESTful API + SPA + IA Panel for user, role, permission, and audit management. Stack: Node.js, React, PostgreSQL, Flask IA. Deployable on DigitalOcean App Platform or Docker Compose.
+
+---
+
+## Tabla de Contenidos
+## Table of Contents
+- [Descripción General](#descripción-general)  
+	General Description
+- [Estructura del Proyecto](#estructura-del-proyecto)  
+	Project Structure
+- [Instalación y Configuración](#instalación-y-configuración)  
+	Installation & Setup
+- [Seguridad](#seguridad)  
+	Security
+- [Módulos Principales](#módulos-principales)  
+	Main Modules
+- [Autenticación y Permisos](#autenticación-y-permisos)  
+	Auth & Permissions
+- [Documentación Técnica](#documentación-técnica)  
+	Technical Documentation
+- [Despliegue](#despliegue)  
+	Deployment
+- [Backup y Restauración](#backup-y-restauración)  
+	Backup & Restore
+- [Changelog](#changelog)
+
+---
+
+## Descripción General
+## General Description
+API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.
+Full-stack API for user, role, and permission management with IA panel. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
+
+---
+
 ## Estructura del Proyecto
-- **frontend/**: Aplicación React + Vite + TailwindCSS
-- **backend/**: API Node.js + Express + Sequelize (PostgreSQL)
-- **ia/**: Scripts Python para IA y análisis de datos
-- **docs/**: Documentación técnica y diagramas
-- **config/**: Configuración global
-- **migrations/**: Migraciones de base de datos
+## Project Structure
+```
+/backend   # API Node.js/Express/Sequelize
+/frontend  # SPA React/Vite/Tailwind
+/ia        # Microservicio IA Python/Flask
+/docs      # Documentación técnica
+```
+```
+/backend   # Node.js/Express/Sequelize API
+/frontend  # React/Vite/Tailwind SPA
+/ia        # Python/Flask IA microservice
+/docs      # Technical documentation
+```
 
-## Instalación y Uso (local)
-1. Backend: `cd backend && npm install`
-2. Frontend: `cd frontend && npm install`
-3. IA: (opcional) instalar `pip install -r requirements.txt` si aplica
-4. Configura variables de entorno copiando cada `.env.example`
-5. Ejecuta backend: `npm start` (desde `backend/`)
-6. Ejecuta frontend: `npm run dev` (desde `frontend/`)
+---
 
-### Con Docker Compose
-- `./scripts/start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001) y ejecuta el seed automático para credenciales demo. En Codespaces expone 3000/5173/5001.
-- Alternativa Makefile: `make up | make down | make logs | make ps`
+## Instalación y Configuración
+## Installation & Setup
+1. Clona el repo y revisa los README de cada módulo.  
+	 Clone the repo and review each module's README.
+2. Configura variables en `.env` y `backend/.env` (ver ejemplos).  
+	 Set variables in `.env` and `backend/.env` (see examples).
+3. Usa Docker Compose o instala dependencias manualmente.  
+	 Use Docker Compose or install dependencies manually.
+4. Ejecuta migraciones y seed si es necesario.  
+	 Run migrations and seed if needed.
 
-## Estructura
-- `frontend/`: React + Vite + TailwindCSS (UI Mantine/MUI)
-- `backend/`: Node.js + Express + Sequelize (PostgreSQL)
-- `ia/`: Flask + IsolationForest demo
-- `docs/`: Documentación técnica
-- `config/`: Configuración Sequelize CLI
-- `migrations/`: Migraciones legacy (usar las de `backend/migrations/`)
+---
 
-### Seguridad Postgres
-- Por defecto, el puerto de Postgres **no está expuesto** fuera de los contenedores (ver `docker-compose.yml`).
-- Si necesitas conectarte desde tu máquina local para desarrollo, descomenta la línea `ports: - "5432:5432"` en el servicio `postgres`.
-- **En producción** (DigitalOcean App Platform o Droplet), nunca expongas el puerto 5432 a internet. Usa Managed PostgreSQL o firewall para restringir acceso solo a los servicios autorizados.
+## Seguridad
+## Security
+- JWT fuerte y CORS restringido en prod  
+	Strong JWT and restricted CORS in production
+- Seeds demo solo en desarrollo  
+	Demo seeds only in development
+- Logs de auditoría y rate limit  
+	Audit logs and rate limiting
 
-## Módulos
-- **Gestión de usuarios, roles y permisos**
-- **Panel de IA y Data Science**
-- **Auditoría y logs de seguridad**
+---
 
-## Autenticación (JWT + Refresh)
-- Endpoints: `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`
-- Header: `Authorization: Bearer <token>` (frontend usa `authFetch`)
-- Config: `JWT_SECRET` obligatorio en prod; TTL: `ACCESS_TOKEN_TTL=15m`, `REFRESH_TOKEN_TTL=7d`
-- Seed demo crea `admin@demo.com` con contraseña `password` (solo pruebas)
+## Módulos Principales
+## Main Modules
+- Backend: API RESTful, RBAC, auditoría  
+	Backend: RESTful API, RBAC, audit
+- Frontend: SPA, dashboard, panel IA  
+	Frontend: SPA, dashboard, IA panel
+- IA: Flask, análisis y predicción  
+	IA: Flask, analysis and prediction
 
-## Documentación
-- API: [docs/api.md](docs/api.md)
-- Base de datos: [docs/db.md](docs/db.md)
-- Seguridad: [docs/security.md](docs/security.md)
-- Despliegue DO: [docs/DEPLOY.md](docs/DEPLOY.md)
-- Índice docs: [docs/README.md](docs/README.md)
-- Changelog docs: [docs/CHANGELOG.md](docs/CHANGELOG.md)
+---
+
+## Autenticación y Permisos
+## Auth & Permissions
+- JWT + refresh tokens  
+	JWT + refresh tokens
+- RBAC por roles y permisos  
+	RBAC by roles and permissions
+- Logs de acceso y acciones  
+	Access and action logs
+
+---
+
+## Documentación Técnica
+## Technical Documentation
+- [API](docs/api.md)  
+	API
+- [Base de datos](docs/db.md)  
+	Database
+- [Seguridad](docs/security.md)  
+	Security
+- [Despliegue](docs/DEPLOY.md)  
+	Deployment
+- [Backup/Restore](docs/RESTORE_BACKUP.md)  
+	Backup/Restore
+- [Changelog](docs/CHANGELOG.md)  
+	Changelog
+
+---
 
 ## Despliegue
-- DigitalOcean App Platform: ver [docs/DEPLOY.md](docs/DEPLOY.md)
-- Docker Compose local: `./scripts/start.sh` o `docker-compose up -d`
+## Deployment
+- DigitalOcean App Platform (recomendado)  
+	DigitalOcean App Platform (recommended)
+- Docker Compose (local/prod)  
+	Docker Compose (local/prod)
+
+---
+
+## Backup y Restauración
+## Backup & Restore
+- Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)  
+	See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+
+---
+
+## Changelog
+## Changelog
+- Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)  
+	See [docs/CHANGELOG.md](docs/CHANGELOG.md)
