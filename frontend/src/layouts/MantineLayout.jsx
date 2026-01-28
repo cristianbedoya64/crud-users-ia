@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger } from '@mantine/core';
+import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 
@@ -18,13 +18,17 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
   return (
     <AppShell
       padding="md"
-      navbar={{ width: 220, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      header={{ height: 56 }}
+      navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      header={{ height: 64 }}
     >
-      <AppShell.Navbar p="xs">
+      <AppShell.Navbar p="md" style={{ background: '#f8fafc' }}>
         <Box mb="md" style={{ display: 'flex', justifyContent: 'center' }}>
-          <Text fw={700} size="lg" color="blue.9">UARP-AI</Text>
+          <Group gap="xs">
+            <Avatar radius="md" color="blue">UA</Avatar>
+            <Text fw={700} size="lg" c="blue.9">UARP-AI</Text>
+          </Group>
         </Box>
+        <Divider mb="sm" />
         <Box>
           {navItems.map(item => (
             <NavLink
@@ -37,32 +41,42 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
                 if (isMobile) close();
               }}
               color="blue"
-              style={{ marginBottom: 8 }}
+              variant={view === item.view ? 'filled' : 'light'}
+              style={{ marginBottom: 10, borderRadius: 10 }}
             />
           ))}
         </Box>
       </AppShell.Navbar>
       <AppShell.Header>
-        <Box h={56} px="md" style={{ background: '#1976d2', display: 'flex', alignItems: 'center' }}>
+        <Box
+          h={64}
+          px="md"
+          style={{
+            background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow: '0 6px 20px rgba(37, 99, 235, 0.25)'
+          }}
+        >
           <Group style={{ width: '100%', justifyContent: 'space-between' }}>
             <Group gap="sm">
               {isMobile && (
                 <Burger opened={opened} onClick={toggle} size="sm" color="white" />
               )}
-              <Text fw={700} size="lg" color="white">UARP-AI Dashboard</Text>
+              <Text fw={700} size="lg" c="white">UARP-AI Dashboard</Text>
             </Group>
             <Group gap="sm">
               <Stack gap={0} align="flex-end">
-                <Text fw={600} size="sm" color="white">{user?.name || 'Usuario'}</Text>
-                <Text size="xs" color="white" style={{ opacity: 0.85 }}>{user?.email || ''}</Text>
+                <Text fw={600} size="sm" c="white">{user?.name || 'Usuario'}</Text>
+                <Text size="xs" c="white" style={{ opacity: 0.85 }}>{user?.email || ''}</Text>
               </Stack>
-              <Button size="xs" color="red" variant="white" onClick={onLogout}>Salir</Button>
+              <Button size="xs" color="gray" variant="white" onClick={onLogout}>Salir</Button>
             </Group>
           </Group>
         </Box>
       </AppShell.Header>
       <AppShell.Main>
-        <Box p={{ base: 'xs', sm: 'md' }}>
+        <Box p={{ base: 'xs', sm: 'md' }} style={{ background: '#f1f5f9', minHeight: 'calc(100vh - 64px)' }}>
           {children}
         </Box>
       </AppShell.Main>

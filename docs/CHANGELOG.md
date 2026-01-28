@@ -16,3 +16,4 @@ Actualizados README raíz, backend, frontend, IA, índice docs y creado `fronten
 - IA: fallback visible cuando el modelo no está disponible.
 - UX: loaders visibles en tablas principales y validaciones consistentes en login/usuarios.
 - Limpieza: eliminados placeholders no usados en layouts/components.
+- UI: tema Mantine y layout modernizados para una apariencia profesional.
