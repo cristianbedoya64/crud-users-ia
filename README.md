@@ -20,7 +20,7 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 6. Ejecuta frontend: `npm run dev` (desde `frontend/`)
 
 ### Con Docker Compose
-- `./start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001) y ejecuta el seed automático para credenciales demo. En Codespaces expone 3000/5173/5001.
+- `./scripts/start.sh` levanta frontend, backend, IA y PostgreSQL en segundo plano (puertos 3000/5173/5001) y ejecuta el seed automático para credenciales demo. En Codespaces expone 3000/5173/5001.
 - Alternativa Makefile: `make up | make down | make logs | make ps`
 
 ## Estructura
@@ -51,10 +51,10 @@ Plataforma web empresarial para gestión de usuarios, roles y permisos, con mód
 - API: [docs/api.md](docs/api.md)
 - Base de datos: [docs/db.md](docs/db.md)
 - Seguridad: [docs/security.md](docs/security.md)
-- Despliegue DO: [DEPLOY.md](DEPLOY.md)
+- Despliegue DO: [docs/DEPLOY.md](docs/DEPLOY.md)
 - Índice docs: [docs/README.md](docs/README.md)
 - Changelog docs: [docs/CHANGELOG.md](docs/CHANGELOG.md)
 
 ## Despliegue
-- DigitalOcean App Platform: ver [DEPLOY.md](DEPLOY.md)
-- Docker Compose local: `./start.sh` o `docker-compose up -d`
+- DigitalOcean App Platform: ver [docs/DEPLOY.md](docs/DEPLOY.md)
+- Docker Compose local: `./scripts/start.sh` o `docker-compose up -d`

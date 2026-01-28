@@ -39,7 +39,7 @@ API RESTful para gestión de usuarios, roles, permisos y auditoría. Conexión a
 5. Ejecuta: `npm start` (o `node src/server.js`)
 
 ### Con Docker Compose
-- Desde la raíz: `./start.sh` o `docker-compose up -d` (backend expone 3000)
+- Desde la raíz: `./scripts/start.sh` o `docker-compose up -d` (backend expone 3000)
 - Variables se inyectan desde `docker-compose.yml`; ajusta JWT_SECRET/CORS ahí o en App Platform
 
 ## Env Vars / Variables de Entorno
