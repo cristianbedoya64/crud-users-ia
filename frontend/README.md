@@ -7,6 +7,7 @@ SPA moderna para gestión de usuarios, roles, permisos y dashboard de IA. Usa Vi
 
 ## Features / Características
 - Dashboard con métricas y panel IA
+- Pantalla de bienvenida interactiva con narrativa del producto
 - CRUD de usuarios, roles, permisos
 - Gráficas y tablas interactivas
 - Notificaciones y validaciones
@@ -33,7 +34,7 @@ SPA moderna para gestión de usuarios, roles, permisos y dashboard de IA. Usa Vi
 ## Structure / Estructura
 - `src/index.jsx`: entrypoint real de la app (usa Mantine layout); `src/index.js` es placeholder inicial
 - `src/components/`: componentes UI (charts, tablas, IA panel)
-- `src/views/`: vistas Dashboard, Users, Roles, Permissions, Audit, Login
+- `src/views/`: vistas Dashboard, Users, Roles, Permissions, Audit, Login, Welcome
 - `src/layouts/`: layouts Mantine/MUI
 - `src/routes/`: AppRoutes placeholder (router pendiente)
 - `public/`: estáticos

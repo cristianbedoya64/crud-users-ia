@@ -7,6 +7,7 @@ import RolesView from '../views/RolesView';
 import PermissionsView from '../views/PermissionsView';
 import AuditView from '../views/AuditView';
 import LoginView from '../views/LoginView';
+import WelcomeView from '../views/WelcomeView';
 
 const viewToPath = {
   dashboard: '/dashboard',
@@ -27,7 +28,7 @@ const pathToView = (pathname) => {
 function RequireAuth({ isAuthed }) {
   const location = useLocation();
   if (!isAuthed) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to="/welcome" replace state={{ from: location }} />;
   }
   return <Outlet />;
 }
@@ -67,6 +68,8 @@ export default function AppRoutes({ isAuthed, currentUser, onLogin, onLogout }) 
   const navigate = useNavigate();
   return (
     <Routes>
+      <Route path="/" element={<WelcomeView />} />
+      <Route path="/welcome" element={<WelcomeView />} />
       <Route
         path="/login"
         element={
@@ -82,10 +85,10 @@ export default function AppRoutes({ isAuthed, currentUser, onLogin, onLogout }) 
           <Route path="/roles" element={<RolesView />} />
           <Route path="/permissions" element={<PermissionsView />} />
           <Route path="/audit" element={<AuditView />} />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route index element={<Navigate to="/welcome" replace />} />
         </Route>
       </Route>
+      <Route path="*" element={<Navigate to="/welcome" replace />} />
     </Routes>
   );
 }
