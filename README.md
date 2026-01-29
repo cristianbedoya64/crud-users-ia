@@ -132,6 +132,15 @@ Full-stack API for user, role, and permission management with IA panel. Includes
 
 ---
 
+## Pruebas
+## Tests
+- Backend (API/Node):
+  - `npm test` dentro de la carpeta backend.
+- Frontend (React):
+  - `npm test` dentro de la carpeta frontend.
+
+---
+
 ## Backup y Restauración
 ## Backup & Restore
 - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)  
