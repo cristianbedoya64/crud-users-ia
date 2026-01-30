@@ -141,6 +141,14 @@ Full-stack API for user, role, and permission management with IA panel. Includes
 
 ---
 
+## Lighthouse
+## Lighthouse
+- Ejecutar auditorías (mobile + desktop):
+	- `npm run lighthouse` dentro de la carpeta frontend.
+- Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)
+
+---
+
 ## Backup y Restauración
 ## Backup & Restore
 - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)  

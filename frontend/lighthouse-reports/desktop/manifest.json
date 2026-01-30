@@ -1,0 +1,14 @@
+[
+  {
+    "url": "http://172.18.0.5:5173/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/workspaces/crud-users-ia/frontend/lighthouse-reports/desktop/172_18_0_5--2026_01_30_00_05_06.report.html",
+    "jsonPath": "/workspaces/crud-users-ia/frontend/lighthouse-reports/desktop/172_18_0_5--2026_01_30_00_05_06.report.json",
+    "summary": {
+      "performance": 0.56,
+      "accessibility": 0.9,
+      "best-practices": 0.79,
+      "seo": 0.83
+    }
+  }
+]
