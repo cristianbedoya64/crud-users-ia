@@ -1,6 +1,3 @@
-
-
-
 # UARP-AI 🚀
 
 <p align="center">
@@ -19,7 +16,7 @@
 ---
 
 ## 📝 Descripción General / General Description
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br>
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
 
 ---
@@ -37,8 +34,8 @@
   - Pruebas
   - Lighthouse
   - Backup y Restauración
-  - Changelog
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+  - Changelog<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
   - General Description
   - Project Structure
   - Installation & Setup
@@ -62,7 +59,8 @@
 /ia        # Microservicio IA Python/Flask
 /docs      # Documentación técnica
 ```
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 ```shell
 /backend   # Node.js/Express/Sequelize API
 /frontend  # React/Vite/Tailwind SPA
@@ -77,8 +75,8 @@
 1. Clona el repo y revisa los README de cada módulo.
 2. Configura variables en `.env` y `backend/.env` (ver ejemplos).
 3. Usa Docker Compose o instala dependencias manualmente.
-4. Ejecuta migraciones y seed si es necesario.
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+4. Ejecuta migraciones y seed si es necesario.<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 1. Clone the repo and review each module's README.
 2. Set variables in `.env` and `backend/.env` (see examples).
 3. Use Docker Compose or install dependencies manually.
@@ -90,8 +88,8 @@
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - JWT fuerte y CORS restringido en prod
 - Seeds demo solo en desarrollo
-- Logs de auditoría y rate limit
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Logs de auditoría y rate limit<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Strong JWT and restricted CORS in production
 - Demo seeds only in development
 - Audit logs and rate limiting
@@ -102,8 +100,8 @@
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Backend: API RESTful, RBAC, auditoría
 - Frontend: SPA, dashboard, panel IA
-- IA: Flask, análisis y predicción
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- IA: Flask, análisis y predicción<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Backend: RESTful API, RBAC, audit
 - Frontend: SPA, dashboard, IA panel
 - IA: Flask, analysis and prediction
@@ -114,8 +112,8 @@
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - JWT + refresh tokens
 - RBAC por roles y permisos
-- Logs de acceso y acciones
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Logs de acceso y acciones<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - JWT + refresh tokens
 - RBAC by roles and permissions
 - Access and action logs
@@ -129,8 +127,8 @@
 - [Seguridad](docs/security.md)
 - [Despliegue](docs/DEPLOY.md)
 - [Backup/Restore](docs/RESTORE_BACKUP.md)
-- [Changelog](docs/CHANGELOG.md)
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- [Changelog](docs/CHANGELOG.md)<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - [API](docs/api.md)
 - [Database](docs/db.md)
 - [Security](docs/security.md)
@@ -143,8 +141,8 @@
 ## 🚀 Despliegue / Deployment
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - DigitalOcean App Platform (recomendado)
-- Docker Compose (local/prod)
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Docker Compose (local/prod)<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - DigitalOcean App Platform (recommended)
 - Docker Compose (local/prod)
 
@@ -155,8 +153,8 @@
 - Backend (API/Node):
   - `npm test` dentro de la carpeta backend.
 - Frontend (React):
-  - `npm test` dentro de la carpeta frontend.
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+  - `npm test` dentro de la carpeta frontend.<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Backend (API/Node):
   - `npm test` inside backend folder.
 - Frontend (React):
@@ -168,8 +166,8 @@
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Ejecutar auditorías (mobile + desktop):
   - `npm run lighthouse` dentro de la carpeta frontend.
-- Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Run audits (mobile + desktop):
   - `npm run lighthouse` inside frontend folder.
 - See detailed guide: [docs/lighthouse.md](docs/lighthouse.md)
@@ -177,11 +175,11 @@
 ---
 
 ## 💾 Backup y Restauración / Backup & Restore
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
 
 ---
 
 ## 📝 Changelog
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)
-<br><img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** See [docs/CHANGELOG.md](docs/CHANGELOG.md)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** See [docs/CHANGELOG.md](docs/CHANGELOG.md)
