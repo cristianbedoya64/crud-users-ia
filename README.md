@@ -4,9 +4,6 @@
 Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science.
 
 
-# UARP-AI
-# UARP-AI
-
 API RESTful + SPA + Panel IA para gestión de usuarios, roles, permisos y auditoría. Stack: Node.js, React, PostgreSQL, Flask IA. Despliegue en DigitalOcean App Platform o Docker Compose.
 RESTful API + SPA + IA Panel for user, role, permission, and audit management. Stack: Node.js, React, PostgreSQL, Flask IA. Deployable on DigitalOcean App Platform or Docker Compose.
 
