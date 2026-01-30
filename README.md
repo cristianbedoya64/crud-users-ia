@@ -1,5 +1,11 @@
 # UARP-AI 🚀
 
+> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Universidad Santiago de Cali**<br>
+> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> 
+> Este documento está orientado a la revisión, calificación y aprobación por parte del jurado académico, presentando el contexto, alcance, objetivos y valor profesional del sistema desarrollado.
+
 <p align="center">
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
@@ -12,6 +18,15 @@
   <b>Proyecto integrador de grado - Ingeniería de Sistemas</b> 🎓<br>
   <i>Full-stack web platform for user, role, and permission management with AI modules.</i>
 </p>
+
+---
+
+## 🎓 Contexto Académico y Propósito / Academic Context & Purpose
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**<br>
+Este sistema corresponde al proyecto de grado para optar al título de Ingeniero de Sistemas (modalidad virtual) en la Universidad Santiago de Cali. Su desarrollo responde a los lineamientos de la asignatura “proyecto integrador profesional” y está dirigido a los jueces encargados de su evaluación y aprobación. El objetivo es demostrar competencias en análisis, diseño, desarrollo e integración de soluciones empresariales modernas, aplicando buenas prácticas de ingeniería de software, seguridad, despliegue y tecnologías de Inteligencia Artificial.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**<br>
+This system is the graduation project for the Systems Engineering degree (virtual modality) at Universidad Santiago de Cali. It fulfills the requirements of the “professional integrative project” course and is addressed to the academic judges responsible for its evaluation and approval. The goal is to demonstrate proficiency in analysis, design, development, and integration of modern enterprise solutions, applying best practices in software engineering, security, deployment, and Artificial Intelligence technologies.
 
 ---
 
