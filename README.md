@@ -20,7 +20,7 @@
 
 ## 📝 Descripción General / General Description
 🇪🇸 es - Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br>
-🇬🇧 en - Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
+🇺🇸 en - Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
 
 ---
 
@@ -38,7 +38,7 @@
   - Lighthouse
   - Backup y Restauración
   - Changelog
-<br>🇬🇧 en -
+<br>🇺🇸 en -
   - General Description
   - Project Structure
   - Installation & Setup
@@ -62,7 +62,7 @@
 /ia        # Microservicio IA Python/Flask
 /docs      # Documentación técnica
 ```
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 ```shell
 /backend   # Node.js/Express/Sequelize API
 /frontend  # React/Vite/Tailwind SPA
@@ -78,7 +78,7 @@
 2. Configura variables en `.env` y `backend/.env` (ver ejemplos).
 3. Usa Docker Compose o instala dependencias manualmente.
 4. Ejecuta migraciones y seed si es necesario.
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 1. Clone the repo and review each module's README.
 2. Set variables in `.env` and `backend/.env` (see examples).
 3. Use Docker Compose or install dependencies manually.
@@ -91,7 +91,7 @@
 - JWT fuerte y CORS restringido en prod
 - Seeds demo solo en desarrollo
 - Logs de auditoría y rate limit
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - Strong JWT and restricted CORS in production
 - Demo seeds only in development
 - Audit logs and rate limiting
@@ -103,7 +103,7 @@
 - Backend: API RESTful, RBAC, auditoría
 - Frontend: SPA, dashboard, panel IA
 - IA: Flask, análisis y predicción
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - Backend: RESTful API, RBAC, audit
 - Frontend: SPA, dashboard, IA panel
 - IA: Flask, analysis and prediction
@@ -115,7 +115,7 @@
 - JWT + refresh tokens
 - RBAC por roles y permisos
 - Logs de acceso y acciones
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - JWT + refresh tokens
 - RBAC by roles and permissions
 - Access and action logs
@@ -130,7 +130,7 @@
 - [Despliegue](docs/DEPLOY.md)
 - [Backup/Restore](docs/RESTORE_BACKUP.md)
 - [Changelog](docs/CHANGELOG.md)
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - [API](docs/api.md)
 - [Database](docs/db.md)
 - [Security](docs/security.md)
@@ -144,7 +144,7 @@
 🇪🇸 es -
 - DigitalOcean App Platform (recomendado)
 - Docker Compose (local/prod)
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - DigitalOcean App Platform (recommended)
 - Docker Compose (local/prod)
 
@@ -156,7 +156,7 @@
   - `npm test` dentro de la carpeta backend.
 - Frontend (React):
   - `npm test` dentro de la carpeta frontend.
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - Backend (API/Node):
   - `npm test` inside backend folder.
 - Frontend (React):
@@ -169,7 +169,7 @@
 - Ejecutar auditorías (mobile + desktop):
   - `npm run lighthouse` dentro de la carpeta frontend.
 - Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)
-<br>🇬🇧 en -
+<br>🇺🇸 en -
 - Run audits (mobile + desktop):
   - `npm run lighthouse` inside frontend folder.
 - See detailed guide: [docs/lighthouse.md](docs/lighthouse.md)
@@ -178,10 +178,10 @@
 
 ## 💾 Backup y Restauración / Backup & Restore
 🇪🇸 es - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
-<br>🇬🇧 en - See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+<br>🇺🇸 en - See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
 
 ---
 
 ## 📝 Changelog
 🇪🇸 es - Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)
-<br>🇬🇧 en - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
+<br>🇺🇸 en - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
