@@ -1,54 +1,69 @@
 
-# UARP-AI
-
-Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science.
 
 
-API RESTful + SPA + Panel IA para gestión de usuarios, roles, permisos y auditoría. Stack: Node.js, React, PostgreSQL, Flask IA. Despliegue en DigitalOcean App Platform o Docker Compose.
-RESTful API + SPA + IA Panel for user, role, permission, and audit management. Stack: Node.js, React, PostgreSQL, Flask IA. Deployable on DigitalOcean App Platform or Docker Compose.
+# UARP-AI 🚀
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+</p>
 
-## Tabla de Contenidos
-## Table of Contents
-- [Descripción General](#descripción-general)  
-	General Description
-- [Estructura del Proyecto](#estructura-del-proyecto)  
-	Project Structure
-- [Instalación y Configuración](#instalación-y-configuración)  
-	Installation & Setup
-- [Seguridad](#seguridad)  
-	Security
-- [Módulos Principales](#módulos-principales)  
-	Main Modules
-- [Autenticación y Permisos](#autenticación-y-permisos)  
-	Auth & Permissions
-- [Documentación Técnica](#documentación-técnica)  
-	Technical Documentation
-- [Despliegue](#despliegue)  
-	Deployment
-- [Backup y Restauración](#backup-y-restauración)  
-	Backup & Restore
-- [Changelog](#changelog)
+<p align="center">
+  <b>Proyecto integrador de grado - Ingeniería de Sistemas</b> 🎓<br>
+  <i>Full-stack web platform for user, role, and permission management with AI modules.</i>
+</p>
 
 ---
 
-## Descripción General
-## General Description
-API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.
-Full-stack API for user, role, and permission management with IA panel. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
+## 📝 Descripción General / General Description
+<span>🇪🇸</span> es - Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br>
+<span>🇬🇧</span> en - Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
 
 ---
 
-## Estructura del Proyecto
-## Project Structure
-```
+## 🗂️ Tabla de Contenidos / Table of Contents
+<span>🇪🇸</span> es -
+  - Descripción General
+  - Estructura del Proyecto
+  - Instalación y Configuración
+  - Seguridad
+  - Módulos Principales
+  - Autenticación y Permisos
+  - Documentación Técnica
+  - Despliegue
+  - Pruebas
+  - Lighthouse
+  - Backup y Restauración
+  - Changelog
+<br><span>🇬🇧</span> en -
+  - General Description
+  - Project Structure
+  - Installation & Setup
+  - Security
+  - Main Modules
+  - Auth & Permissions
+  - Technical Documentation
+  - Deployment
+  - Tests
+  - Lighthouse
+  - Backup & Restore
+  - Changelog
+
+---
+
+## 🏗️ Estructura del Proyecto / Project Structure
+<span>🇪🇸</span> es -
+```shell
 /backend   # API Node.js/Express/Sequelize
 /frontend  # SPA React/Vite/Tailwind
 /ia        # Microservicio IA Python/Flask
 /docs      # Documentación técnica
 ```
-```
+<br><span>🇬🇧</span> en -
+```shell
 /backend   # Node.js/Express/Sequelize API
 /frontend  # React/Vite/Tailwind SPA
 /ia        # Python/Flask IA microservice
@@ -57,103 +72,116 @@ Full-stack API for user, role, and permission management with IA panel. Includes
 
 ---
 
-## Instalación y Configuración
-## Installation & Setup
-1. Clona el repo y revisa los README de cada módulo.  
-	 Clone the repo and review each module's README.
-2. Configura variables en `.env` y `backend/.env` (ver ejemplos).  
-	 Set variables in `.env` and `backend/.env` (see examples).
-3. Usa Docker Compose o instala dependencias manualmente.  
-	 Use Docker Compose or install dependencies manually.
-4. Ejecuta migraciones y seed si es necesario.  
-	 Run migrations and seed if needed.
+## ⚙️ Instalación y Configuración / Installation & Setup
+<span>🇪🇸</span> es -
+1. Clona el repo y revisa los README de cada módulo.
+2. Configura variables en `.env` y `backend/.env` (ver ejemplos).
+3. Usa Docker Compose o instala dependencias manualmente.
+4. Ejecuta migraciones y seed si es necesario.
+<br><span>🇬🇧</span> en -
+1. Clone the repo and review each module's README.
+2. Set variables in `.env` and `backend/.env` (see examples).
+3. Use Docker Compose or install dependencies manually.
+4. Run migrations and seed if needed.
 
 ---
 
-## Seguridad
-## Security
-- JWT fuerte y CORS restringido en prod  
-	Strong JWT and restricted CORS in production
-- Seeds demo solo en desarrollo  
-	Demo seeds only in development
-- Logs de auditoría y rate limit  
-	Audit logs and rate limiting
+## 🔒 Seguridad / Security
+<span>🇪🇸</span> es -
+- JWT fuerte y CORS restringido en prod
+- Seeds demo solo en desarrollo
+- Logs de auditoría y rate limit
+<br><span>🇬🇧</span> en -
+- Strong JWT and restricted CORS in production
+- Demo seeds only in development
+- Audit logs and rate limiting
 
 ---
 
-## Módulos Principales
-## Main Modules
-- Backend: API RESTful, RBAC, auditoría  
-	Backend: RESTful API, RBAC, audit
-- Frontend: SPA, dashboard, panel IA  
-	Frontend: SPA, dashboard, IA panel
-- IA: Flask, análisis y predicción  
-	IA: Flask, analysis and prediction
+## 🧩 Módulos Principales / Main Modules
+<span>🇪🇸</span> es -
+- Backend: API RESTful, RBAC, auditoría
+- Frontend: SPA, dashboard, panel IA
+- IA: Flask, análisis y predicción
+<br><span>🇬🇧</span> en -
+- Backend: RESTful API, RBAC, audit
+- Frontend: SPA, dashboard, IA panel
+- IA: Flask, analysis and prediction
 
 ---
 
-## Autenticación y Permisos
-## Auth & Permissions
-- JWT + refresh tokens  
-	JWT + refresh tokens
-- RBAC por roles y permisos  
-	RBAC by roles and permissions
-- Logs de acceso y acciones  
-	Access and action logs
+## 🛡️ Autenticación y Permisos / Auth & Permissions
+<span>🇪🇸</span> es -
+- JWT + refresh tokens
+- RBAC por roles y permisos
+- Logs de acceso y acciones
+<br><span>🇬🇧</span> en -
+- JWT + refresh tokens
+- RBAC by roles and permissions
+- Access and action logs
 
 ---
 
-## Documentación Técnica
-## Technical Documentation
-- [API](docs/api.md)  
-	API
-- [Base de datos](docs/db.md)  
-	Database
-- [Seguridad](docs/security.md)  
-	Security
-- [Despliegue](docs/DEPLOY.md)  
-	Deployment
-- [Backup/Restore](docs/RESTORE_BACKUP.md)  
-	Backup/Restore
-- [Changelog](docs/CHANGELOG.md)  
-	Changelog
+## 📚 Documentación Técnica / Technical Documentation
+<span>🇪🇸</span> es -
+- [API](docs/api.md)
+- [Base de datos](docs/db.md)
+- [Seguridad](docs/security.md)
+- [Despliegue](docs/DEPLOY.md)
+- [Backup/Restore](docs/RESTORE_BACKUP.md)
+- [Changelog](docs/CHANGELOG.md)
+<br><span>🇬🇧</span> en -
+- [API](docs/api.md)
+- [Database](docs/db.md)
+- [Security](docs/security.md)
+- [Deployment](docs/DEPLOY.md)
+- [Backup/Restore](docs/RESTORE_BACKUP.md)
+- [Changelog](docs/CHANGELOG.md)
 
 ---
 
-## Despliegue
-## Deployment
-- DigitalOcean App Platform (recomendado)  
-	DigitalOcean App Platform (recommended)
-- Docker Compose (local/prod)  
-	Docker Compose (local/prod)
+## 🚀 Despliegue / Deployment
+<span>🇪🇸</span> es -
+- DigitalOcean App Platform (recomendado)
+- Docker Compose (local/prod)
+<br><span>🇬🇧</span> en -
+- DigitalOcean App Platform (recommended)
+- Docker Compose (local/prod)
 
 ---
 
-## Pruebas
-## Tests
+## 🧪 Pruebas / Tests
+<span>🇪🇸</span> es -
 - Backend (API/Node):
   - `npm test` dentro de la carpeta backend.
 - Frontend (React):
   - `npm test` dentro de la carpeta frontend.
+<br><span>🇬🇧</span> en -
+- Backend (API/Node):
+  - `npm test` inside backend folder.
+- Frontend (React):
+  - `npm test` inside frontend folder.
 
 ---
 
-## Lighthouse
-## Lighthouse
+## 💡 Lighthouse
+<span>🇪🇸</span> es -
 - Ejecutar auditorías (mobile + desktop):
-	- `npm run lighthouse` dentro de la carpeta frontend.
+  - `npm run lighthouse` dentro de la carpeta frontend.
 - Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)
+<br><span>🇬🇧</span> en -
+- Run audits (mobile + desktop):
+  - `npm run lighthouse` inside frontend folder.
+- See detailed guide: [docs/lighthouse.md](docs/lighthouse.md)
 
 ---
 
-## Backup y Restauración
-## Backup & Restore
-- Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)  
-	See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+## 💾 Backup y Restauración / Backup & Restore
+<span>🇪🇸</span> es - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+<br><span>🇬🇧</span> en - See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
 
 ---
 
-## Changelog
-## Changelog
-- Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)  
-	See [docs/CHANGELOG.md](docs/CHANGELOG.md)
+## 📝 Changelog
+<span>🇪🇸</span> es - Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)
+<br><span>🇬🇧</span> en - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
