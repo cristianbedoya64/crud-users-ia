@@ -1,9 +1,22 @@
 
-# Routes
+# 🧭 Routes (Frontend) / Routes (Frontend)
 
-Aquí se definen las rutas principales del frontend.
+> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Universidad Santiago de Cali**<br>
+> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+>
+> Documento técnico orientado a evaluación académica: describe el enrutamiento del frontend (si se usa React Router) y su relación con vistas.
 
-## Ejemplo
+---
+
+## 📌 Propósito / Purpose
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Define rutas cuando el proyecto adopta navegación declarativa. Si no se usa router, la navegación puede estar basada en estado.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Defines routes when the project adopts declarative navigation. If no router is used, navigation may be state-driven.
+
+---
+
+## 🧪 Ejemplo / Example
 ```jsx
 // AppRoutes.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -14,12 +27,16 @@ export default function AppRoutes() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/dashboard" element={<DashboardView />} />
-				{/* ...otras rutas */}
+				{/* ...other routes */}
 			</Routes>
 		</BrowserRouter>
 	);
 }
 ```
 
-## Recomendaciones
-Mantén las rutas organizadas y documenta las rutas principales y sus props.
+---
+
+## ✅ Recomendaciones / Recommendations
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Mantén rutas organizadas y documenta rutas principales y requisitos de autenticación/permisos.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Keep routes organized and document main routes and auth/permission requirements.

@@ -1,124 +1,130 @@
 
+# 🖥️ Frontend (React/Vite) — UARP-AI / Frontend (React/Vite) — UARP-AI
 
-# Frontend (React/Vite) - UARP-AI
-# Frontend (React/Vite) - UARP-AI
-
----
-
-## Visión General
-## Overview
-SPA moderna para gestión de usuarios, roles, permisos y dashboard de IA. Usa Vite, React y TailwindCSS.
-Modern SPA for user, role, permission management and IA dashboard. Uses Vite, React, and TailwindCSS.
+> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Universidad Santiago de Cali**<br>
+> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+>
+> Documento técnico orientado a evaluación académica: presenta la SPA usada para evidenciar UX, visualización de datos y consumo seguro de la API (auth + refresh + RBAC).
 
 ---
 
-## Características
-## Features
-- Dashboard con métricas y panel IA  
-	Dashboard with metrics and IA panel
-- Pantalla de bienvenida interactiva con narrativa del producto  
-	Interactive welcome screen with product narrative
-- CRUD de usuarios, roles, permisos  
-	User, role, and permission CRUD
-- Gráficas y tablas interactivas  
-	Interactive charts and tables
-- Notificaciones y validaciones  
-	Notifications and validations
+## 🎓 Contexto Académico y Propósito / Academic Context & Purpose
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este módulo representa la interfaz evaluable del sistema: navegación, dashboard, CRUDs y evidencias visuales de auditoría/seguridad.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This module is the evaluable interface of the system: navigation, dashboard, CRUD screens, and visual evidence of auditing/security.
 
 ---
 
-## Configuración (local)
-## Setup (local)
-1. Instala dependencias: `npm install`  
-	 Install dependencies: `npm install`
-2. Copia `.env.example` a `.env` y define `VITE_API_URL` (ej: `http://localhost:3000`)  
-	 Copy `.env.example` to `.env` and set `VITE_API_URL` (e.g. `http://localhost:3000`)
-3. Dev: `npm run dev`  
-	 Dev: `npm run dev`
-4. Build: `npm run build` y previsualiza con `npm run preview`  
-	 Build: `npm run build` and preview with `npm run preview`
-
-### Con Docker / App Platform
-### With Docker / App Platform
-- Compose: se construye desde `frontend/Dockerfile`, puerto 5173  
-	Compose: builds from `frontend/Dockerfile`, port 5173
-- App Platform (Static Site): build `npm install && npm run build`, publish dir `dist`, env `VITE_API_URL=https://<backend>`  
-	App Platform (Static Site): build `npm install && npm run build`, publish dir `dist`, env `VITE_API_URL=https://<backend>`
+## 🧭 Visión General / Overview
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** SPA moderna para gestión de usuarios, roles, permisos, auditoría y dashboard de IA. Construida con Vite, React y TailwindCSS.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Modern SPA for users/roles/permissions/audit management and an AI dashboard. Built with Vite, React, and TailwindCSS.
 
 ---
 
-## Variables de Entorno
-## Env Vars
-- `VITE_API_URL` (URL backend; en Codespaces se reescribe host automáticamente para HTTPS)  
-	(Backend URL; in Codespaces, host is auto-rewritten for HTTPS)
-- `NODE_ENV`
+## ✨ Características / Features
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Dashboard con métricas y panel IA
+- Pantalla de bienvenida (narrativa del producto)
+- CRUD de usuarios, roles y permisos
+- Gráficas/tablas interactivas
+- Notificaciones y validaciones
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Dashboard with metrics and AI panel
+- Welcome screen (product narrative)
+- Users/roles/permissions CRUD
+- Interactive charts/tables
+- Notifications and validations
 
 ---
 
-## Scripts principales
-## Main Scripts
-- `npm run dev`
-- `npm run build`
-- `npm run preview`
+## 🛠️ Configuración (Local) / Setup (Local)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+1. Instala dependencias: `npm install`.
+2. Copia `.env.example` a `.env` y define `VITE_API_URL` (ej: `http://localhost:3000`).
+3. Dev: `npm run dev`.
+4. Build: `npm run build` y previsualiza con `npm run preview`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+1. Install dependencies: `npm install`.
+2. Copy `.env.example` to `.env` and set `VITE_API_URL` (e.g., `http://localhost:3000`).
+3. Dev: `npm run dev`.
+4. Build: `npm run build` and preview with `npm run preview`.
 
 ---
 
-## Estructura
-## Structure
-- `src/index.jsx`: entrypoint real de la app (usa Mantine layout); `src/index.js` es placeholder inicial  
-	`src/index.jsx`: real app entrypoint (uses Mantine layout); `src/index.js` is initial placeholder
-- `src/components/`: componentes UI (charts, tablas, IA panel)  
-	`src/components/`: UI components (charts, tables, IA panel)
-- `src/views/`: vistas Dashboard, Users, Roles, Permissions, Audit, Login, Welcome  
-	`src/views/`: views (Dashboard, Users, Roles, Permissions, Audit, Login, Welcome)
-- `src/layouts/`: layouts Mantine/MUI  
-	`src/layouts/`: Mantine/MUI layouts
-- `src/routes/`: AppRoutes placeholder (router pendiente)  
-	`src/routes/`: AppRoutes placeholder (router pending)
-- `public/`: estáticos  
-	`public/`: static files
+## 🐳 Docker / App Platform
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Compose: se construye desde `frontend/Dockerfile`, puerto 5173.
+- App Platform (Static Site): build `npm install && npm run build`, publish dir `dist`, env `VITE_API_URL=https://<backend>`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Compose: builds from `frontend/Dockerfile`, port 5173.
+- App Platform (Static Site): build `npm install && npm run build`, publish dir `dist`, env `VITE_API_URL=https://<backend>`.
 
 ---
 
-## Dependencias
-## Dependencies
-- react, vite, tailwindcss
-- mantine, @mui/material, recharts, dayjs, dompurify
+## 🔧 Variables de Entorno / Env Vars
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- `VITE_API_URL` (URL del backend; en Codespaces puede reescribirse para HTTPS).
+- `NODE_ENV`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- `VITE_API_URL` (backend URL; in Codespaces it may be rewritten for HTTPS).
+- `NODE_ENV`.
 
 ---
 
-## Notas
-## Notes
-- Router principal aún no implementado en `src/routes/AppRoutes.jsx`; navegación actual se maneja por estado en `index.jsx`.  
-	Main router not yet implemented in `src/routes/AppRoutes.jsx`; navigation currently handled by state in `index.jsx`.
-- authFetch maneja refresh token automáticamente.  
-	authFetch handles refresh token automatically.
+## ▶️ Scripts Principales / Main Scripts
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** `npm run dev`, `npm run build`, `npm run preview`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** `npm run dev`, `npm run build`, `npm run preview`.
 
 ---
 
-## Referencias
-## References
-- API: ../docs/api.md
-- Seguridad/env: ../docs/security.md  
-	Security/env: ../docs/security.md
+## 🧱 Estructura / Structure
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- `src/index.jsx`: entrypoint real (layout + navegación)
+- `src/components/`: UI reutilizable (charts, tablas, panel IA)
+- `src/views/`: vistas (Dashboard/Users/Roles/Permissions/Audit/Login/Welcome)
+- `src/layouts/`: layouts Mantine/MUI
+- `src/routes/`: rutas (si se activa router)
+- `public/`: estáticos
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- `src/index.jsx`: real entrypoint (layout + navigation)
+- `src/components/`: reusable UI (charts, tables, AI panel)
+- `src/views/`: views (Dashboard/Users/Roles/Permissions/Audit/Login/Welcome)
+- `src/layouts/`: Mantine/MUI layouts
+- `src/routes/`: routes (if router is enabled)
+- `public/`: static files
 
 ---
 
-## Seguridad
-## Security
-- Sanitización de inputs  
-	Input sanitization
-- CORS configurado en backend  
-	CORS set in backend
+## 📝 Notas / Notes
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Si el router principal no está implementado, la navegación puede manejarse por estado en `src/index.jsx`. `authFetch` maneja refresh token automáticamente.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** If the main router is not implemented, navigation may be state-driven in `src/index.jsx`. `authFetch` handles refresh tokens automatically.
 
 ---
 
-## Testing
-- `npm test` (si hay tests / if available)  
-	(if available)
+## 🔗 Referencias / References
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** API: [../docs/api.md](../docs/api.md) · Seguridad/env: [../docs/security.md](../docs/security.md)
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** API: [../docs/api.md](../docs/api.md) · Security/env: [../docs/security.md](../docs/security.md)
 
 ---
 
-## Troubleshooting
-- Verifica conexión API / Check API connection
-- Revisa consola del navegador / Review browser console
+## 🔐 Seguridad / Security
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Sanitización de inputs y consumo de API bajo CORS configurado en backend.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Input sanitization and API consumption under backend-configured CORS.
+
+---
+
+## 🧪 Testing y Troubleshooting / Testing & Troubleshooting
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Si existen pruebas, ejecutar `npm test`. Ante errores, verifica `VITE_API_URL` y revisa consola del navegador.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** If tests exist, run `npm test`. For issues, verify `VITE_API_URL` and review the browser console.

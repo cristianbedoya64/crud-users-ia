@@ -1,40 +1,15 @@
-# Restaurar backup y actualizar despliegue
 
-## Restaurar backup de Postgres
-1. Copia tu archivo de backup (ej: `backup.sql`) al servidor.
-2. Detén servicios que escriban en la base de datos:
-   ```bash
-   docker compose -f docker-compose.prod.yml stop backend ia-panel
-   ```
-3. Restaura el backup:
-   ```bash
-   docker compose -f docker-compose.prod.yml exec -T postgres psql -U $DB_USER -d $DB_NAME < backup.sql
-   ```
-   Ajusta `$DB_USER` y `$DB_NAME` según tu .env.
-4. Reinicia los servicios:
-   ```bash
-   docker compose -f docker-compose.prod.yml start backend ia-panel
-   ```
+# 💾 Restauración (Documento Movido) / Restore (Document Moved)
 
-## Actualizar el proyecto (pull + rebuild)
-1. Haz pull de la última versión:
-   ```bash
-   git pull origin main
-   ```
-2. Reconstruye y reinicia los servicios:
-   ```bash
-   docker compose -f docker-compose.prod.yml build
-   docker compose -f docker-compose.prod.yml up -d
-   ```
-3. (Opcional) Ejecuta migraciones si hay cambios en modelos:
-   ```bash
-   docker compose -f docker-compose.prod.yml exec backend node src/migrate.js
-   ```
+> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Universidad Santiago de Cali**<br>
+> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+>
+> Documento técnico orientado a evaluación académica: este archivo se mantiene como punto de entrada para restauración/continuidad operativa, redirigiendo a la guía oficial.
 
-## Rotar JWT_SECRET
-1. Cambia el valor en `.env` y reinicia backend.
-2. Todos los tokens previos quedarán inválidos. Considera limpiar la tabla `RefreshTokens` si es necesario.
+---
 
-## Notas
-- Nunca subas backups ni .env al repo.
-- Haz backup antes de actualizar o migrar.
+## 📌 Referencia Oficial / Official Reference
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** La guía oficial de restauración y actualización está en [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md).
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** The official restore/update guide is in [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md).

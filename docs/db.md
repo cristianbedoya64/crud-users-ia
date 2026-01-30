@@ -1,80 +1,101 @@
 
-# Base de datos
-# Database
+# 🗄️ Base de Datos / Database
+
+> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Universidad Santiago de Cali**<br>
+> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+>
+> Documento técnico orientado a evaluación académica: describe el modelo de datos (PostgreSQL/Sequelize), entidades, relaciones y procedimientos de migración/seed para validar el alcance del sistema.
 
 ---
 
-PostgreSQL con Sequelize. Tablas principales y relaciones.
-PostgreSQL with Sequelize. Main tables and relationships.
+## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta guía respalda la evaluación del proyecto de grado (Ingeniería de Sistemas, modalidad virtual, Universidad Santiago de Cali) y permite a los jueces verificar consistencia entre modelo de datos, funcionalidad y seguridad (RBAC, auditoría, tokens).
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This guide supports the academic evaluation of the graduation project and allows judges to validate consistency between the data model, functionality, and security (RBAC, auditing, tokens).
 
 ---
 
-## Entidades
-## Entities
-- Users: id, documentId (único), name, email (único), password (bcrypt), status ENUM(active/inactive), createdAt/updatedAt, createdBy/updatedBy  
-	Users: id, documentId (unique), name, email (unique), password (bcrypt), status ENUM(active/inactive), createdAt/updatedAt, createdBy/updatedBy
-- Roles: id, name (único), description, createdAt/updatedAt  
-	Roles: id, name (unique), description, createdAt/updatedAt
-- Permissions: id, name (único), description, createdAt/updatedAt  
-	Permissions: id, name (unique), description, createdAt/updatedAt
-- UserRoles: userId → roleId (N:M)  
-	UserRoles: userId → roleId (N:M)
-- RolePermissions: roleId → permissionId (N:M)  
-	RolePermissions: roleId → permissionId (N:M)
-- RefreshTokens: id, tokenHash (único), expiresAt, revokedAt, userId, timestamps  
-	RefreshTokens: id, tokenHash (unique), expiresAt, revokedAt, userId, timestamps
-- AuditLogs: id, userId, action, details, createdBy, createdAt/updatedAt  
-	AuditLogs: id, userId, action, details, createdBy, createdAt/updatedAt
+## 🧱 Entidades Principales / Main Entities
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Users**: `id`, `documentId` (único), `name`, `email` (único), `password` (bcrypt), `status` ENUM(active/inactive), `createdAt/updatedAt`, `createdBy/updatedBy`
+- **Roles**: `id`, `name` (único), `description`, `createdAt/updatedAt`
+- **Permissions**: `id`, `name` (único), `description`, `createdAt/updatedAt`
+- **UserRoles**: `userId` → `roleId` (N:M)
+- **RolePermissions**: `roleId` → `permissionId` (N:M)
+- **RefreshTokens**: `id`, `tokenHash` (único), `expiresAt`, `revokedAt`, `userId`, timestamps
+- **AuditLogs**: `id`, `userId`, `action`, `details`, `createdBy`, `createdAt/updatedAt`
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Users**: `id`, `documentId` (unique), `name`, `email` (unique), `password` (bcrypt), `status` ENUM(active/inactive), `createdAt/updatedAt`, `createdBy/updatedBy`
+- **Roles**: `id`, `name` (unique), `description`, `createdAt/updatedAt`
+- **Permissions**: `id`, `name` (unique), `description`, `createdAt/updatedAt`
+- **UserRoles**: `userId` → `roleId` (N:M)
+- **RolePermissions**: `roleId` → `permissionId` (N:M)
+- **RefreshTokens**: `id`, `tokenHash` (unique), `expiresAt`, `revokedAt`, `userId`, timestamps
+- **AuditLogs**: `id`, `userId`, `action`, `details`, `createdBy`, `createdAt/updatedAt`
 
 ---
 
-## Relaciones
-## Relationships
-- User → Role (N:M) vía UserRoles  
-	User → Role (N:M) via UserRoles
-- Role → Permission (N:M) vía RolePermissions  
-	Role → Permission (N:M) via RolePermissions
-- User 1:N RefreshTokens  
-	User 1:N RefreshTokens
-- User 1:N AuditLogs  
-	User 1:N AuditLogs
+## 🔗 Relaciones / Relationships
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- User → Role (N:M) vía **UserRoles**
+- Role → Permission (N:M) vía **RolePermissions**
+- User 1:N **RefreshTokens**
+- User 1:N **AuditLogs**
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- User → Role (N:M) via **UserRoles**
+- Role → Permission (N:M) via **RolePermissions**
+- User 1:N **RefreshTokens**
+- User 1:N **AuditLogs**
 
 ---
 
-## Migraciones y seeds
-## Migrations and seeds
-- Carpeta activa: `backend/migrations/` (usar `backend/src/migrate.js` con `sequelize.sync({ alter: true })`).  
-	Active folder: `backend/migrations/` (use `backend/src/migrate.js` with `sequelize.sync({ alter: true })`).
-- Carpeta raíz `migrations/` contiene duplicados; preferir la de `backend/` para coherencia.  
-	Root folder `migrations/` contains duplicates; prefer `backend/` for consistency.
-- Seed: `node backend/src/seed.js` (crea roles base, permisos base, admin demo y ~50 usuarios demo). Contraseña demo hash corresponde a `password`.  
-	Seed: `node backend/src/seed.js` (creates base roles, base permissions, demo admin and ~50 demo users). Demo password hash matches `password`.
+## 🧬 Migraciones y Seed / Migrations & Seeding
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Carpeta activa: `backend/migrations/`.
+- `backend/src/migrate.js` sincroniza modelos (usa `sequelize.sync({ alter: true })`).
+- La carpeta raíz `migrations/` puede contener duplicados; para coherencia se recomienda la de `backend/`.
+- Seed: `node backend/src/seed.js` (crea roles base, permisos base, admin demo y usuarios demo). La contraseña demo corresponde a `password`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Active folder: `backend/migrations/`.
+- `backend/src/migrate.js` syncs models (uses `sequelize.sync({ alter: true })`).
+- Root `migrations/` may contain duplicates; for consistency, prefer `backend/`.
+- Seed: `node backend/src/seed.js` (creates base roles, base permissions, demo admin and demo users). Demo password is `password`.
 
 ---
 
-## Pasos locales (sin Docker)
-## Local steps (without Docker)
-1. Configura `.env` en `backend/` con DB_* y JWT_SECRET.  
-	 Set up `.env` in `backend/` with DB_* and JWT_SECRET.
-2. Ejecuta migración: `node backend/src/migrate.js`.  
-	 Run migration: `node backend/src/migrate.js`.
-3. (Opcional) Seed: `node backend/src/seed.js`.  
-	 (Optional) Seed: `node backend/src/seed.js`.
+## 🧪 Pasos Locales (sin Docker) / Local Steps (without Docker)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+1. Configura `.env` en `backend/` con `DB_*` y `JWT_SECRET`.
+2. Ejecuta migración: `node backend/src/migrate.js`.
+3. (Opcional) Ejecuta seed: `node backend/src/seed.js`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+1. Set up `backend/.env` with `DB_*` and `JWT_SECRET`.
+2. Run migration: `node backend/src/migrate.js`.
+3. (Optional) Run seed: `node backend/src/seed.js`.
 
 ---
 
-## Pasos con Docker Compose
-## Steps with Docker Compose
-- DB se crea con credenciales de `docker-compose.yml` (POSTGRES_*).  
-	DB is created with credentials from `docker-compose.yml` (POSTGRES_*).
-- Backend arranca y sincroniza modelos al conectar (usa sync); ejecutar seed manualmente si se requiere datos demo.  
-	Backend starts and syncs models on connect (uses sync); run seed manually if demo data is needed.
+## 🐳 Docker Compose / Docker Compose
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- La DB se crea con credenciales de `docker-compose.yml` (`POSTGRES_*`).
+- El backend arranca y sincroniza modelos al conectar; ejecutar seed manualmente si se requieren datos demo.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- DB is created with credentials from `docker-compose.yml` (`POSTGRES_*`).
+- Backend starts and syncs models on connect; run seed manually if demo data is required.
 
 ---
 
-## Notas
-## Notes
-- Refresh tokens se almacenan con hash (sha256) y tienen rotación; campo revokedAt marca invalidación.  
-	Refresh tokens are stored as hash (sha256) and are rotated; revokedAt field marks invalidation.
-- AuditLogs registran acciones exitosas y accesos fallidos (middleware).  
-	AuditLogs record successful actions and failed accesses (middleware).
+## 📝 Notas / Notes
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Los refresh tokens se almacenan como hash (sha256) y se rotan; `revokedAt` marca invalidación.
+- AuditLogs registran acciones exitosas y accesos fallidos (middleware).
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Refresh tokens are stored as sha256 hashes and rotated; `revokedAt` marks invalidation.
+- AuditLogs record successful actions and failed accesses (middleware).
