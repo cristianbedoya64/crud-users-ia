@@ -19,13 +19,13 @@
 ---
 
 ## 📝 Descripción General / General Description
-<span>🇪🇸</span> es - Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br>
-<span>🇬🇧</span> en - Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
+🇪🇸 es - Plataforma web empresarial para gestión de usuarios, roles y permisos, con módulos de Inteligencia Artificial y Data Science. API full-stack para gestión de usuarios, roles, permisos y panel de IA. Incluye autenticación JWT, RBAC, logs de auditoría y dashboard interactivo. Pensado para despliegue seguro y escalable.<br>
+🇬🇧 en - Full-stack web platform for user, role, and permission management with AI and Data Science modules. Includes JWT authentication, RBAC, audit logs, and interactive dashboard. Designed for secure and scalable deployment.
 
 ---
 
 ## 🗂️ Tabla de Contenidos / Table of Contents
-<span>🇪🇸</span> es -
+🇪🇸 es -
   - Descripción General
   - Estructura del Proyecto
   - Instalación y Configuración
@@ -38,7 +38,7 @@
   - Lighthouse
   - Backup y Restauración
   - Changelog
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
   - General Description
   - Project Structure
   - Installation & Setup
@@ -55,14 +55,14 @@
 ---
 
 ## 🏗️ Estructura del Proyecto / Project Structure
-<span>🇪🇸</span> es -
+🇪🇸 es -
 ```shell
 /backend   # API Node.js/Express/Sequelize
 /frontend  # SPA React/Vite/Tailwind
 /ia        # Microservicio IA Python/Flask
 /docs      # Documentación técnica
 ```
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 ```shell
 /backend   # Node.js/Express/Sequelize API
 /frontend  # React/Vite/Tailwind SPA
@@ -73,12 +73,12 @@
 ---
 
 ## ⚙️ Instalación y Configuración / Installation & Setup
-<span>🇪🇸</span> es -
+🇪🇸 es -
 1. Clona el repo y revisa los README de cada módulo.
 2. Configura variables en `.env` y `backend/.env` (ver ejemplos).
 3. Usa Docker Compose o instala dependencias manualmente.
 4. Ejecuta migraciones y seed si es necesario.
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 1. Clone the repo and review each module's README.
 2. Set variables in `.env` and `backend/.env` (see examples).
 3. Use Docker Compose or install dependencies manually.
@@ -87,11 +87,11 @@
 ---
 
 ## 🔒 Seguridad / Security
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - JWT fuerte y CORS restringido en prod
 - Seeds demo solo en desarrollo
 - Logs de auditoría y rate limit
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - Strong JWT and restricted CORS in production
 - Demo seeds only in development
 - Audit logs and rate limiting
@@ -99,11 +99,11 @@
 ---
 
 ## 🧩 Módulos Principales / Main Modules
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - Backend: API RESTful, RBAC, auditoría
 - Frontend: SPA, dashboard, panel IA
 - IA: Flask, análisis y predicción
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - Backend: RESTful API, RBAC, audit
 - Frontend: SPA, dashboard, IA panel
 - IA: Flask, analysis and prediction
@@ -111,11 +111,11 @@
 ---
 
 ## 🛡️ Autenticación y Permisos / Auth & Permissions
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - JWT + refresh tokens
 - RBAC por roles y permisos
 - Logs de acceso y acciones
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - JWT + refresh tokens
 - RBAC by roles and permissions
 - Access and action logs
@@ -123,14 +123,14 @@
 ---
 
 ## 📚 Documentación Técnica / Technical Documentation
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - [API](docs/api.md)
 - [Base de datos](docs/db.md)
 - [Seguridad](docs/security.md)
 - [Despliegue](docs/DEPLOY.md)
 - [Backup/Restore](docs/RESTORE_BACKUP.md)
 - [Changelog](docs/CHANGELOG.md)
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - [API](docs/api.md)
 - [Database](docs/db.md)
 - [Security](docs/security.md)
@@ -141,22 +141,22 @@
 ---
 
 ## 🚀 Despliegue / Deployment
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - DigitalOcean App Platform (recomendado)
 - Docker Compose (local/prod)
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - DigitalOcean App Platform (recommended)
 - Docker Compose (local/prod)
 
 ---
 
 ## 🧪 Pruebas / Tests
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - Backend (API/Node):
   - `npm test` dentro de la carpeta backend.
 - Frontend (React):
   - `npm test` dentro de la carpeta frontend.
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - Backend (API/Node):
   - `npm test` inside backend folder.
 - Frontend (React):
@@ -165,11 +165,11 @@
 ---
 
 ## 💡 Lighthouse
-<span>🇪🇸</span> es -
+🇪🇸 es -
 - Ejecutar auditorías (mobile + desktop):
   - `npm run lighthouse` dentro de la carpeta frontend.
 - Ver guía detallada: [docs/lighthouse.md](docs/lighthouse.md)
-<br><span>🇬🇧</span> en -
+<br>🇬🇧 en -
 - Run audits (mobile + desktop):
   - `npm run lighthouse` inside frontend folder.
 - See detailed guide: [docs/lighthouse.md](docs/lighthouse.md)
@@ -177,11 +177,11 @@
 ---
 
 ## 💾 Backup y Restauración / Backup & Restore
-<span>🇪🇸</span> es - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
-<br><span>🇬🇧</span> en - See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+🇪🇸 es - Ver [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
+<br>🇬🇧 en - See [docs/RESTORE_BACKUP.md](docs/RESTORE_BACKUP.md)
 
 ---
 
 ## 📝 Changelog
-<span>🇪🇸</span> es - Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)
-<br><span>🇬🇧</span> en - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
+🇪🇸 es - Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)
+<br>🇬🇧 en - See [docs/CHANGELOG.md](docs/CHANGELOG.md)
