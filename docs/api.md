@@ -28,11 +28,13 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Todas las rutas (salvo login/refresh/logout) requieren `Authorization: Bearer <accessToken>` emitido por `POST /api/auth/login`.
 - El acceso se controla por permisos RBAC (roles ↔ permisos).
+- La verificación de permisos usa cache con TTL configurable (`PERMISSION_CACHE_TTL_MS`) para reducir consultas por request.
 - Los endpoints se agrupan por módulos para facilitar la revisión por parte de los evaluadores.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - All routes (except login/refresh/logout) require `Authorization: Bearer <accessToken>` issued by `POST /api/auth/login`.
 - Access is controlled by RBAC permissions (roles ↔ permissions).
+- Permission checks use a configurable TTL cache (`PERMISSION_CACHE_TTL_MS`) to reduce DB queries per request.
 - Endpoints are grouped by module for easier academic review.
 
 ---
@@ -86,13 +88,13 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 
 ## 🔑 Permisos / Permissions
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- GET `/api/permissions` – Recomendado `manage_roles` (actualmente abierto tras auth)
+- GET `/api/permissions` – Permiso `manage_roles`
 - POST `/api/permissions` – Permiso `manage_roles` – Body `{ name, description? }`
 - PUT `/api/permissions/:id` – Permiso `manage_roles` – Body `{ name, description? }`
 - DELETE `/api/permissions/:id` – Permiso `manage_roles`
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- GET `/api/permissions` – `manage_roles` recommended (currently open after auth)
+- GET `/api/permissions` – Permission `manage_roles`
 - POST `/api/permissions` – Permission `manage_roles` – Body `{ name, description? }`
 - PUT `/api/permissions/:id` – Permission `manage_roles` – Body `{ name, description? }`
 - DELETE `/api/permissions/:id` – Permission `manage_roles`

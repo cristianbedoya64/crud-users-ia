@@ -5,9 +5,13 @@ import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
+import { getStoredUser } from '../auth';
+import { hasPermission } from '../utils/permissions';
 
 
 export default function RolesView() {
+  const currentUser = getStoredUser();
+  const canManageRoles = hasPermission(currentUser, 'manage_roles');
   const [roleName, setRoleName] = useState('');
   const [roleDescription, setRoleDescription] = useState('');
   const [roles, setRoles] = useState([]);
@@ -396,6 +400,17 @@ export default function RolesView() {
       .finally(() => setSaving(false));
   }
 
+  if (!canManageRoles) {
+    return (
+      <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+        <Card shadow="md" padding="lg" radius="md" withBorder>
+          <Title order={3} mb="sm">Roles</Title>
+          <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
+        </Card>
+      </Box>
+    );
+  }
+
   return (
     <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
@@ -438,7 +453,7 @@ export default function RolesView() {
                 {roles.length === 0 ? (
                   <tr>
                     <td colSpan={3}>
-                      <Text color="dimmed" align="center">No hay roles registrados.</Text>
+                      <Text color="dimmed" align="center">No hay datos para mostrar.</Text>
                     </td>
                   </tr>
                 ) : (

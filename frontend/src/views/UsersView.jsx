@@ -6,8 +6,15 @@ import { notifications } from '@mantine/notifications';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { isValidEmail, isValidPassword } from '../utils/validation';
+import { getStoredUser } from '../auth';
+import { hasPermission } from '../utils/permissions';
 
 export default function UsersView() {
+  const currentUser = getStoredUser();
+  const canReadUsers = hasPermission(currentUser, 'read_user');
+  const canCreateUser = hasPermission(currentUser, 'create_user');
+  const canUpdateUser = hasPermission(currentUser, 'update_user');
+  const canDeleteUser = hasPermission(currentUser, 'delete_user');
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [showInactive, setShowInactive] = useState(false);
@@ -238,6 +245,17 @@ export default function UsersView() {
   const currentCount = filteredUsers.length;
   const sectionColor = showInactive ? 'red' : 'green';
 
+  if (!canReadUsers) {
+    return (
+      <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
+        <Card shadow="md" padding="lg" radius="md" withBorder>
+          <Title order={3} mb="sm">Usuarios</Title>
+          <Text color="dimmed">No autorizado. Requiere permiso <b>read_user</b>.</Text>
+        </Card>
+      </Box>
+    );
+  }
+
   return (
     <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
@@ -250,9 +268,12 @@ export default function UsersView() {
           <MultiSelect label="Roles" data={roles.map(r => ({ value: r.id.toString(), label: r.name }))} value={form.roles} onChange={roles => setForm({ ...form, roles: roles.map(r => DOMPurify.sanitize(r)) })} placeholder="Selecciona roles" clearable aria-label="Roles" w="100%" />
         </SimpleGrid>
         <Group justify="flex-end" wrap="wrap">
-          <Button color="blue" onClick={handleAdd} loading={creating} disabled={editModal} mt={{ base: 8, sm: 0 }} w={{ base: '100%', sm: 120 }} type="button">Registrar</Button>
+          <Button color="blue" onClick={handleAdd} loading={creating} disabled={editModal || !canCreateUser} mt={{ base: 8, sm: 0 }} w={{ base: '100%', sm: 120 }} type="button">Registrar</Button>
           <Button variant="default" onClick={resetCreateForm} disabled={creating || editModal} mt={{ base: 8, sm: 0 }} w={{ base: '100%', sm: 120 }} type="button">Limpiar</Button>
         </Group>
+        {!canCreateUser && (
+          <Text size="sm" color="dimmed" mt="sm">No tienes permiso para crear usuarios.</Text>
+        )}
       </Card>
 
       <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -277,7 +298,7 @@ export default function UsersView() {
               </Accordion.Control>
               <Accordion.Panel>
                 {filteredUsers.length === 0 ? (
-                  <Text color="dimmed" align="center" py="md">No hay usuarios registrados.</Text>
+                  <Text color="dimmed" align="center" py="md">No hay datos para mostrar.</Text>
                 ) : (
                   <Stack gap="sm">
                     {filteredUsers.map(user => {
@@ -303,17 +324,23 @@ export default function UsersView() {
                           </Group>
                           <Group gap={8} mt="md">
                             {isInactive ? (
-                              <Tooltip label="Restaurar usuario" withArrow position="top">
-                                <Button color="green" size="xs" variant="outline" onClick={() => handleRestore(user.id)}>Restaurar</Button>
-                              </Tooltip>
+                              canUpdateUser && (
+                                <Tooltip label="Restaurar usuario" withArrow position="top">
+                                  <Button color="green" size="xs" variant="outline" onClick={() => handleRestore(user.id)}>Restaurar</Button>
+                                </Tooltip>
+                              )
                             ) : (
                               <>
-                                <Tooltip label="Editar usuario" withArrow position="top">
-                                  <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
-                                </Tooltip>
-                                <Tooltip label="Eliminar usuario" withArrow position="top">
-                                  <Button color="red" size="xs" onClick={() => handleDelete(user)}>Eliminar</Button>
-                                </Tooltip>
+                                {canUpdateUser && (
+                                  <Tooltip label="Editar usuario" withArrow position="top">
+                                    <Button color="yellow" size="xs" onClick={() => handleEdit(user)}>Editar</Button>
+                                  </Tooltip>
+                                )}
+                                {canDeleteUser && (
+                                  <Tooltip label="Eliminar usuario" withArrow position="top">
+                                    <Button color="red" size="xs" onClick={() => handleDelete(user)}>Eliminar</Button>
+                                  </Tooltip>
+                                )}
                               </>
                             )}
                           </Group>

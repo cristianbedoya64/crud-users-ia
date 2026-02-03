@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { notifications } from '@mantine/notifications';
+import { Card, Title, Select, MultiSelect, Button, Text, Stack, Group, Loader } from '@mantine/core';
 
 export default function AssignPermissionsForm({ onAssigned }) {
   const [roles, setRoles] = useState([]);
@@ -11,10 +12,13 @@ export default function AssignPermissionsForm({ onAssigned }) {
   const [selectedPerms, setSelectedPerms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [loadingRoles, setLoadingRoles] = useState(false);
+  const [loadingPerms, setLoadingPerms] = useState(false);
 
   const toArray = (value) => (Array.isArray(value) ? value : []);
 
   useEffect(() => {
+    setLoadingRoles(true);
     authFetch(`${API_BASE}/api/roles`)
       .then(async res => {
         const data = await res.json().catch(() => null);
@@ -33,7 +37,10 @@ export default function AssignPermissionsForm({ onAssigned }) {
         return data;
       })
       .then(data => setRoles(toArray(data)))
-      .catch(() => setRoles([]));
+      .catch(() => setRoles([]))
+      .finally(() => setLoadingRoles(false));
+
+    setLoadingPerms(true);
     authFetch(`${API_BASE}/api/permissions`)
       .then(async res => {
         const data = await res.json().catch(() => null);
@@ -52,7 +59,8 @@ export default function AssignPermissionsForm({ onAssigned }) {
         return data;
       })
       .then(data => setPermissions(toArray(data)))
-      .catch(() => setPermissions([]));
+      .catch(() => setPermissions([]))
+      .finally(() => setLoadingPerms(false));
   }, []);
 
   const handleAssign = async (e) => {
@@ -73,7 +81,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
       const res = await authFetch(`${API_BASE}/api/roles/${selectedRole}/permissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ permissionIds: selectedPerms })
+        body: JSON.stringify({ permissionIds: selectedPerms.map(id => Number(id)) })
       });
       if (res.ok) {
         setMessage('Permisos asignados correctamente.');
@@ -106,49 +114,56 @@ export default function AssignPermissionsForm({ onAssigned }) {
     setLoading(false);
   };
 
+  const roleOptions = roles.map(role => ({ value: String(role.id), label: role.name }));
+  const permOptions = permissions.map(perm => ({ value: String(perm.id), label: perm.name }));
+
   return (
-    <form onSubmit={handleAssign} style={{ padding: 20, border: '1px solid #eee', borderRadius: 8, background: '#fafafa', width: '100%' }}>
-      <h3>Asignar Permisos a Rol</h3>
-      <div>
-        <label>Rol:</label>
-        <select value={selectedRole} onChange={e => setSelectedRole(DOMPurify.sanitize(e.target.value))} required style={{ width: '100%' }}>
-          <option value="">Selecciona un rol</option>
-          {roles.map(role => (
-            <option key={role.id} value={role.id}>{role.name}</option>
-          ))}
-        </select>
-      </div>
-      <div style={{ marginTop: 10 }}>
-        <label>Permisos:</label>
-        <div style={{ maxHeight: 120, overflowY: 'auto', border: '1px solid #ddd', padding: 5 }}>
-          {permissions.map(perm => (
-            <div key={perm.id} style={{ marginBottom: 6 }}>
-              <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span>
-                  <input
-                    type="checkbox"
-                    value={perm.id}
-                    checked={selectedPerms.includes(perm.id)}
-                    onChange={e => {
-                      const value = DOMPurify.sanitize(e.target.value);
-                      if (e.target.checked) setSelectedPerms([...selectedPerms, perm.id]);
-                      else setSelectedPerms(selectedPerms.filter(id => id !== perm.id));
-                    }}
-                  />
-                  <b style={{ marginLeft: 6 }}>{perm.name}</b>
-                </span>
-                {perm.description && (
-                  <span style={{ fontSize: '0.9em', color: '#555', marginLeft: 24 }}>{perm.description}</span>
-                )}
-              </label>
-            </div>
-          ))}
-        </div>
-      </div>
-      <button type="submit" disabled={loading} style={{ marginTop: 15, width: '100%' }}>
-        {loading ? 'Asignando...' : 'Asignar Permisos'}
-      </button>
-      {message && <div style={{ marginTop: 10, color: message.includes('correctamente') ? 'green' : 'red' }}>{message}</div>}
-    </form>
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Stack gap="sm">
+        <Title order={4}>Asignar permisos a rol</Title>
+        {(loadingRoles || loadingPerms) && (
+          <Group justify="center"><Loader size="sm" /></Group>
+        )}
+        {!loadingRoles && roleOptions.length === 0 && (
+          <Text size="sm" color="dimmed">No hay roles disponibles.</Text>
+        )}
+        {!loadingPerms && permOptions.length === 0 && (
+          <Text size="sm" color="dimmed">No hay permisos disponibles.</Text>
+        )}
+
+        <form onSubmit={handleAssign}>
+          <Stack gap="sm">
+            <Select
+              label="Rol"
+              placeholder="Selecciona un rol"
+              data={roleOptions}
+              value={selectedRole}
+              onChange={value => setSelectedRole(DOMPurify.sanitize(value || ''))}
+              searchable
+              clearable
+              required
+            />
+            <MultiSelect
+              label="Permisos"
+              placeholder="Selecciona permisos"
+              data={permOptions}
+              value={selectedPerms}
+              onChange={values => setSelectedPerms(values.map(v => DOMPurify.sanitize(v)))}
+              searchable
+              clearable
+              required
+            />
+            <Button type="submit" loading={loading} fullWidth>
+              {loading ? 'Asignando...' : 'Asignar permisos'}
+            </Button>
+            {message && (
+              <Text size="sm" color={message.includes('correctamente') ? 'green' : 'red'}>
+                {message}
+              </Text>
+            )}
+          </Stack>
+        </form>
+      </Stack>
+    </Card>
   );
 }

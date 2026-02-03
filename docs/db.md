@@ -63,15 +63,25 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 ## 🧬 Migraciones y Seed / Migrations & Seeding
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Carpeta activa: `backend/migrations/`.
-- `backend/src/migrate.js` sincroniza modelos (usa `sequelize.sync({ alter: true })`).
+- `backend/src/migrate.js` permite `sync/alter` solo fuera de producción. En producción se deben usar migraciones.
+- `MIGRATE_MODE=sync` habilita sync en entornos no productivos; por defecto en producción es `migrations`.
 - La carpeta raíz `migrations/` puede contener duplicados; para coherencia se recomienda la de `backend/`.
-- Seed: `node backend/src/seed.js` (crea roles base, permisos base, admin demo y usuarios demo). La contraseña demo corresponde a `password`.
+- Seed: `node backend/src/seed.js`.
+	- `SEED_MODE=demo` crea usuarios demo (admin/usuariodemo y dataset de ejemplo).
+	- `SEED_MODE=prod` solo crea roles/permisos base (sin usuarios demo).
+	- `SEED_ALLOW_SYNC=true` permite `sequelize.sync()` solo en entornos no productivos.
+	- Contraseña demo: `Password1!`.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Active folder: `backend/migrations/`.
-- `backend/src/migrate.js` syncs models (uses `sequelize.sync({ alter: true })`).
+- `backend/src/migrate.js` allows `sync/alter` only outside production. Production must use migrations.
+- `MIGRATE_MODE=sync` enables sync in non‑production; production defaults to `migrations`.
 - Root `migrations/` may contain duplicates; for consistency, prefer `backend/`.
-- Seed: `node backend/src/seed.js` (creates base roles, base permissions, demo admin and demo users). Demo password is `password`.
+- Seed: `node backend/src/seed.js`.
+	- `SEED_MODE=demo` creates demo users (admin/usuariodemo and sample dataset).
+	- `SEED_MODE=prod` creates only base roles/permissions (no demo users).
+	- `SEED_ALLOW_SYNC=true` allows `sequelize.sync()` only in non‑production.
+	- Demo password: `Password1!`.
 
 ---
 
@@ -79,23 +89,23 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 1. Configura `.env` en `backend/` con `DB_*` y `JWT_SECRET`.
 2. Ejecuta migración: `node backend/src/migrate.js`.
-3. (Opcional) Ejecuta seed: `node backend/src/seed.js`.
+3. (Opcional) Ejecuta seed demo: `SEED_MODE=demo node backend/src/seed.js`.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 1. Set up `backend/.env` with `DB_*` and `JWT_SECRET`.
 2. Run migration: `node backend/src/migrate.js`.
-3. (Optional) Run seed: `node backend/src/seed.js`.
+3. (Optional) Run demo seed: `SEED_MODE=demo node backend/src/seed.js`.
 
 ---
 
 ## 🐳 Docker Compose / Docker Compose
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - La DB se crea con credenciales de `docker-compose.yml` (`POSTGRES_*`).
-- El backend arranca y sincroniza modelos al conectar; ejecutar seed manualmente si se requieren datos demo.
+- El backend arranca; usar migraciones para producción y ejecutar seed demo manualmente si se requieren datos de prueba.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - DB is created with credentials from `docker-compose.yml` (`POSTGRES_*`).
-- Backend starts and syncs models on connect; run seed manually if demo data is required.
+- Backend starts; use migrations in production and run demo seed manually if test data is needed.
 
 ---
 

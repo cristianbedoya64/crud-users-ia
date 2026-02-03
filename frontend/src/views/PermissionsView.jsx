@@ -8,8 +8,12 @@ import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
 import { notifications } from '@mantine/notifications';
 import { useMediaQuery } from '@mantine/hooks';
+import { getStoredUser } from '../auth';
+import { hasPermission } from '../utils/permissions';
 
 export default function PermissionsView() {
+  const currentUser = getStoredUser();
+  const canManageRoles = hasPermission(currentUser, 'manage_roles');
   const [permissions, setPermissions] = useState([]);
   const [permName, setPermName] = useState('');
   const [permDescription, setPermDescription] = useState('');
@@ -233,6 +237,17 @@ export default function PermissionsView() {
       });
   }
 
+  if (!canManageRoles) {
+    return (
+      <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+        <Card shadow="md" padding="lg" radius="md" withBorder>
+          <Title order={3} mb="sm">Permisos</Title>
+          <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
+        </Card>
+      </Box>
+    );
+  }
+
   return (
     <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
       <PermissionsReferenceTable />
@@ -266,7 +281,7 @@ export default function PermissionsView() {
           ) : isMobile ? (
             <Stack gap="sm">
               {permissions.length === 0 ? (
-                <Text color="dimmed" align="center">No hay permisos registrados.</Text>
+                <Text color="dimmed" align="center">No hay datos para mostrar.</Text>
               ) : (
                 permissions.map(perm => (
                   <Card key={perm.id} withBorder radius="md" p="sm">
@@ -305,7 +320,7 @@ export default function PermissionsView() {
                   {permissions.length === 0 ? (
                     <tr>
                       <td colSpan={3}>
-                        <Text color="dimmed" align="center">No hay permisos registrados.</Text>
+                        <Text color="dimmed" align="center">No hay datos para mostrar.</Text>
                       </td>
                     </tr>
                   ) : (

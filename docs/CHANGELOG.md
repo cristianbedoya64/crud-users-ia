@@ -73,6 +73,21 @@
 - Compatibilidad con Codespaces y despliegue seguro en Docker Compose.
 - Actualización de README y documentación técnica para reflejar cambios de seguridad y arquitectura.
 - Se establece política: todo cambio futuro será documentado en este changelog y en los archivos relevantes.
+- Auditoría: rutas dummy limitadas a `/api/demo/*` y `/api/audit` queda inequívoco.
+- Auditoría: registro de 401/403 incluso sin `req.user` (userId=0 como anónimo/indeterminado).
+- Auditoría: filtros y permisos `view_audit` se mantienen en `/api/audit` (auditLogRoutes).
+- Documentado el uso de IA (GitHub Copilot) y el proceso de validación en `docs/ai_assistance.md`.
+- Creada carpeta de trazabilidad de prompts IA en `docs/ai_traceability/`.
+- Seed: `documentId` demo alineado con validaciones (solo numérico 6-12 dígitos).
+- Seed: separación demo/prod vía `SEED_MODE` y contraseña demo actualizada.
+- Migraciones: `migrate.js` evita `sync` en producción y documenta uso de migraciones.
+- RBAC: cache TTL para permisos (`PERMISSION_CACHE_TTL_MS`) y menor carga por request.
+- RBAC: `GET /api/permissions` ahora requiere `manage_roles` (consistencia con docs).
+- Frontend: tabla de referencia de permisos alineada con matriz real.
+- Documentación IA: enlace a trazabilidad de prompts en `docs/ai_assistance.md`.
+- UX: menú por capacidades (oculta módulos sin permisos) y acciones restringidas por rol.
+- UX: formulario de asignación de permisos unificado con Mantine.
+- UX: estados vacíos y mensajes consistentes.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Hardened user serialization: password is never exposed in responses or logs.
@@ -84,3 +99,18 @@
 - Codespaces compatibility and secure deployment in Docker Compose.
 - README and technical documentation updated to reflect security and architecture changes.
 - Policy established: all future changes will be documented in this changelog and relevant files.
+- Audit: dummy routes limited to `/api/demo/*` and `/api/audit` is unambiguous.
+- Audit: 401/403 logging even without `req.user` (userId=0 as anonymous/unknown).
+- Audit: filters and `view_audit` permission remain enforced on `/api/audit` (auditLogRoutes).
+- Documented AI usage (GitHub Copilot) and validation process in `docs/ai_assistance.md`.
+- Created AI prompt traceability folder in `docs/ai_traceability/`.
+- Seed: demo `documentId` aligned with validations (numeric 6-12 digits only).
+- Seed: demo/prod separation via `SEED_MODE` and demo password updated.
+- Migrations: `migrate.js` avoids `sync` in production and documents migrations usage.
+- RBAC: TTL cache for permissions (`PERMISSION_CACHE_TTL_MS`) and reduced per-request load.
+- RBAC: `GET /api/permissions` now requires `manage_roles` (docs consistency).
+- Frontend: permissions reference table aligned with real matrix.
+- AI docs: prompt traceability link added in `docs/ai_assistance.md`.
+- UX: capability-based menu (hides modules without permissions) and role-restricted actions.
+- UX: permissions assignment form unified with Mantine.
+- UX: consistent empty states and messages.

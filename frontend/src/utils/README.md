@@ -17,8 +17,12 @@
 
 ## 🧱 Archivos / Files
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- `validation.js`: validaciones y helpers de formularios.
+- `permissions.js`: helpers de permisos/roles en frontend.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- `validation.js`: form validations and helper utilities.
+- `permissions.js`: frontend helpers for roles/permissions.
 
 ## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**

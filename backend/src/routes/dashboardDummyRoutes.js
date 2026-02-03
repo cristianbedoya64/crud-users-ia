@@ -2,36 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const permission = require('../middleware/permission');
 
-const { AuditLog } = require('../models');
-
-// Panel requiere usuario autenticado; lectura de auditoría requiere permiso explícito
+// Panel requiere usuario autenticado; endpoints demo
 router.use(auth());
-
-// Devuelve los logs reales de la base de datos
-router.get('/audit', permission('view_audit'), async (req, res) => {
-  try {
-    const logs = await AuditLog.findAll({ order: [['createdAt', 'DESC']] });
-    res.json(logs);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al consultar auditoría.', details: err.message });
-  }
-});
-
-// Endpoint para registrar eventos desde otras secciones
-router.post('/audit', permission('view_audit'), async (req, res) => {
-  try {
-    const { userId, action, details } = req.body;
-    if (!userId || !action) {
-      return res.status(400).json({ error: 'userId y action son obligatorios.' });
-    }
-    const log = await AuditLog.create({ userId, action, details });
-    res.status(201).json(log);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al registrar auditoría.', details: err.message });
-  }
-});
 
 router.get('/security-alerts', (req, res) => {
   res.json([

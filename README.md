@@ -141,6 +141,8 @@ This system is the graduation project for the Systems Engineering degree (virtua
 - [API](docs/api.md)
 - [Base de datos](docs/db.md)
 - [Seguridad](docs/security.md)
+- [Uso de IA (Copilot)](docs/ai_assistance.md)
+- [Trazabilidad de Prompts (IA)](docs/ai_traceability/README.md)
 - [Despliegue](docs/DEPLOY.md)
 - [Backup/Restore](docs/RESTORE_BACKUP.md)
 - [Changelog](docs/CHANGELOG.md)<br><br>
@@ -199,10 +201,10 @@ This system is the graduation project for the Systems Engineering degree (virtua
 
 ## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-Cada cambio funcional, técnico o de seguridad realizado en el sistema será documentado en el changelog ([docs/CHANGELOG.md](docs/CHANGELOG.md)) y en los archivos relevantes. Esto garantiza trazabilidad, transparencia y evidencia para la evaluación académica y profesional.
+Cada cambio funcional, técnico o de seguridad realizado en el sistema será documentado en el changelog ([docs/CHANGELOG.md](docs/CHANGELOG.md)) y en los archivos relevantes. Además, cuando un cambio tenga prompts relevantes, se registrará en la trazabilidad de IA ([docs/ai_traceability/README.md](docs/ai_traceability/README.md)). Esto garantiza trazabilidad, transparencia y evidencia para la evaluación académica y profesional.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-Every functional, technical, or security change made to the system will be documented in the changelog ([docs/CHANGELOG.md](docs/CHANGELOG.md)) and in the relevant files. This ensures traceability, transparency, and evidence for academic and professional evaluation.
+Every functional, technical, or security change made to the system will be documented in the changelog ([docs/CHANGELOG.md](docs/CHANGELOG.md)) and in the relevant files. In addition, when a change has relevant prompts, it will be recorded in AI traceability ([docs/ai_traceability/README.md](docs/ai_traceability/README.md)). This ensures traceability, transparency, and evidence for academic and professional evaluation.
 
 ## 📝 Changelog
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ver [docs/CHANGELOG.md](docs/CHANGELOG.md)<br><br>

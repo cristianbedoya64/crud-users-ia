@@ -9,21 +9,46 @@ const PERMISSIONS_REFERENCE = [
     endpoints: ['POST /api/users']
   },
   {
+    name: 'read_user',
+    description: 'Permite ver usuarios',
+    endpoints: ['GET /api/users', 'GET /api/users/:id']
+  },
+  {
+    name: 'update_user',
+    description: 'Permite editar usuarios',
+    endpoints: ['PUT /api/users/:id', 'POST /api/users/:id/restore']
+  },
+  {
     name: 'delete_user',
     description: 'Permite eliminar (desactivar) usuarios',
     endpoints: ['DELETE /api/users/:id']
   },
   {
-    name: 'create_role',
-    description: 'Permite crear roles',
-    endpoints: ['POST /api/roles']
+    name: 'manage_roles',
+    description: 'Permite gestionar roles, permisos y asignaciones',
+    endpoints: [
+      'GET /api/roles',
+      'POST /api/roles',
+      'PUT /api/roles/:id',
+      'DELETE /api/roles/:id',
+      'GET /api/permissions',
+      'POST /api/permissions',
+      'PUT /api/permissions/:id',
+      'DELETE /api/permissions/:id',
+      'GET /api/roles/:roleId/permissions',
+      'POST /api/roles/:roleId/permissions',
+      'DELETE /api/roles/:roleId/permissions/:permissionId',
+      'GET /api/user-roles/:userId/roles',
+      'POST /api/user-roles/:userId/roles',
+      'DELETE /api/user-roles/:userId/roles/:roleId'
+    ]
   },
   {
-    name: 'assign_permission',
-    description: 'Permite asignar permisos a roles',
-    endpoints: ['POST /api/role-permissions/:roleId/permissions']
+    name: 'view_audit',
+    description: 'Permite ver auditoría',
+    endpoints: ['GET /api/audit']
   },
-  // Agrega aquí más permisos según tu lógica
+  // Mantener sincronizado con backend/src/constants/permissionMatrix.js
 ];
 
 export default function PermissionsReferenceTable() {

@@ -2,18 +2,21 @@ import React from 'react';
 import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { getUserPermissions } from '../utils/permissions';
 
 const navItems = [
   { label: 'Dashboard', icon: <IconDashboard size={20} />, view: 'dashboard' },
-  { label: 'Usuarios', icon: <IconUsers size={20} />, view: 'users' },
-  { label: 'Roles', icon: <IconShield size={20} />, view: 'roles' },
-  { label: 'Permisos', icon: <IconKey size={20} />, view: 'permissions' },
-  { label: 'Auditoría', icon: <IconHistory size={20} />, view: 'audit' },
+  { label: 'Usuarios', icon: <IconUsers size={20} />, view: 'users', requiredPermission: 'read_user' },
+  { label: 'Roles', icon: <IconShield size={20} />, view: 'roles', requiredPermission: 'manage_roles' },
+  { label: 'Permisos', icon: <IconKey size={20} />, view: 'permissions', requiredPermission: 'manage_roles' },
+  { label: 'Auditoría', icon: <IconHistory size={20} />, view: 'audit', requiredPermission: 'view_audit' },
 ];
 
 export default function MantineLayout({ view, setView, user, onLogout, children }) {
   const [opened, { toggle, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const userPermissions = getUserPermissions(user);
+  const visibleNavItems = navItems.filter(item => !item.requiredPermission || userPermissions.has(item.requiredPermission));
 
   return (
     <AppShell
@@ -30,12 +33,13 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
         </Box>
         <Divider mb="sm" />
         <Box>
-          {navItems.map(item => (
+          {visibleNavItems.map(item => (
             <NavLink
               key={item.label}
               label={item.label}
               leftSection={item.icon}
               active={view === item.view}
+              aria-label={item.label}
               onClick={() => {
                 setView(item.view);
                 if (isMobile) close();

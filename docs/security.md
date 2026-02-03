@@ -65,12 +65,12 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - La contraseña requiere minúscula, mayúscula, dígito y símbolo (validación por regex).
 - Evitar reutilización de contraseñas (en seed se rechaza duplicación directa).
-- Seeds crean `admin@demo.com` con contraseña `password` (hash). Cambiar en producción o deshabilitar seed.
+- Seeds crean `admin@demo.com` con contraseña `Password1!` (hash). Cambiar en producción o deshabilitar seed.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Password requires lowercase, uppercase, digit, and symbol (regex validation).
 - Avoid password reuse (seed rejects direct duplicates).
-- Seeds create `admin@demo.com` with password `password` (hash). Change in production or disable seed.
+- Seeds create `admin@demo.com` with password `Password1!` (hash). Change in production or disable seed.
 
 ---
 
@@ -112,10 +112,12 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 ## 🧾 Logs y Auditoría / Logs & Audit
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - AuditLog captura acciones exitosas y accesos fallidos (401/403) para monitoreo.
+- Si no hay usuario autenticado, el acceso fallido se registra con `userId=0` (anónimo/indeterminado).
 - No se deben registrar contraseñas ni tokens en logs.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - AuditLog captures successful actions and failed accesses (401/403) for monitoring.
+- If there is no authenticated user, failed access is logged with `userId=0` (anonymous/unknown).
 - Passwords and tokens must never be logged.
 
 ---

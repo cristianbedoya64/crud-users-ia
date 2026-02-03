@@ -5,9 +5,14 @@ const { Op } = require('sequelize');
 
 async function seed() {
   try {
-    await sequelize.sync();
-
+    const isProduction = process.env.NODE_ENV === 'production';
+    const seedMode = process.env.SEED_MODE || (isProduction ? 'prod' : 'demo');
     const RESET_DEMO = process.env.SEED_RESET_DEMO === 'true';
+    const allowSync = process.env.SEED_ALLOW_SYNC === 'true' && !isProduction;
+
+    if (allowSync) {
+      await sequelize.sync();
+    }
 
     // Roles básicos
     const roles = [
@@ -67,12 +72,12 @@ async function seed() {
     const exampleEmails = exampleNames.map((n, i) =>
       n.toLowerCase().replace(/ /g, '.') + (i+1) + '@demo.com'
     );
-    const exampleDocs = exampleNames.map((_, i) => 'DOC' + (1000 + i));
-    // Hash bcrypt para "password"
-    const examplePw = '$2b$10$dRqs3pNn02DXa7kRA9faXOs/xDonwVPcHDvXjhc0x6fWkQpBR9RxK';
+    const exampleDocs = exampleNames.map((_, i) => String(100000 + i));
+    // Hash bcrypt para "Password1!"
+    const examplePw = '$2a$10$cGk4HnZAD79qdo5uUA5SnOIc/6bR8KegDNkcR.n5Tl/N1VDG1y67u';
 
     // Opcional: resetear usuarios demo para repoblar en entornos de prueba
-    if (RESET_DEMO) {
+    if (seedMode === 'demo' && RESET_DEMO) {
       const demoUsers = await User.findAll({
         where: {
           [Op.and]: [
@@ -90,7 +95,7 @@ async function seed() {
       }
     }
 
-    // Crear usuario admin fijo para acceso inicial (password = "password")
+    // Crear usuario admin fijo para acceso inicial (password = "Password1!")
       async function ensureDemoUser({ email, documentId, name }) {
         const existing = await User.findOne({
           where: {
@@ -113,24 +118,26 @@ async function seed() {
         });
       }
 
-      // Crear usuario admin fijo para acceso inicial (password = "password")
-      const adminUser = await ensureDemoUser({
-        email: 'admin@demo.com',
-        documentId: '00000001',
-        name: 'Admin Demo'
-      });
-      if (adminRole) {
-        await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
-      }
+      if (seedMode === 'demo') {
+        // Crear usuario admin fijo para acceso inicial (password = "Password1!")
+        const adminUser = await ensureDemoUser({
+          email: 'admin@demo.com',
+          documentId: '00000001',
+          name: 'Admin Demo'
+        });
+        if (adminRole) {
+          await UserRole.findOrCreate({ where: { userId: adminUser.id, roleId: adminRole.id } });
+        }
 
-      // Crear usuario usuariodemo fijo (password = "password")
-      const usuariodemoUser = await ensureDemoUser({
-        email: 'usuariodemo@demo.com',
-        documentId: '00000002',
-        name: 'Usuario Demo'
-      });
-      if (adminRole) {
-        await UserRole.findOrCreate({ where: { userId: usuariodemoUser.id, roleId: adminRole.id } });
+        // Crear usuario usuariodemo fijo (password = "Password1!")
+        const usuariodemoUser = await ensureDemoUser({
+          email: 'usuariodemo@demo.com',
+          documentId: '00000002',
+          name: 'Usuario Demo'
+        });
+        if (adminRole) {
+          await UserRole.findOrCreate({ where: { userId: usuariodemoUser.id, roleId: adminRole.id } });
+        }
       }
 
     // Obtener roles existentes
@@ -138,31 +145,33 @@ async function seed() {
     console.log(`Roles cargados: ${allRoles.length}`);
 
     let success = 0;
-    for (let i = 0; i < exampleNames.length; i++) {
-      try {
-        const [user, created] = await User.findOrCreate({
-          where: { email: exampleEmails[i] },
-          defaults: {
-            documentId: exampleDocs[i],
-            name: exampleNames[i],
-            email: exampleEmails[i],
-            password: examplePw,
-            status: i % 3 === 0 ? 'inactive' : 'active',
-            createdBy: null,
-            updatedBy: null
+    if (seedMode === 'demo') {
+      for (let i = 0; i < exampleNames.length; i++) {
+        try {
+          const [user, created] = await User.findOrCreate({
+            where: { email: exampleEmails[i] },
+            defaults: {
+              documentId: exampleDocs[i],
+              name: exampleNames[i],
+              email: exampleEmails[i],
+              password: examplePw,
+              status: i % 3 === 0 ? 'inactive' : 'active',
+              createdBy: null,
+              updatedBy: null
+            }
+          });
+          if (created) {
+            const randomRole = allRoles[Math.floor(Math.random() * allRoles.length)];
+            if (randomRole) {
+              await UserRole.findOrCreate({ where: { userId: user.id, roleId: randomRole.id } });
+            }
+            success++;
+            console.log(`Usuario demo insertado: ${user.name} (${user.email}) con rol ${randomRole?.name}`);
           }
-        });
-        if (created) {
-          const randomRole = allRoles[Math.floor(Math.random() * allRoles.length)];
-          if (randomRole) {
-            await UserRole.findOrCreate({ where: { userId: user.id, roleId: randomRole.id } });
-          }
-          success++;
-          console.log(`Usuario demo insertado: ${user.name} (${user.email}) con rol ${randomRole?.name}`);
+        } catch (err) {
+          console.error(`Error insertando usuario demo ${exampleNames[i]}: ${err.message}`);
+          if (err.stack) console.error(err.stack);
         }
-      } catch (err) {
-        console.error(`Error insertando usuario demo ${exampleNames[i]}: ${err.message}`);
-        if (err.stack) console.error(err.stack);
       }
     }
 

@@ -38,6 +38,8 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 - [API](api.md)
 - [Base de datos](db.md)
 - [Seguridad y configuración](security.md)
+- [Uso de IA (Copilot)](ai_assistance.md)
+- [Trazabilidad de Prompts (IA)](ai_traceability/README.md)
 - [Despliegue DigitalOcean](DEPLOY.md)
 - [Backup y actualización](RESTORE_BACKUP.md)
 - [Changelog de docs](CHANGELOG.md)
@@ -57,8 +59,10 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 - Revisa estos documentos antes de cambios de arquitectura o despliegues.
 - Mantén este índice actualizado al agregar nuevos documentos.
 - Prioriza coherencia: variables de entorno, puertos y rutas deben coincidir con `docker-compose.yml` y los módulos.
+- Cuando los cambios impliquen prompts relevantes, registra la trazabilidad en [ai_traceability/README.md](ai_traceability/README.md).
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Review these documents before architecture changes or deployments.
 - Keep this index updated when adding new documents.
 - Keep consistency: env vars, ports, and routes must match `docker-compose.yml` and the modules.
+- When changes involve relevant prompts, record traceability in [ai_traceability/README.md](ai_traceability/README.md).
