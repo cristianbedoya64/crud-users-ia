@@ -6,6 +6,15 @@
 > 
 > Este documento está orientado a la revisión, calificación y aprobación por parte del jurado académico, presentando el contexto, alcance, objetivos y valor profesional del sistema desarrollado.
 
+---
+
+## 🧭 Alcance, narrativa y rúbrica (problema → solución → valor)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+La gestión segura y eficiente de usuarios, roles y auditoría es un reto clave en sistemas empresariales modernos, donde la trazabilidad y el control de acceso son críticos para la confianza y el cumplimiento. Este proyecto integra autenticación robusta, control granular de permisos y un panel de IA para análisis, resolviendo limitaciones comunes de soluciones genéricas. La arquitectura modular, el registro de auditoría y la integración de IA aportan valor diferencial, facilitando la adaptabilidad, la transparencia y la defensa académica ante jueces evaluadores.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+Secure and efficient management of users, roles, and auditing is a key challenge in modern enterprise systems, where traceability and access control are critical for trust and compliance. This project integrates robust authentication, granular permission control, and an AI panel for analysis, addressing common limitations of generic solutions. Modular architecture, audit logging, and AI integration provide differential value, enabling adaptability, transparency, and strong academic defense before evaluators.
+
 <p align="center">
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />

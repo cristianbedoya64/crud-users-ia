@@ -6,12 +6,20 @@
 > **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
 >
 > Documento técnico orientado a evaluación académica: describe el modelo de datos (PostgreSQL/Sequelize), entidades, relaciones y procedimientos de migración/seed para validar el alcance del sistema.
-
 ---
 
 ## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta guía respalda la evaluación del proyecto de grado (Ingeniería de Sistemas, modalidad virtual, Universidad Santiago de Cali) y permite a los jueces verificar consistencia entre modelo de datos, funcionalidad y seguridad (RBAC, auditoría, tokens).
+
+---
+
+## 🧭 Alcance, narrativa y rúbrica (problema → solución → valor)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+La gestión segura y eficiente de usuarios, roles y auditoría es un reto clave en sistemas empresariales modernos, donde la trazabilidad y el control de acceso son críticos para la confianza y el cumplimiento. Este proyecto integra autenticación robusta, control granular de permisos y un panel de IA para análisis, resolviendo limitaciones comunes de soluciones genéricas. La arquitectura modular, el registro de auditoría y la integración de IA aportan valor diferencial, facilitando la adaptabilidad, la transparencia y la defensa académica ante jueces evaluadores.
 <br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+Secure and efficient management of users, roles, and auditing is a key challenge in modern enterprise systems, where traceability and access control are critical for trust and compliance. This project integrates robust authentication, granular permission control, and an AI panel for analysis, addressing common limitations of generic solutions. Modular architecture, audit logging, and AI integration provide differential value, enabling adaptability, transparency, and strong academic defense before evaluators.
+
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This guide supports the academic evaluation of the graduation project and allows judges to validate consistency between the data model, functionality, and security (RBAC, auditing, tokens).
 
 ---
