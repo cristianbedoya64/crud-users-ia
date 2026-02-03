@@ -47,17 +47,9 @@ This system is the graduation project for the Systems Engineering degree (virtua
 
 ## 🗂️ Tabla de Contenidos / Table of Contents
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-  - Descripción General
-  - Estructura del Proyecto
-  - Instalación y Configuración
-  - Seguridad
-  - Módulos Principales
-  - Autenticación y Permisos
-  - Documentación Técnica
-  - Despliegue
-  - Pruebas
-  - Lighthouse
-  - Backup y Restauración
+
+- [Resumen Ejecutivo](docs/Resumen_Ejecutivo.md)
+- [Alcance y Límites](docs/Alcance_y_Limites.md)
   - Changelog<br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
   - General Description
