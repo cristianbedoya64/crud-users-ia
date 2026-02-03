@@ -105,6 +105,74 @@ This log provides transparency about AI usage in architectural decisions. It doc
 - **Copilot did:** UI adjustments and permission controls in views.
 - **I did:** UX criteria validation and message consistency.
 
+### 2026-02-03 (Pruebas)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Contexto:** Evidencia mínima para jurado (seguridad y RBAC).
+- **Prompt (resumen):** Solicitud de definir estrategia y agregar tests críticos.
+- **Decisión:** Tests para no exponer password, RBAC 403 y refresh tokens.
+- **Resultado:** Cambios en `backend/tests/api.test.js` y documentación en `backend/README.md`.
+- **Copilot hizo:** Implementación de pruebas y documentación.
+- **Yo hice:** Validación de criterios de cobertura.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Context:** Minimal evidence for evaluation (security and RBAC).
+- **Prompt (summary):** Request to define strategy and add critical tests.
+- **Decision:** Tests for no password exposure, RBAC 403, and refresh tokens.
+- **Outcome:** Changes in `backend/tests/api.test.js` and documentation in `backend/README.md`.
+- **Copilot did:** Test implementation and documentation.
+- **I did:** Coverage criteria validation.
+
+### 2026-02-03 (QA/Lighthouse)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Contexto:** Evidencia de calidad frontend con Lighthouse CI.
+- **Prompt (resumen):** Solicitud de mantener Lighthouse CI y ejecución reproducible.
+- **Decisión:** Documentar pasos reproducibles y cómo explicar mejoras.
+- **Resultado:** Cambios en `docs/lighthouse.md` y `frontend/README.md`.
+- **Copilot hizo:** Ajustes de documentación Lighthouse.
+- **Yo hice:** Validación de criterios de QA.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Context:** Frontend quality evidence with Lighthouse CI.
+- **Prompt (summary):** Request to keep Lighthouse CI and reproducible execution.
+- **Decision:** Document reproducible steps and how to explain improvements.
+- **Outcome:** Changes in `docs/lighthouse.md`.
+- **Copilot did:** Lighthouse documentation updates.
+- **I did:** QA criteria validation.
+
+### 2026-02-03 (DevOps/Operación)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Contexto:** Reproducibilidad de arranque y evitar romper producción.
+- **Prompt (resumen):** Solicitud de robustecer start.sh y separar modos local/codespaces/prod-demo.
+- **Decisión:** Health de DB, migración/seed con reintentos y variables de modo.
+- **Resultado:** Cambios en `scripts/start.sh`, `docs/DEPLOY.md`, `docs/RESTORE_BACKUP.md`.
+- **Copilot hizo:** Implementación de start.sh y actualización de docs.
+- **Yo hice:** Validación de criterios de operación segura.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Context:** Reproducible startup and avoid breaking production.
+- **Prompt (summary):** Request to harden start.sh and separate local/codespaces/prod-demo modes.
+- **Decision:** DB health wait, migrate/seed retries, and mode variables.
+- **Outcome:** Changes in `scripts/start.sh`, `docs/DEPLOY.md`, `docs/RESTORE_BACKUP.md`.
+- **Copilot did:** start.sh implementation and docs updates.
+- **I did:** Safe ops criteria validation.
+
+### 2026-02-03 (UX/Login demo)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Contexto:** Evitar 401 por credenciales demo desactualizadas.
+- **Prompt (resumen):** Solicitud de configurar credenciales demo por defecto.
+- **Decisión:** Actualizar valores por defecto a `Password1!`.
+- **Resultado:** Cambios en `frontend/src/views/LoginView.jsx`.
+- **Copilot hizo:** Ajuste de valores por defecto y mensaje UI.
+- **Yo hice:** Validación de credenciales demo.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Context:** Avoid 401 due to outdated demo credentials.
+- **Prompt (summary):** Request to set default demo credentials.
+- **Decision:** Update defaults to `Password1!`.
+- **Outcome:** Changes in `frontend/src/views/LoginView.jsx`.
+- **Copilot did:** Default values and UI message update.
+- **I did:** Demo credential validation.
+
 ### 2026-02-03
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - **Contexto:** Endurecer seguridad, exposición IA y confiabilidad del backend.

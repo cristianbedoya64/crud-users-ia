@@ -88,6 +88,8 @@
 - UX: menú por capacidades (oculta módulos sin permisos) y acciones restringidas por rol.
 - UX: formulario de asignación de permisos unificado con Mantine.
 - UX: estados vacíos y mensajes consistentes.
+- Pruebas: suite mínima (password no expuesto, RBAC 403, refresh tokens).
+- Docs: sección de cobertura mínima de tests en backend README.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Hardened user serialization: password is never exposed in responses or logs.
@@ -114,3 +116,10 @@
 - UX: capability-based menu (hides modules without permissions) and role-restricted actions.
 - UX: permissions assignment form unified with Mantine.
 - UX: consistent empty states and messages.
+- Tests: minimal suite (no password exposure, RBAC 403, refresh tokens).
+- Docs: minimum test coverage section in backend README.
+- QA: reproducible Lighthouse guide and improvement explanation.
+- DevOps: start.sh robusto (health DB, migración/seed con reintentos, modos por env).
+- Docs: DEPLOY/RESTORE actualizados para reproducibilidad.
+- Docs: Lighthouse command reference added to frontend README.
+- UX: credenciales demo por defecto actualizadas en login (Password1!).

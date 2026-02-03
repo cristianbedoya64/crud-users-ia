@@ -105,6 +105,41 @@ docker compose -f docker-compose.prod.yml logs -f backend frontend ia-panel post
 
 ---
 
+## ▶️ Arranque rápido (local/Codespaces/prod‑demo) / Quick Start (local/Codespaces/prod‑demo)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Usa `scripts/start.sh` como camino feliz para levantar todo en un solo comando.
+- Variables relevantes:
+	- `RUN_MODE`: `local` | `codespaces` | `prod-demo`.
+	- `MIGRATE_MODE`: `sync` (solo no‑prod) | `migrations`.
+	- `SEED_MODE`: `demo` | `prod` | `skip`.
+	- `SEED_ALLOW_SYNC=true`: permite `sequelize.sync()` solo en no‑prod.
+
+Ejemplos:
+```bash
+RUN_MODE=local scripts/start.sh
+RUN_MODE=codespaces scripts/start.sh
+RUN_MODE=prod-demo SEED_MODE=prod MIGRATE_MODE=migrations scripts/start.sh
+```
+> En producción real, evita `sync` y usa migraciones con `docker-compose.prod.yml`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Use `scripts/start.sh` as the happy path to start everything with one command.
+- Relevant vars:
+	- `RUN_MODE`: `local` | `codespaces` | `prod-demo`.
+	- `MIGRATE_MODE`: `sync` (non‑prod only) | `migrations`.
+	- `SEED_MODE`: `demo` | `prod` | `skip`.
+	- `SEED_ALLOW_SYNC=true`: allows `sequelize.sync()` only in non‑prod.
+
+Examples:
+```bash
+RUN_MODE=local scripts/start.sh
+RUN_MODE=codespaces scripts/start.sh
+RUN_MODE=prod-demo SEED_MODE=prod MIGRATE_MODE=migrations scripts/start.sh
+```
+> In real production, avoid `sync` and use migrations with `docker-compose.prod.yml`.
+
+---
+
 ## 💸 Opción B: Droplet único (ahorro) / Option B: Single Droplet (cost-saving)
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 1) Droplet Ubuntu 24.04 (1 vCPU, 1 GB RAM) + firewall (22/80/443; 5001 solo si expones IA).

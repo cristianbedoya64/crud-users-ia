@@ -6,7 +6,7 @@ import { isValidEmail } from '../utils/validation';
 
 export default function LoginView({ onLogin }) {
   const [email, setEmail] = useState('admin@demo.com');
-  const [password, setPassword] = useState('password');
+  const [password, setPassword] = useState('Password1!');
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
@@ -36,9 +36,9 @@ export default function LoginView({ onLogin }) {
         <Title order={3}>Iniciar sesión</Title>
         <Text c="dimmed" size="sm">Usa tus credenciales para obtener un token Bearer.</Text>
         <TextInput label="Email" value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@demo.com" required />
-        <PasswordInput label="Contraseña" value={password} onChange={e => setPassword(e.target.value)} placeholder="password" required />
+        <PasswordInput label="Contraseña" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password1!" required />
         <Button color="blue" onClick={handleLogin} loading={loading}>Entrar</Button>
-        <Text size="xs" c="dimmed">Demo: admin@demo.com / password</Text>
+        <Text size="xs" c="dimmed">Demo: admin@demo.com / Password1!</Text>
       </Stack>
     </Card>
   );

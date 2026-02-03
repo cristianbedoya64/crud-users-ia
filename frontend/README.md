@@ -136,3 +136,8 @@ Every functional, technical, or security change made to the frontend will be doc
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Si existen pruebas, ejecutar `npm test`. Ante errores, verifica `VITE_API_URL` y revisa consola del navegador.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** If tests exist, run `npm test`. For issues, verify `VITE_API_URL` and review the browser console.
+
+## 🧪 Lighthouse (QA) / Lighthouse (QA)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Ejecuta `npm run lighthouse` y revisa `docs/lighthouse.md` para pasos reproducibles.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Run `npm run lighthouse` and see `docs/lighthouse.md` for reproducible steps.

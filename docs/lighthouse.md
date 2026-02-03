@@ -70,6 +70,42 @@ Reports are stored in:
 
 ---
 
+## ♻️ Ejecución reproducible (entorno de evaluación) / Reproducible Run (Evaluation)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+1. En `frontend/`, instala dependencias: `npm install`.
+2. Construye el build: `npm run build`.
+3. Levanta preview: `npm run preview` (deja el proceso activo).
+4. En otra terminal, ejecuta Lighthouse:
+	- Local: `npm run lighthouse`
+	- Codespaces: `LHCI_URL=https://<tu-codespace>-5173.app.github.dev npm run lighthouse`
+5. Guarda los reportes HTML/JSON en `frontend/lighthouse-reports/`.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+1. In `frontend/`, install dependencies: `npm install`.
+2. Build: `npm run build`.
+3. Start preview: `npm run preview` (keep it running).
+4. In another terminal, run Lighthouse:
+	- Local: `npm run lighthouse`
+	- Codespaces: `LHCI_URL=https://<your-codespace>-5173.app.github.dev npm run lighthouse`
+5. Save HTML/JSON reports in `frontend/lighthouse-reports/`.
+
+---
+
+## 💡 Cómo explicar 2–3 mejoras / How to explain 2–3 improvements
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+Cuando presentes el reporte al jurado, explica mejoras típicas que Lighthouse señala:
+- **Performance:** reducir JS y dividir cargas (carga diferida de componentes pesados).
+- **Accessibility:** labels consistentes, foco visible, contraste y jerarquía clara.
+- **Best Practices/SEO:** uso de HTTPS, metadatos y evitar errores en consola.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+When presenting reports, highlight typical Lighthouse improvements:
+- **Performance:** reduce JS and split heavy components (lazy loading).
+- **Accessibility:** consistent labels, visible focus, contrast, clear hierarchy.
+- **Best Practices/SEO:** HTTPS usage, metadata, and avoid console errors.
+
+---
+
 ## 📊 Qué métricas incluye / Included Metrics
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Lighthouse reporta cuatro categorías principales:
 - Performance

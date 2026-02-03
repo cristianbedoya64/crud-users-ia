@@ -84,6 +84,17 @@ docker compose -f docker-compose.prod.yml exec backend node src/migrate.js
 
 ---
 
+## ✅ Coherencia (migraciones/seed) / Consistency (migrations/seed)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- En producción, evita `sync` y usa migraciones controladas.
+- Si necesitas datos demo, ejecuta `SEED_MODE=demo node src/seed.js` solo en entornos no‑prod.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- In production, avoid `sync` and use controlled migrations.
+- If you need demo data, run `SEED_MODE=demo node src/seed.js` only in non‑prod environments.
+
+---
+
 ## 🔐 Rotar JWT_SECRET / Rotate JWT_SECRET
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 1. Cambia el valor en `.env` y reinicia backend.

@@ -156,3 +156,14 @@ Every functional, technical, or security change made to the backend will be docu
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Si existen pruebas, ejecutar `npm test`. Ante fallos, verifica conexión DB y revisa logs del contenedor/proceso.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** If tests exist, run `npm test`. For issues, check DB connectivity and review container/process logs.
+
+### ✅ Cobertura mínima / Minimum Coverage
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Seguridad: verificación de no exposición de `password` en consultas de usuarios.
+- RBAC: 403 cuando un usuario no tiene permisos.
+- Auth: refresh tokens (revocados) y rotación básica.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Security: no `password` exposure in user queries.
+- RBAC: 403 when user lacks permissions.
+- Auth: refresh tokens (revoked) and basic rotation.
