@@ -26,6 +26,7 @@ module.exports = {
       }
       const { count, rows } = await User.findAndCountAll({
         where,
+        attributes: { exclude: ['password'] },
         include: [{ model: Role, through: { attributes: [] } }],
         offset,
         limit: parseInt(limit)
@@ -43,7 +44,10 @@ module.exports = {
   async detail(req, res) {
     try {
       const { id } = req.params;
-      const user = await User.findByPk(id, { include: [{ model: Role, through: { attributes: [] } }] });
+      const user = await User.findByPk(id, {
+        attributes: { exclude: ['password'] },
+        include: [{ model: Role, through: { attributes: [] } }]
+      });
       if (!user) {
         return res.status(404).json({ error: 'Usuario no encontrado.' });
       }
@@ -109,12 +113,7 @@ module.exports = {
       if (!passwordRegex.test(password)) {
         return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres, una minúscula, una mayúscula, un número y un símbolo.' });
       }
-      console.log('--- CREAR USUARIO ---');
-      console.log('Datos recibidos:', { documentId, name, email, password, roles });
-      const existsPassword = await User.findOne({ where: { password } });
-      if (existsPassword) {
-        return res.status(409).json({ error: 'La contraseña ya está en uso. Elija una diferente.' });
-      }
+      // No registrar datos sensibles en logs ni validar duplicidad por texto plano
       const bcrypt = require('bcryptjs');
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -125,11 +124,9 @@ module.exports = {
       // Asignar roles si se envían
       if (roles && Array.isArray(roles) && roles.length > 0) {
         const foundRoles = await Role.findAll({ where: { id: roles } });
-        console.log('Intentando asociar roles al usuario:', { userId: user.id, roleIds: foundRoles.map(r => r.id) });
+        // Evitar logs sensibles en producción
         try {
           await user.addRoles(foundRoles);
-          const userRoles = await user.getRoles();
-          console.log('Roles asociados al usuario (addRoles):', userRoles.map(r => r.id));
         } catch (err) {
           console.error('Error al asociar roles con addRoles:', err);
         }
@@ -142,7 +139,10 @@ module.exports = {
         createdBy: req.user ? req.user.id : null
       });
       // Devolver usuario con roles
-      const userWithRoles = await User.findByPk(user.id, { include: [{ model: Role, through: { attributes: [] } }] });
+      const userWithRoles = await User.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+        include: [{ model: Role, through: { attributes: [] } }]
+      });
       res.status(201).json({ message: 'Usuario creado exitosamente.', user: userWithRoles });
     } catch (err) {
       const isProduction = process.env.NODE_ENV === 'production';
@@ -212,7 +212,7 @@ module.exports = {
       }
       updateData.updatedBy = req.user ? req.user.id : null;
       await User.update(updateData, { where: { id } });
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(id, { attributes: { exclude: ['password'] } });
       // Actualizar roles si se envían
       if (roles && Array.isArray(roles)) {
         const foundRoles = await Role.findAll({ where: { id: roles } });
@@ -226,7 +226,10 @@ module.exports = {
         createdBy: req.user ? req.user.id : null
       });
       // Devolver usuario con roles
-      const userWithRoles = await User.findByPk(user.id, { include: [{ model: Role, through: { attributes: [] } }] });
+      const userWithRoles = await User.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+        include: [{ model: Role, through: { attributes: [] } }]
+      });
       res.json({ message: 'Usuario actualizado exitosamente.', user: userWithRoles });
     } catch (err) {
       res.status(500).json({ error: 'Error al actualizar usuario.', details: err.message });

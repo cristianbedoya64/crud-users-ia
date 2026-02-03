@@ -1,6 +1,17 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
 
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('JWT_SECRET is required in production');
+    }
+    return 'supersecret';
+  }
+  return secret;
+}
+
 module.exports = function (roles = []) {
   // roles puede ser un string o array
   if (typeof roles === 'string') roles = [roles];
@@ -8,7 +19,7 @@ module.exports = function (roles = []) {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ error: 'No autenticado.' });
     const token = authHeader.split(' ')[1];
-    jwt.verify(token, process.env.JWT_SECRET || 'supersecret', (err, user) => {
+    jwt.verify(token, getJwtSecret(), (err, user) => {
       if (err) {
         // 401 permite al frontend intentar refresh de sesión.
         if (err.name === 'TokenExpiredError') {

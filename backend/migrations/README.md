@@ -22,7 +22,13 @@
 
 ---
 
-## 📝 Convenciones / Conventions
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Mantén nombres con prefijo de fecha (`YYYYMMDD-...`) y una intención clara del cambio.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Keep date-prefixed filenames (`YYYYMMDD-...`) with a clear intent.
+
+## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+Cada cambio funcional, técnico o de seguridad realizado en las migraciones será documentado en el changelog ([../../docs/CHANGELOG.md](../../docs/CHANGELOG.md)) y en los archivos relevantes. Esto garantiza trazabilidad y evidencia para la evaluación académica y profesional.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+Every functional, technical, or security change made to the migrations will be documented in the changelog ([../../docs/CHANGELOG.md](../../docs/CHANGELOG.md)) and in the relevant files. This ensures traceability and evidence for academic and professional evaluation.

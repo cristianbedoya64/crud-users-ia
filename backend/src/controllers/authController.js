@@ -5,7 +5,17 @@ const { User, Role, RefreshToken } = require('../models');
 
 const ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL || '15m';
 const REFRESH_TOKEN_TTL = process.env.REFRESH_TOKEN_TTL || '7d';
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
+
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('JWT_SECRET is required in production');
+    }
+    return 'supersecret';
+  }
+  return secret;
+}
 
 function ttlToMs(ttl) {
   if (typeof ttl === 'number') return ttl * 1000;
@@ -27,7 +37,7 @@ async function generateTokens(user) {
 
   const accessToken = jwt.sign(
     { id: user.id, email: user.email, roles: roleNames },
-    JWT_SECRET,
+    getJwtSecret(),
     { expiresIn: ACCESS_TOKEN_TTL }
   );
 
@@ -50,7 +60,7 @@ module.exports = {
       if (!email || !password) {
         return res.status(400).json({ error: 'Email y contraseña son obligatorios.' });
       }
-      const user = await User.findOne({ where: { email }, include: [Role] });
+      const user = await User.scope('withPassword').findOne({ where: { email }, include: [Role] });
       if (!user) return res.status(401).json({ error: 'Credenciales inválidas.' });
       if (user.status && user.status !== 'active') {
         return res.status(403).json({ error: 'Usuario inactivo. Contacta a un administrador.' });

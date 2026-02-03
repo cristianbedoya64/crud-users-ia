@@ -28,10 +28,10 @@ fi
 
 # Si estamos en Codespaces, expone puertos para evitar bloqueos/CORS por túnel privado
 if [[ -n "${CODESPACE_NAME:-}" ]]; then
-  gh codespace ports visibility 3000:public 5173:public 5001:public -c "$CODESPACE_NAME" || true
-  echo "Ports 3000, 5173, 5001 set to public for codespace $CODESPACE_NAME"
+  gh codespace ports visibility 3000:public 5173:public -c "$CODESPACE_NAME" || true
+  echo "Ports 3000, 5173 set to public for codespace $CODESPACE_NAME"
 fi
 
 popd > /dev/null
 
-echo "Services up. Frontend: http://localhost:5173 | Backend: http://localhost:3000 | IA: http://localhost:5001"
+echo "Services up. Frontend: http://localhost:5173 | Backend: http://localhost:3000 | IA (via backend): http://localhost:3000/api/ia-panel"

@@ -20,13 +20,11 @@ La gestión segura y eficiente de usuarios, roles y auditoría es un reto clave 
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 Secure and efficient management of users, roles, and auditing is a key challenge in modern enterprise systems, where traceability and access control are critical for trust and compliance. This project integrates robust authentication, granular permission control, and an AI panel for analysis, addressing common limitations of generic solutions. Modular architecture, audit logging, and AI integration provide differential value, enabling adaptability, transparency, and strong academic defense before evaluators.
 
-<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This document supports academic evaluation by detailing security decisions (JWT, RBAC, CORS, rate limiting, auditing) and safe deployment guidelines.
-
 ---
 
 ## 🧪 Variables Críticas / Critical Variables
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- `JWT_SECRET` (obligatorio en prod). El fallback `supersecret` solo aplica en desarrollo: cambiar.
+- `JWT_SECRET` es obligatorio en producción. No se permite fallback inseguro.
 - `ACCESS_TOKEN_TTL` (default 15m), `REFRESH_TOKEN_TTL` (default 7d).
 - Backend DB: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, `DB_NAME`. Para IA usar `POSTGRES_*`.
 - Frontend: `VITE_API_URL` debe apuntar al backend (en Codespaces el host HTTPS puede reescribirse automáticamente).
@@ -41,13 +39,11 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 
 ## 🌐 CORS
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- `CORS_ALLOW_ALL` por defecto `true` (acepta cualquier origen).
-- Para producción: usar `CORS_ALLOW_ALL=false` y definir `CORS_ORIGINS` (lista separada por comas).
+- En producción, `CORS_ALLOW_ALL` debe ser `false` y se requiere `CORS_ORIGINS` explícito (lista separada por comas).
 - Codespaces `*.app.github.dev` se permite explícitamente.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- `CORS_ALLOW_ALL` defaults to `true` (accepts any origin).
-- For production: set `CORS_ALLOW_ALL=false` and define `CORS_ORIGINS` (comma-separated list).
+- In production, `CORS_ALLOW_ALL` must be `false` and `CORS_ORIGINS` is required (comma-separated list).
 - Codespaces `*.app.github.dev` is explicitly allowed.
 
 ---
@@ -55,12 +51,12 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 ## 🛡️ Autorización / Authorization
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Middleware `auth` valida JWT; `permission` verifica permisos vía DB.
-- `SKIP_AUTH=true` omite permisos (solo dev). No usar en prod.
+- `SKIP_AUTH=true` solo tiene efecto fuera de producción; en producción se ignora.
 - Rate limit: 100 req / 15m por IP (`src/middleware/rateLimit.js`).
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - `auth` middleware validates JWT; `permission` checks permissions via DB.
-- `SKIP_AUTH=true` skips permissions (dev only). Do not use in prod.
+- `SKIP_AUTH=true` only works outside production; it is ignored in production.
 - Rate limit: 100 req / 15m per IP (`src/middleware/rateLimit.js`).
 
 ---
@@ -91,21 +87,36 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 
 ## 🤖 Servicio IA / IA Service
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- Flask `/ia-panel` no tiene autenticación propia; se expone detrás del proxy del backend.
-- No publicar directamente sin red interna o autenticación adicional.
+- Postura: la IA es asistente/demo para análisis, no motor de decisiones de acceso.
+- Flask `/ia-panel` no tiene autenticación propia; se consume vía backend (proxy) en red interna.
+- No publicar directamente sin red interna o controles adicionales.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- Flask `/ia-panel` has no own auth; it is exposed behind the backend proxy.
-- Do not publish it directly without internal network or additional auth.
+- Posture: AI is an assistant/demo for analysis, not an access decision engine.
+- Flask `/ia-panel` has no own auth; it is consumed via the backend proxy on the internal network.
+- Do not publish it directly without internal network or additional controls.
+
+---
+
+## ⚠️ Amenaza → Mitigación (IA) / Threat → Mitigation (AI)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Amenaza:** Exposición pública directa del microservicio IA podría permitir consultas no autorizadas y fuga de señales del modelo.
+- **Mitigación:** El servicio IA no expone puerto público por defecto y sólo se consume vía backend (proxy) dentro de la red interna.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Threat:** Direct public exposure of the AI microservice could allow unauthorized queries and model signal leakage.
+- **Mitigation:** The AI service does not expose a public port by default and is only consumed via the backend proxy on the internal network.
 
 ---
 
 ## 🧾 Logs y Auditoría / Logs & Audit
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - AuditLog captura acciones exitosas y accesos fallidos (401/403) para monitoreo.
+- No se deben registrar contraseñas ni tokens en logs.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - AuditLog captures successful actions and failed accesses (401/403) for monitoring.
+- Passwords and tokens must never be logged.
 
 ---
 

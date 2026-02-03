@@ -2,6 +2,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const axios = require('axios');
 const dotenv = require('dotenv');
 dotenv.config();
 const { sequelize } = require('./models');
@@ -23,7 +24,12 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // CORS: solo dominios permitidos (ajusta para prod)
-const allowAll = process.env.CORS_ALLOW_ALL !== 'false';
+const isProduction = process.env.NODE_ENV === 'production';
+let allowAll = process.env.CORS_ALLOW_ALL === 'true' && !isProduction;
+if (isProduction && process.env.CORS_ALLOW_ALL === 'true') {
+  console.error('CORS_ALLOW_ALL no está permitido en producción. Se forzará a false.');
+  allowAll = false;
+}
 const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean).concat([
   'http://localhost:5173',
   'http://localhost:3000',
@@ -77,20 +83,70 @@ app.use('/api/audit', require('./routes/auditLogRoutes'));
 
 app.get('/', (req, res) => res.send('UARP-AI Backend Running'));
 
-const PORT = process.env.PORT || 3000;
+let dbReady = false;
+let lastDbError = null;
 
-sequelize.authenticate()
-  .then(() => {
-    const host = '0.0.0.0';
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Connected to PostgreSQL');
-      app.listen(PORT, host, () => console.log(`Server running on ${host}:${PORT}`));
-    } else {
-      app.listen(PORT, host);
-    }
-  })
-  .catch(err => {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('Unable to connect to DB:', err);
-    }
+const IA_PANEL_URL = process.env.IA_PANEL_URL || 'http://ia-panel:5001/ia-panel';
+
+async function checkDb() {
+  try {
+    await sequelize.authenticate();
+    dbReady = true;
+    lastDbError = null;
+    return true;
+  } catch (err) {
+    dbReady = false;
+    lastDbError = err?.message || 'DB error';
+    return false;
+  }
+}
+
+async function checkIa() {
+  try {
+    const payload = { num_roles: 1, is_admin: 0, activity_score: 10 };
+    await axios.post(IA_PANEL_URL, payload, { timeout: 2000 });
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+app.get('/health', async (req, res) => {
+  const [dbOk, iaOk] = await Promise.all([checkDb(), checkIa()]);
+  res.json({
+    status: 'ok',
+    db: dbOk ? 'ok' : 'error',
+    ia: iaOk ? 'ok' : 'error'
   });
+});
+
+app.get('/ready', async (req, res) => {
+  const [dbOk, iaOk] = await Promise.all([checkDb(), checkIa()]);
+  if (!dbOk || !iaOk) {
+    return res.status(503).json({
+      status: 'not_ready',
+      db: dbOk ? 'ok' : 'error',
+      ia: iaOk ? 'ok' : 'error',
+      ...(dbOk ? {} : { dbError: lastDbError })
+    });
+  }
+  return res.json({ status: 'ready', db: 'ok', ia: 'ok' });
+});
+
+const PORT = process.env.PORT || 3000;
+const host = '0.0.0.0';
+
+app.listen(PORT, host, () => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Server running on ${host}:${PORT}`);
+  }
+});
+
+checkDb().then((ok) => {
+  if (ok && process.env.NODE_ENV !== 'production') {
+    console.log('Connected to PostgreSQL');
+  }
+}).catch((err) => {
+  const msg = err?.message || err;
+  console.error('Database connection failed at startup:', msg);
+});

@@ -23,7 +23,19 @@ module.exports = (sequelize, DataTypes) => {
 	}, {
 		timestamps: true,
 		tableName: 'Users',
+		defaultScope: {
+			attributes: { exclude: ['password'] }
+		},
+		scopes: {
+			withPassword: {}
+		}
 	});
+
+	User.prototype.toJSON = function () {
+		const values = { ...this.get() };
+		delete values.password;
+		return values;
+	};
 
 	// Associations
 	User.associate = (models) => {

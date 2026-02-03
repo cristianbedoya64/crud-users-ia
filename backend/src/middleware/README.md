@@ -17,18 +17,15 @@
 
 ## 🧱 Archivos / Files
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- `auth.js`: verificación de autenticación (JWT) y/o protección de rutas.
-- `permission.js`: validación de permisos requeridos por endpoint (RBAC).
-- `audit.js`: registro de acciones relevantes (auditoría).
-- `logFailedAccess.js`: registro de accesos fallidos/no autorizados.
-- `rateLimit.js`: limitación de solicitudes para protección básica.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- `auth.js`: authentication checks (JWT) and/or route protection.
-- `permission.js`: required permission enforcement (RBAC).
-- `audit.js`: action logging (audit trail).
-- `logFailedAccess.js`: failed/unauthorized access logging.
-- `rateLimit.js`: request limiting for basic protection.
+
+## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+Cada cambio funcional, técnico o de seguridad realizado en el middleware será documentado en el changelog ([../../../docs/CHANGELOG.md](../../../docs/CHANGELOG.md)) y en los archivos relevantes. Esto garantiza trazabilidad y evidencia para la evaluación académica y profesional.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+Every functional, technical, or security change made to the middleware will be documented in the changelog ([../../../docs/CHANGELOG.md](../../../docs/CHANGELOG.md)) and in the relevant files. This ensures traceability and evidence for academic and professional evaluation.
 
 ---
 

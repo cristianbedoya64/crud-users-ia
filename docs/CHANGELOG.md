@@ -58,16 +58,29 @@
 - IA: fallback visible cuando el modelo no está disponible.
 - UX: loaders visibles en tablas principales y validaciones consistentes en login/usuarios.
 - Limpieza: eliminados placeholders no usados en layouts/components.
-- UI: tema Mantine y layout modernizados para una apariencia profesional.
-- Estructura: docs movidos a docs/ y scripts a scripts/.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- Roles: role and permissions editing without leaving the view.
-- Permissions: edit name/description and list actions.
-- Auditing: filters by user/action/date; shows `createdBy`.
-- Users: delete confirmation and filter cleanup when toggling inactive.
-- AI: visible fallback when the model is unavailable.
-- UX: visible loaders on main tables and consistent validations in login/users.
-- Cleanup: removed unused placeholders in layouts/components.
-- UI: Mantine theme and layout modernized for a professional look.
-- Structure: docs moved to `docs/` and scripts to `scripts/`.
+
+
+### 2026-02-03
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Endurecimiento de serialización de usuario: la contraseña nunca se expone en respuestas ni logs.
+- Exclusión de campo `password` en modelo y controladores de usuario.
+- Control de exposición del microservicio IA: solo accesible vía backend, sin puerto público por defecto.
+- Documentación de amenaza y mitigación para IA en `docs/security.md`.
+- Endpoints `/health` y `/ready` agregados al backend para monitoreo y confiabilidad.
+- El backend siempre responde HTTP, incluso si la DB falla; errores de DB se loguean claramente.
+- Compatibilidad con Codespaces y despliegue seguro en Docker Compose.
+- Actualización de README y documentación técnica para reflejar cambios de seguridad y arquitectura.
+- Se establece política: todo cambio futuro será documentado en este changelog y en los archivos relevantes.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Hardened user serialization: password is never exposed in responses or logs.
+- Exclusion of `password` field in user model and controllers.
+- IA microservice exposure controlled: only accessible via backend, no public port by default.
+- Threat and mitigation for IA documented in `docs/security.md`.
+- `/health` and `/ready` endpoints added to backend for monitoring and reliability.
+- Backend always responds HTTP, even if DB fails; DB errors are logged clearly.
+- Codespaces compatibility and secure deployment in Docker Compose.
+- README and technical documentation updated to reflect security and architecture changes.
+- Policy established: all future changes will be documented in this changelog and relevant files.

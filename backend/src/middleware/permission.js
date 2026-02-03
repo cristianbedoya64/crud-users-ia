@@ -5,8 +5,8 @@ const { User, Role, Permission } = require('../models');
 module.exports = function(requiredPermission) {
   return async function(req, res, next) {
     try {
-      // Permitir saltar validación en entornos de desarrollo si se define SKIP_AUTH=true
-      if (process.env.SKIP_AUTH === 'true') return next();
+      // Permitir saltar validación solo en no producción si se define SKIP_AUTH=true
+      if (process.env.NODE_ENV !== 'production' && process.env.SKIP_AUTH === 'true') return next();
 
       const user = req.user;
       if (!user) return res.status(401).json({ error: 'No autenticado.' });
