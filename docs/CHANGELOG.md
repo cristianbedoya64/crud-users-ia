@@ -123,3 +123,4 @@
 - Docs: DEPLOY/RESTORE actualizados para reproducibilidad.
 - Docs: Lighthouse command reference added to frontend README.
 - UX: credenciales demo por defecto actualizadas en login (Password1!).
+- UX: header móvil evita desborde del bloque de usuario.

@@ -173,6 +173,23 @@ This log provides transparency about AI usage in architectural decisions. It doc
 - **Copilot did:** Default values and UI message update.
 - **I did:** Demo credential validation.
 
+### 2026-02-03 (UX/Header móvil)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- **Contexto:** Desborde del bloque de usuario en la barra superior móvil.
+- **Prompt (resumen):** Ajustar layout para evitar overflow y ocultar contenido.
+- **Decisión:** Permitir wrap y ajustar alineación en header.
+- **Resultado:** Cambios en `frontend/src/layouts/MantineLayout.jsx`.
+- **Copilot hizo:** Ajuste de layout y estilos.
+- **Yo hice:** Validación visual en móvil.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- **Context:** User block overflow on mobile header.
+- **Prompt (summary):** Adjust layout to avoid overflow and hidden content.
+- **Decision:** Allow wrap and adjust header alignment.
+- **Outcome:** Changes in `frontend/src/layouts/MantineLayout.jsx`.
+- **Copilot did:** Layout and styling adjustments.
+- **I did:** Mobile visual validation.
+
 ### 2026-02-03
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - **Contexto:** Endurecer seguridad, exposición IA y confiabilidad del backend.

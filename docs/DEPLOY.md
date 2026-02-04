@@ -140,6 +140,31 @@ RUN_MODE=prod-demo SEED_MODE=prod MIGRATE_MODE=migrations scripts/start.sh
 
 ---
 
+## 🧪 Paso a paso para jurado / Step‑by‑step for evaluators
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+1. Clonar el repositorio.
+2. (Opcional) Crear `.env`/`backend/.env` con variables mínimas (ver sección anterior).
+3. Ejecutar arranque feliz:
+```bash
+RUN_MODE=local scripts/start.sh
+```
+4. Abrir frontend (`http://localhost:5173`) y backend (`http://localhost:3000`).
+5. Login demo: `admin@demo.com` / `Password1!`.
+6. Verificar `/health` y `/ready` en backend.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+1. Clone the repo.
+2. (Optional) Create `.env`/`backend/.env` with minimal vars (see above).
+3. Run the happy‑path startup:
+```bash
+RUN_MODE=local scripts/start.sh
+```
+4. Open frontend (`http://localhost:5173`) and backend (`http://localhost:3000`).
+5. Demo login: `admin@demo.com` / `Password1!`.
+6. Check `/health` and `/ready` on backend.
+
+---
+
 ## 💸 Opción B: Droplet único (ahorro) / Option B: Single Droplet (cost-saving)
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 1) Droplet Ubuntu 24.04 (1 vCPU, 1 GB RAM) + firewall (22/80/443; 5001 solo si expones IA).

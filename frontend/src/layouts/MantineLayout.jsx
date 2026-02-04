@@ -62,15 +62,15 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
             boxShadow: '0 6px 20px rgba(37, 99, 235, 0.25)'
           }}
         >
-          <Group style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Group gap="sm">
+          <Group style={{ width: '100%', justifyContent: 'space-between' }} wrap="wrap" align="center">
+            <Group gap="sm" wrap="nowrap">
               {isMobile && (
                 <Burger opened={opened} onClick={toggle} size="sm" color="white" />
               )}
               <Text fw={700} size="lg" c="white">UARP-AI Dashboard</Text>
             </Group>
-            <Group gap="sm">
-              <Stack gap={0} align="flex-end">
+            <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 220 }}>
+              <Stack gap={0} align={isMobile ? 'flex-start' : 'flex-end'} style={{ maxWidth: '100%' }}>
                 <Text fw={600} size="sm" c="white">{user?.name || 'Usuario'}</Text>
                 <Text size="xs" c="white" style={{ opacity: 0.85 }}>{user?.email || ''}</Text>
               </Stack>
