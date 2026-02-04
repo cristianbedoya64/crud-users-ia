@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, Table, Button, TextInput, Title, Box, Text, Modal, Checkbox, Stack, Loader, SimpleGrid, ScrollArea } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
+import { notifyError, notifyWarning } from '../utils/notify';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { getStoredUser } from '../auth';
@@ -40,15 +41,15 @@ export default function RolesView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para ver la lista de permisos.'
-                : (data && data.error) || 'No se pudieron cargar los permisos.',
-            autoClose: 4500
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para ver la lista de permisos.'
+              : (data && data.error) || 'No se pudieron cargar los permisos.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 4500 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 4500 });
+          }
           return [];
         }
         return data;
@@ -66,15 +67,15 @@ export default function RolesView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para ver la sección de roles (requiere manage_roles).'
-                : (data && data.error) || 'No se pudieron cargar los roles.',
-            autoClose: 5000
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para ver la sección de roles (requiere manage_roles).'
+              : (data && data.error) || 'No se pudieron cargar los roles.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 5000 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 5000 });
+          }
           return [];
         }
         return data;
@@ -88,8 +89,7 @@ export default function RolesView() {
   }
   function handleAdd() {
     if (!roleName) {
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error',
         message: 'El nombre del rol es obligatorio.',
         autoClose: 4000
@@ -104,8 +104,7 @@ export default function RolesView() {
       .then(async res => {
         const data = await res.json();
         if (!res.ok) {
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: data.error || 'Error al crear rol.',
             autoClose: 4000
@@ -123,8 +122,7 @@ export default function RolesView() {
         fetchRoles();
       })
       .catch(() => {
-        notifications.show({
-          color: 'red',
+        notifyError({
           title: 'Error de red',
           message: 'No se pudo conectar al servidor.',
           autoClose: 4000
@@ -161,8 +159,7 @@ export default function RolesView() {
           fetchRoles();
         } else {
           const data = await res.json();
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: data.error || 'Error al eliminar rol.',
             withCloseButton: true,
@@ -182,8 +179,7 @@ export default function RolesView() {
           });
         }
       })
-      .catch(err => notifications.show({
-        color: 'red',
+      .catch(() => notifyError({
         title: 'Error',
         message: 'Error de red al eliminar rol.',
         withCloseButton: true,
@@ -213,8 +209,7 @@ export default function RolesView() {
   function handleUpdateRole() {
     if (!editingRole) return;
     if (!editingName) {
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error',
         message: 'El nombre del rol es obligatorio.',
         autoClose: 4000
@@ -229,8 +224,7 @@ export default function RolesView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: (data && data.error) || 'Error al actualizar rol.',
             autoClose: 4000
@@ -248,8 +242,7 @@ export default function RolesView() {
         fetchRoles();
       })
       .catch(() => {
-        notifications.show({
-          color: 'red',
+        notifyError({
           title: 'Error de red',
           message: 'No se pudo conectar al servidor.',
           autoClose: 4000
@@ -265,15 +258,15 @@ export default function RolesView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para ver/editar permisos de roles.'
-                : (data && data.error) || 'No se pudieron cargar los permisos del rol.',
-            autoClose: 5000
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para ver/editar permisos de roles.'
+              : (data && data.error) || 'No se pudieron cargar los permisos del rol.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 5000 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 5000 });
+          }
           return [];
         }
         return data;
@@ -302,8 +295,7 @@ export default function RolesView() {
           })
         });
       })
-      .catch(() => notifications.show({
-        color: 'red',
+      .catch(() => notifyError({
         title: 'Error',
         message: 'No se pudieron cargar los permisos del rol.',
         withCloseButton: true,
@@ -357,8 +349,7 @@ export default function RolesView() {
           setSelectedRole(null);
         } else {
           const data = await res.json();
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: data.error || 'Error al actualizar permisos.',
             withCloseButton: true,
@@ -378,8 +369,7 @@ export default function RolesView() {
           });
         }
       })
-      .catch(() => notifications.show({
-        color: 'red',
+      .catch(() => notifyError({
         title: 'Error',
         message: 'Error de red al actualizar permisos.',
         withCloseButton: true,

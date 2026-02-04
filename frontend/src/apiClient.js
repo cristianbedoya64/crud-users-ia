@@ -1,4 +1,4 @@
-import { notifications } from '@mantine/notifications';
+import { notifyOnce } from './utils/notify';
 import { getAccessToken, refreshTokens, clearTokens, getRefreshToken } from './auth';
 
 const AUTH_ERROR_COOLDOWN_MS = 5000;
@@ -24,7 +24,7 @@ export async function authFetch(url, options = {}) {
     } catch (err) {
       clearTokens();
       if (!silent) {
-        notifications.show({ color: 'red', title: 'Sesión expirada', message: err.message || 'No se pudo refrescar la sesión.' });
+        notifyOnce({ color: 'red', title: 'Sesión expirada', message: err.message || 'No se pudo refrescar la sesión.' });
       }
       throw err;
     }
@@ -44,10 +44,10 @@ export async function authFetch(url, options = {}) {
         const now = Date.now();
         if (now - lastAuthErrorAt > AUTH_ERROR_COOLDOWN_MS) {
           lastAuthErrorAt = now;
-          notifications.show({ id: 'auth-error', color: 'red', title: 'Error', message });
+          notifyOnce({ id: 'auth-error', color: 'red', title: 'Error', message });
         }
       } else {
-        notifications.show({ color: 'red', title: 'Error', message });
+      notifyOnce({ color: 'red', title: 'Error', message });
       }
     }
     const error = new Error(message);

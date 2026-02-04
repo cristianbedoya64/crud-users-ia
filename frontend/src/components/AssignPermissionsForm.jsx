@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { notifications } from '@mantine/notifications';
+import { notifyError, notifyWarning } from '../utils/notify';
 import { Card, Title, Select, MultiSelect, Button, Text, Stack, Group, Loader } from '@mantine/core';
 
 export default function AssignPermissionsForm({ onAssigned }) {
@@ -23,15 +24,15 @@ export default function AssignPermissionsForm({ onAssigned }) {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para listar roles (requiere manage_roles).'
-                : (data && data.error) || 'No se pudieron cargar los roles.',
-            autoClose: 5000
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para listar roles (requiere manage_roles).'
+              : (data && data.error) || 'No se pudieron cargar los roles.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 5000 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 5000 });
+          }
           return [];
         }
         return data;
@@ -45,15 +46,15 @@ export default function AssignPermissionsForm({ onAssigned }) {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para listar permisos.'
-                : (data && data.error) || 'No se pudieron cargar los permisos.',
-            autoClose: 5000
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para listar permisos.'
+              : (data && data.error) || 'No se pudieron cargar los permisos.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 5000 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 5000 });
+          }
           return [];
         }
         return data;
@@ -67,8 +68,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
     e.preventDefault();
     if (!selectedRole || selectedPerms.length === 0) {
       setMessage('Selecciona un rol y al menos un permiso.');
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error',
         message: 'Selecciona un rol y al menos un permiso.',
         autoClose: 4000
@@ -95,8 +95,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
       } else {
         const data = await res.json();
         setMessage(data.error || 'Error al asignar permisos.');
-        notifications.show({
-          color: 'red',
+        notifyError({
           title: 'Error',
           message: data.error || 'Error al asignar permisos.',
           autoClose: 4000
@@ -104,8 +103,7 @@ export default function AssignPermissionsForm({ onAssigned }) {
       }
     } catch (err) {
       setMessage('Error de red.');
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error de red',
         message: 'No se pudo conectar al servidor.',
         autoClose: 4000

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider } from '@mantine/core';
+import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider, Paper } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { getUserPermissions } from '../utils/permissions';
@@ -22,7 +22,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
     <AppShell
       padding="md"
       navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      header={{ height: 64 }}
+      header={{ height: { base: 92, sm: 64 } }}
     >
       <AppShell.Navbar p="md" style={{ background: '#f8fafc' }}>
         <Box mb="md" style={{ display: 'flex', justifyContent: 'center' }}>
@@ -53,8 +53,9 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
       </AppShell.Navbar>
       <AppShell.Header>
         <Box
-          h={64}
+          h="100%"
           px="md"
+          py={{ base: 'xs', sm: 0 }}
           style={{
             background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%)',
             display: 'flex',
@@ -62,18 +63,55 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
             boxShadow: '0 6px 20px rgba(37, 99, 235, 0.25)'
           }}
         >
-          <Group style={{ width: '100%', justifyContent: 'space-between' }} wrap="wrap" align="center">
+          <Group style={{ width: '100%', justifyContent: 'space-between' }} wrap="nowrap" align="center">
             <Group gap="sm" wrap="nowrap">
               {isMobile && (
                 <Burger opened={opened} onClick={toggle} size="sm" color="white" />
               )}
-              <Text fw={700} size="lg" c="white">UARP-AI Dashboard</Text>
+              <Paper
+                radius="xl"
+                px="sm"
+                py={6}
+                style={{
+                  background: 'rgba(255,255,255,0.16)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 6px 18px rgba(15,23,42,0.25)'
+                }}
+              >
+                <Stack gap={0} style={{ lineHeight: 1.05 }}>
+                  <Text fw={700} size="sm" c="white" style={{ letterSpacing: 0.4 }}>
+                    Control seguro
+                  </Text>
+                  <Text fw={600} size="xs" c="white" style={{ letterSpacing: 0.6, opacity: 0.9 }}>
+                    de Usuarios
+                  </Text>
+                </Stack>
+              </Paper>
             </Group>
-            <Group gap="sm" wrap="wrap" justify="flex-end" style={{ flex: 1, minWidth: 220 }}>
-              <Stack gap={0} align={isMobile ? 'flex-start' : 'flex-end'} style={{ maxWidth: '100%' }}>
-                <Text fw={600} size="sm" c="white">{user?.name || 'Usuario'}</Text>
-                <Text size="xs" c="white" style={{ opacity: 0.85 }}>{user?.email || ''}</Text>
-              </Stack>
+            <Group gap="sm" wrap="nowrap" justify="flex-end" style={{ flex: 1, minWidth: 0 }}>
+              <Paper
+                radius="xl"
+                px="sm"
+                py={6}
+                style={{
+                  background: 'rgba(255,255,255,0.16)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 6px 18px rgba(15,23,42,0.25)',
+                  maxWidth: isMobile ? 170 : 280,
+                  minWidth: 0
+                }}
+              >
+                <Stack gap={0} align={isMobile ? 'flex-start' : 'flex-end'} style={{ minWidth: 0 }}>
+                  <Text fw={600} size="sm" c="white" lineClamp={1}>
+                    {user?.name || 'Usuario'}
+                  </Text>
+                  <Text size="xs" c="white" style={{ opacity: 0.85 }} lineClamp={1}>
+                    {user?.email || ''}
+                  </Text>
+                </Stack>
+              </Paper>
               <Button size="xs" color="gray" variant="white" onClick={onLogout}>Salir</Button>
             </Group>
           </Group>

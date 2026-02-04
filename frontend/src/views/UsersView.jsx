@@ -3,6 +3,7 @@ import { Card, Button, TextInput, Group, Title, Box, Text, MultiSelect, Modal, S
 import { Loader, Tooltip } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { notifications } from '@mantine/notifications';
+import { notifyError } from '../utils/notify';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { isValidEmail, isValidPassword } from '../utils/validation';
@@ -34,8 +35,7 @@ export default function UsersView() {
   };
 
   function showError(title, message) {
-    notifications.show({
-      color: 'red',
+    notifyError({
       title,
       message,
       withCloseButton: true,

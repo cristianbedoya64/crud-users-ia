@@ -7,6 +7,7 @@ import DOMPurify from 'dompurify';
 import AssignPermissionsForm from '../components/AssignPermissionsForm';
 import PermissionsReferenceTable from '../components/PermissionsReferenceTable';
 import { notifications } from '@mantine/notifications';
+import { notifyError, notifyWarning } from '../utils/notify';
 import { useMediaQuery } from '@mantine/hooks';
 import { getStoredUser } from '../auth';
 import { hasPermission } from '../utils/permissions';
@@ -32,15 +33,15 @@ export default function PermissionsView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: res.status === 403 ? 'yellow' : 'red',
-            title: res.status === 403 ? 'Acceso restringido' : 'Error',
-            message:
-              res.status === 403
-                ? 'No tienes permiso para ver la lista de permisos.'
-                : (data && data.error) || 'No se pudieron cargar los permisos.',
-            autoClose: 4500
-          });
+          const message =
+            res.status === 403
+              ? 'No tienes permiso para ver la lista de permisos.'
+              : (data && data.error) || 'No se pudieron cargar los permisos.';
+          if (res.status === 403) {
+            notifyWarning({ title: 'Acceso restringido', message, autoClose: 4500 });
+          } else {
+            notifyError({ title: 'Error', message, autoClose: 4500 });
+          }
           return [];
         }
         return data;
@@ -55,8 +56,7 @@ export default function PermissionsView() {
 
   function handleAdd() {
     if (!permName) {
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error',
         message: 'El nombre del permiso es obligatorio.',
         autoClose: 4000
@@ -71,8 +71,7 @@ export default function PermissionsView() {
       .then(async res => {
         const data = await res.json();
         if (!res.ok) {
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: data.error || 'Error al crear permiso.',
             autoClose: 4000
@@ -97,8 +96,7 @@ export default function PermissionsView() {
           .catch(() => setPermissions([]));
       })
       .catch(() => {
-        notifications.show({
-          color: 'red',
+        notifyError({
           title: 'Error de red',
           message: 'No se pudo conectar al servidor.',
           autoClose: 4000
@@ -132,33 +130,31 @@ export default function PermissionsView() {
             })
           });
           setPermissions(permissions.filter(p => p.id !== id));
-        } else {
-          const data = await res.json();
-          notifications.show({
-            color: 'red',
-            title: 'Error',
-            message: data.error || 'Error al eliminar permiso.',
-            withCloseButton: true,
-            autoClose: 5000,
-            styles: theme => ({
-              root: {
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                position: 'fixed',
-                zIndex: 9999,
-                minWidth: 320,
-                boxShadow: theme.shadows.xl,
-                borderRadius: theme.radius.lg,
-              }
-            })
-          });
+          return;
         }
+        const data = await res.json();
+        notifyError({
+          title: 'Error',
+          message: data.error || 'Error al eliminar permiso.',
+          withCloseButton: true,
+          autoClose: 5000,
+          styles: theme => ({
+            root: {
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              position: 'fixed',
+              zIndex: 9999,
+              minWidth: 320,
+              boxShadow: theme.shadows.xl,
+              borderRadius: theme.radius.lg,
+            }
+          })
+        });
       })
-      .catch(err => notifications.show({
-        color: 'red',
+      .catch(err => notifyError({
         title: 'Error',
-        message: 'Error de red al eliminar permiso.',
+        message: err.message || 'Error al eliminar permiso.',
         withCloseButton: true,
         autoClose: 5000,
         styles: theme => ({
@@ -186,8 +182,7 @@ export default function PermissionsView() {
   function handleUpdate() {
     if (!editingPerm) return;
     if (!editingName) {
-      notifications.show({
-        color: 'red',
+      notifyError({
         title: 'Error',
         message: 'El nombre del permiso es obligatorio.',
         autoClose: 4000
@@ -202,8 +197,7 @@ export default function PermissionsView() {
       .then(async res => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          notifications.show({
-            color: 'red',
+          notifyError({
             title: 'Error',
             message: (data && data.error) || 'Error al actualizar permiso.',
             autoClose: 4000
@@ -228,8 +222,7 @@ export default function PermissionsView() {
           .catch(() => setPermissions([]));
       })
       .catch(() => {
-        notifications.show({
-          color: 'red',
+        notifyError({
           title: 'Error de red',
           message: 'No se pudo conectar al servidor.',
           autoClose: 4000
