@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider, Paper } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
@@ -14,14 +14,18 @@ const navItems = [
 
 export default function MantineLayout({ view, setView, user, onLogout, children }) {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 992px)');
   const userPermissions = getUserPermissions(user);
   const visibleNavItems = navItems.filter(item => !item.requiredPermission || userPermissions.has(item.requiredPermission));
+
+  useEffect(() => {
+    if (isMobile && opened) close();
+  }, [isMobile, opened, close]);
 
   return (
     <AppShell
       padding="md"
-      navbar={{ width: 240, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      navbar={{ width: 240, breakpoint: 'md', collapsed: { mobile: !opened } }}
       header={{ height: { base: 92, sm: 64 } }}
     >
       <AppShell.Navbar p="md" style={{ background: '#f8fafc' }}>
