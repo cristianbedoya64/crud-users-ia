@@ -180,6 +180,47 @@ RUN_MODE=local scripts/start.sh
 
 ---
 
+## 🔁 Re-despliegue rápido (Droplet) / Quick Redeploy (Droplet)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+1) Conéctate al droplet y ve a la carpeta del repo.
+2) Actualiza el código:
+```bash
+git pull origin main
+```
+3) Reconstruye y levanta:
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+4) Ejecuta migraciones (solo si hay cambios de DB):
+```bash
+docker compose -f docker-compose.prod.yml exec backend node src/migrate.js
+```
+5) (Opcional) Verifica logs:
+```bash
+docker compose -f docker-compose.prod.yml logs -f backend frontend ia-panel postgres
+```
+
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+1) SSH into the droplet and go to the repo folder.
+2) Pull latest code:
+```bash
+git pull origin main
+```
+3) Rebuild and start:
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+4) Run migrations (only if DB changes):
+```bash
+docker compose -f docker-compose.prod.yml exec backend node src/migrate.js
+```
+5) (Optional) Check logs:
+```bash
+docker compose -f docker-compose.prod.yml logs -f backend frontend ia-panel postgres
+```
+
+---
+
 ## 🔒 Recomendaciones de Seguridad / Security Recommendations
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - CORS solo para tu dominio (`CORS_ALLOW_ALL=false`).
