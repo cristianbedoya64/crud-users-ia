@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AppShell, Group, Text, NavLink, Box, Button, Stack, Burger, Avatar, Divider, Paper } from '@mantine/core';
 import { IconDashboard, IconUsers, IconKey, IconShield, IconHistory } from '@tabler/icons-react';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
@@ -18,9 +18,13 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
   const userPermissions = getUserPermissions(user);
   const visibleNavItems = navItems.filter(item => !item.requiredPermission || userPermissions.has(item.requiredPermission));
 
+  const wasMobileRef = useRef(isMobile);
   useEffect(() => {
-    if (isMobile && opened) close();
-  }, [isMobile, opened, close]);
+    if (isMobile && !wasMobileRef.current) {
+      close();
+    }
+    wasMobileRef.current = isMobile;
+  }, [isMobile, close]);
 
   return (
     <AppShell
