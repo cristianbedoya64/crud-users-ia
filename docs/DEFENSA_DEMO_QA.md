@@ -1,14 +1,14 @@
-# 🎤 Preparación de defensa (Demo + Q&A)
+# 🎤 Plan de validación técnica (Demo + Q&A)
 
-**Objetivo:** responder sin improvisar, con evidencia en repo.
+**Objetivo:** validar el prototipo actual y el enfoque de investigación con evidencia en el repositorio.
 
 ---
 
 ## 1) Guion de demo cronometrado (10–12 min) + Plan B
 
 ### 0:00–1:00 | Introducción
-- Contexto: CRUD de usuarios con IA controlada por permisos y auditoría.
-- Mostrar que hay documentación y trazabilidad.
+- Contexto: gestión de usuarios con RBAC, auditoría y componente IA como prueba de concepto.
+- Mostrar trazabilidad y documentación de investigación aplicada.
 
 **Evidencia:** [docs/PAQUETE_JURADO.md](docs/PAQUETE_JURADO.md)
 
@@ -103,7 +103,7 @@
 
 ---
 
-## 3) Preguntas del jurado + respuestas
+## 3) Preguntas del comité académico + respuestas
 
 ### 3.1 ¿Por qué JWT + refresh con rotación?
 **Respuesta:**

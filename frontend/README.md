@@ -9,9 +9,9 @@ Cada cambio funcional, técnico o de seguridad realizado en el frontend será do
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 Every functional, technical, or security change made to the frontend will be documented in the changelog ([../docs/CHANGELOG.md](../docs/CHANGELOG.md)) and in the relevant files. This ensures traceability and evidence for academic and professional evaluation.
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: presenta la SPA usada para evidenciar UX, visualización de datos y consumo seguro de la API (auth + refresh + RBAC).
 

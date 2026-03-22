@@ -1,9 +1,9 @@
 
 # 🧪 Lighthouse (Mobile y Desktop) / Lighthouse (Mobile & Desktop)
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: describe el proceso de auditoría del frontend con Lighthouse CI para evidenciar métricas de rendimiento, accesibilidad y buenas prácticas.
 

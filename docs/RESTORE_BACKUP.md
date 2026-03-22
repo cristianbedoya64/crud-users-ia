@@ -1,16 +1,16 @@
 
 # 💾 Backup y Restauración / Backup & Restore
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: define procedimientos reproducibles de restauración y actualización del sistema, evidenciando prácticas de operación segura.
 
 ---
 
-## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta guía apoya la evaluación del proyecto integrador profesional, permitiendo a los jueces validar continuidad operativa (backup/restore), mantenimiento y control de cambios.
+## 🎓 Contexto Académico / Academic Context
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta guía apoya la evaluación académica del prototipo, permitiendo validar continuidad operativa (backup/restore), mantenimiento y control de cambios.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This guide supports academic evaluation by documenting operational continuity (backup/restore), maintenance, and change control.
 

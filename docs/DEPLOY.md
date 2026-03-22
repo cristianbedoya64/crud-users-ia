@@ -1,18 +1,18 @@
 
 # 🚀 Despliegue (DigitalOcean) / Deployment (DigitalOcean)
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
-> Documento técnico orientado a evaluación académica: explica opciones de despliegue y variables de entorno para validar la capacidad de operación del sistema en escenarios reales.
+> Documento técnico orientado a evaluación académica: explica opciones de despliegue y variables de entorno para validar la capacidad de operación del prototipo y su futura ampliación.
 
 ---
 
-## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este documento sirve como evidencia del componente de despliegue del proyecto integrador profesional, permitiendo a los jueces verificar reproducibilidad y buenas prácticas (seguridad, variables, persistencia, observabilidad).
+## 🎓 Contexto Académico / Academic Context
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este documento sirve como evidencia del componente de despliegue del prototipo, permitiendo verificar reproducibilidad y buenas prácticas (seguridad, variables, persistencia, observabilidad).
 <br><br>
-<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This document is evidence of the deployment component of the integrative project, allowing judges to validate reproducibility and best practices (security, env vars, persistence, observability).
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This document provides evidence of deployment practices for the prototype, enabling reproducibility and best-practice validation.
 
 ---
 
@@ -140,7 +140,7 @@ RUN_MODE=prod-demo SEED_MODE=prod MIGRATE_MODE=migrations scripts/start.sh
 
 ---
 
-## 🧪 Paso a paso para jurado / Step‑by‑step for evaluators
+## 🧪 Paso a paso para evaluación / Step‑by‑step for evaluation
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 1. Clonar el repositorio.
 2. (Opcional) Crear `.env`/`backend/.env` con variables mínimas (ver sección anterior).

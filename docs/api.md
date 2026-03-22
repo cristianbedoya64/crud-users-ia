@@ -1,26 +1,24 @@
 
 # 📡 API (Backend) / API (Backend)
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: describe los endpoints del backend, su seguridad (JWT/RBAC) y el alcance funcional expuesto a frontend y a la integración con IA.
 ---
 
-## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta especificación de API hace parte del proyecto de grado (Ingeniería de Sistemas, modalidad virtual, Universidad Santiago de Cali) y está dirigida a los jueces evaluadores para facilitar la verificación de funcionalidades, seguridad y trazabilidad del sistema.
+## 🎓 Contexto Académico / Academic Context
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Esta especificación de API hace parte de la propuesta de trabajo de grado y facilita la verificación de funcionalidades, seguridad y trazabilidad del sistema.
 
 ---
 
-## 🧭 Alcance, narrativa y rúbrica (problema → solución → valor)
+## 🧭 Enfoque de investigación (problema → solución → valor)
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-La gestión segura y eficiente de usuarios, roles y auditoría es un reto clave en sistemas empresariales modernos, donde la trazabilidad y el control de acceso son críticos para la confianza y el cumplimiento. Este proyecto integra autenticación robusta, control granular de permisos y un panel de IA para análisis, resolviendo limitaciones comunes de soluciones genéricas. La arquitectura modular, el registro de auditoría y la integración de IA aportan valor diferencial, facilitando la adaptabilidad, la transparencia y la defensa académica ante jueces evaluadores.
+La seguridad en el registro de usuarios requiere complementar el RBAC con una capa predictiva de riesgo. El sistema integra autenticación robusta, control granular de permisos y un panel de IA como prueba de concepto, proyectando un microservicio de scoring de riesgo con Random Forest.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-Secure and efficient management of users, roles, and auditing is a key challenge in modern enterprise systems, where traceability and access control are critical for trust and compliance. This project integrates robust authentication, granular permission control, and an AI panel for analysis, addressing common limitations of generic solutions. Modular architecture, audit logging, and AI integration provide differential value, enabling adaptability, transparency, and strong academic defense before evaluators.
-
-<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This API specification is part of the graduation project (Systems Engineering, virtual modality, Universidad Santiago de Cali) and is intended for academic judges to validate functionality, security, and traceability.
+Onboarding security requires complementing RBAC with a predictive risk layer. The system integrates robust authentication, granular permission control, and an AI panel as a proof of concept, projecting a Random Forest risk-scoring microservice.
 
 ---
 
@@ -145,6 +143,32 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - POST `/api/ia-panel` – Auth – Free body `{ num_roles?, is_admin?, activity_score? }` → proxies to Flask `/ia-panel` and returns `{ suggestions, anomalies, predictions }`
 
+## 📉 Scoring de Riesgo (fase de grado) / Risk Scoring (degree phase)
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- POST `/api/risk-score` – Auth + permiso `view_risk_score` (propuesto) – Body `{ features, metadata? }` → proxy a FastAPI y retorna `{ score, risk_level, explanation? }`.
+- Ver especificacion detallada: [risk_scoring_microservice.md](risk_scoring_microservice.md).
+- **Features principales (entrada):**
+	- `document_validity_score` (0-1)
+	- `document_age_days`
+	- `email_domain_reputation` (0-1)
+	- `email_age_days`
+	- `phone_line_age_days`
+	- `ip_risk_score` (0-1)
+	- `device_trust_score` (0-1)
+	- `velocity_24h` (int)
+	- `kyc_flags` (int)
+	- `prior_rejection_count` (int)
+- **Metadatos opcionales:** `request_id`, `model_version`, `source_channel`.
+- **Respuesta:** score continuo (0-1), nivel de riesgo (low/medium/high) y explicacion opcional (top features).
+- **Auditoria:** cada consulta genera log de auditoria con `userId`, `request_id` y `risk_level`.
+- **Versionamiento:** el microservicio expone `model_version` para reproducibilidad experimental.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- POST `/api/risk-score` – Auth + `view_risk_score` (planned) – Body `{ features, metadata? }` → proxies to FastAPI and returns `{ score, risk_level, explanation? }`.
+- See detailed spec: [risk_scoring_microservice.md](risk_scoring_microservice.md).
+- **Core inputs:** document validity, account age, reputation/velocity/device/IP risk signals, and KYC flags.
+- **Auditability:** each request is logged with `risk_level` and `request_id`.
+
 ---
 
 ## 📊 Dashboard (demo / backoffice)
@@ -180,6 +204,8 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 - `create_user`, `read_user`, `update_user`, `delete_user`
 - `manage_roles` (roles, permisos, asignaciones)
 - `view_audit`
+- `view_risk_score` (consulta de scoring)
+- `manage_risk_models` (gestionar versiones/modelos) [propuesto]
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - `create_user`, `read_user`, `update_user`, `delete_user`

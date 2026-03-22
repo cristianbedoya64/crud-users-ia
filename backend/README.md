@@ -1,9 +1,9 @@
 
 # 🧩 Backend (Node.js/Express) — UARP-AI / Backend (Node.js/Express) — UARP-AI
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: presenta el backend (API, seguridad, auditoría y RBAC) y los pasos para reproducirlo.
 
@@ -29,7 +29,7 @@
 - JWT + refresh tokens (rotación)
 - Autorización por permisos (RBAC)
 - Auditoría de acciones
-- Integración con IA (servicio externo)
+- Integración con IA (servicio externo y scoring de riesgo proyectado)
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Users/roles/permissions CRUD

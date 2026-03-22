@@ -1,6 +1,6 @@
 
 
-# 📚 Documentación Técnica / Technical Documentation
+# 📚 Documentación Técnica
 
 ## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
@@ -9,27 +9,27 @@ Cada cambio funcional, técnico o de seguridad realizado en la documentación se
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 Every functional, technical, or security change made to the documentation will be documented in the changelog ([CHANGELOG.md](CHANGELOG.md)) and in the relevant files. This ensures traceability and evidence for academic and professional evaluation.
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** optimización de la seguridad en el registro de usuarios mediante capas predictivas de riesgo.<br>
 >
-> Este documento organiza la documentación técnica del sistema para facilitar la revisión, calificación y aprobación por parte del jurado académico.
+> Este índice organiza la documentación de la propuesta de investigación y desarrollo tecnológico, facilitando la revisión académica y la trazabilidad técnica.
 
 ---
 
-## 🧭 Alcance, narrativa y rúbrica (problema → solución → valor)
+## 🧭 Enfoque de investigación (problema → solución → valor)
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-La gestión segura y eficiente de usuarios, roles y auditoría es un reto clave en sistemas empresariales modernos, donde la trazabilidad y el control de acceso son críticos para la confianza y el cumplimiento. Este proyecto integra autenticación robusta, control granular de permisos y un panel de IA para análisis, resolviendo limitaciones comunes de soluciones genéricas. La arquitectura modular, el registro de auditoría y la integración de IA aportan valor diferencial, facilitando la adaptabilidad, la transparencia y la defensa académica ante jueces evaluadores.
+La seguridad en el registro de usuarios requiere mecanismos preventivos que complementen el RBAC con análisis predictivo de riesgo. Esta propuesta integra un sistema funcional de roles y permisos con un microservicio de scoring de riesgo (Random Forest) para apoyar la detección de identidades sintéticas y reducir exposición a fraude, manteniendo trazabilidad y control de acceso.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-Secure and efficient management of users, roles, and auditing is a key challenge in modern enterprise systems, where traceability and access control are critical for trust and compliance. This project integrates robust authentication, granular permission control, and an AI panel for analysis, addressing common limitations of generic solutions. Modular architecture, audit logging, and AI integration provide differential value, enabling adaptability, transparency, and strong academic defense before evaluators.
+User onboarding security benefits from preventive mechanisms that complement RBAC with predictive risk analysis. This proposal integrates a functional roles/permissions system with a risk-scoring microservice (Random Forest) to support synthetic-identity detection while preserving traceability and access control.
 
 ---
 
-## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este repositorio corresponde a un proyecto de grado de Ingeniería de Sistemas (modalidad virtual) de la Universidad Santiago de Cali. La documentación está redactada con enfoque de evaluación académica y presenta evidencia técnica del análisis, diseño, implementación, seguridad y despliegue del sistema.
+## 🎓 Contexto Académico / Academic Context
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este repositorio corresponde a una propuesta de investigación y desarrollo tecnológico (Trabajo de Grado) en Ingeniería de Sistemas. La documentación presenta evidencia técnica del prototipo actual y del plan de ampliación hacia un microservicio de IA para scoring de riesgo.
 <br><br>
-<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This repository is a Systems Engineering graduation project (virtual modality) at Universidad Santiago de Cali. This documentation is written for academic evaluation and provides technical evidence of analysis, design, implementation, security, and deployment.
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This repository is a research and technological development proposal (degree thesis). The documentation provides technical evidence of the current prototype and the plan to extend it with an AI risk-scoring microservice.
 
 ---
 
@@ -38,6 +38,7 @@ Secure and efficient management of users, roles, and auditing is a key challenge
 - [API](api.md)
 - [Base de datos](db.md)
 - [Seguridad y configuración](security.md)
+- [Microservicio de Scoring de Riesgo](risk_scoring_microservice.md)
 - [Uso de IA (Copilot)](ai_assistance.md)
 - [Trazabilidad de Prompts (IA)](ai_traceability/README.md)
 - [Despliegue DigitalOcean](DEPLOY.md)

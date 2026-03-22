@@ -9,9 +9,9 @@ Cada cambio funcional, técnico o de seguridad realizado en el microservicio IA 
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 Every functional, technical, or security change made to the IA microservice will be documented in the changelog ([../docs/CHANGELOG.md](../docs/CHANGELOG.md)) and in the relevant files. This ensures traceability and evidence for academic and professional evaluation.
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.<br>
 >
 > Documento técnico orientado a evaluación académica: presenta el microservicio de IA y su integración con el backend, evidenciando arquitectura por componentes.
 
@@ -25,7 +25,7 @@ Every functional, technical, or security change made to the IA microservice will
 ---
 
 ## 🧭 Visión General / Overview
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Servicio Flask para análisis de datos y panel de IA. Expone `/ia-panel` para sugerencias, anomalías y predicciones (según implementación/modelo).
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Servicio Flask para análisis de datos y panel de IA (PoC). Expone `/ia-panel` para sugerencias, anomalías y predicciones. En la fase de grado se proyecta migrar el scoring de riesgo a FastAPI con Random Forest.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** Flask service for data analysis and AI panel. Exposes `/ia-panel` for suggestions, anomalies, and predictions (depending on implementation/model).
 

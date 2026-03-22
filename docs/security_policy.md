@@ -1,4 +1,7 @@
-## 📋 Política de Documentación y Trazabilidad / Documentation & Traceability Policy
+## 📋 Política de Documentación y Trazabilidad
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
+> **Universidad Santiago de Cali**<br>
+> **Enfoque:** propuesta de investigación aplicada con IA para scoring de riesgo.
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 Cada cambio que afecte la seguridad, arquitectura o funcionalidad será documentado en el changelog ([docs/CHANGELOG.md](docs/CHANGELOG.md)) y en este archivo si corresponde. Esto garantiza trazabilidad y evidencia para la evaluación académica y profesional.
 <br><br>

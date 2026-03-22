@@ -1,15 +1,15 @@
-# 📘 Paquete Jurado – Memoria Técnica
+# 📘 Paquete de Evidencia – Memoria Técnica
 
-**Proyecto:** CRUD Users IA Panel  
+**Proyecto:** UARP-IA (Propuesta de Trabajo de Grado)  
 **Fecha:** 2026‑02‑04  
 **Repositorio:** cristianbedoya64/crud-users-ia  
 
 ---
 
 ## 1) Contexto y problema
-Las organizaciones requieren una plataforma segura y auditable para administrar usuarios, roles y permisos, con trazabilidad completa y soporte operativo. Adicionalmente, se exige un panel de IA controlado por permisos para apoyar operaciones sin exponer datos sensibles.
+Las organizaciones requieren una plataforma segura y auditable para administrar usuarios, roles y permisos, con trazabilidad completa y soporte operativo. En el registro de usuarios, el riesgo de identidades sintéticas exige capas predictivas que complementen el control de acceso tradicional.
 
-**Problema principal:** contar con un sistema de administración de usuarios que cumpla requisitos de seguridad, auditoría, disponibilidad y reproducibilidad operacional, con documentación académica completa.
+**Problema principal:** optimizar la seguridad en el registro de usuarios mediante un sistema RBAC con trazabilidad y un microservicio de scoring de riesgo con IA (Random Forest) como capa preventiva.
 
 ---
 
@@ -19,9 +19,10 @@ Las organizaciones requieren una plataforma segura y auditable para administrar 
 - **RF1:** Autenticación y autorización con JWT y RBAC.
 - **RF2:** CRUD de usuarios, roles y permisos.
 - **RF3:** Registro de auditoría de eventos y accesos fallidos.
-- **RF4:** Panel IA con acceso restringido por permisos.
+- **RF4:** Panel IA con acceso restringido por permisos (PoC).
 - **RF5:** Endpoints de salud y readiness para operación.
 - **RF6:** Semillas y migraciones controladas por modo.
+- **RF7:** Microservicio de scoring de riesgo (fase de grado) integrado al backend.
 
 ### 2.2 No funcionales
 - **RNF1:** Seguridad por diseño (hash de contraseñas, mínimo privilegio, rate‑limit).
@@ -29,6 +30,7 @@ Las organizaciones requieren una plataforma segura y auditable para administrar 
 - **RNF3:** Reproducibilidad (scripts de arranque, documentación de despliegue).
 - **RNF4:** Escalabilidad básica y rendimiento razonable (caching de permisos con TTL).
 - **RNF5:** Compatibilidad local y Codespaces.
+- **RNF6:** Capacidad de evaluación experimental del scoring (métricas y dataset controlado).
 
 ---
 
@@ -39,14 +41,17 @@ Las organizaciones requieren una plataforma segura y auditable para administrar 
 flowchart LR
   FE[Frontend (Vite + React/Mantine)] -->|JWT| BE[Backend (Node.js/Express)]
   BE --> DB[(PostgreSQL)]
-  BE --> IA[IA Panel (Flask)]
+  BE --> IA[IA Panel (Flask, PoC)]
+  BE --> RS[Risk Scoring (FastAPI, Random Forest)]
 ```
 
 **Justificación tecnológica:**
 - **React + Vite:** UI moderna, rápida, con componentes Mantine y control de permisos.
 - **Node.js/Express:** API REST robusta, compatible con JWT y middleware de seguridad.
 - **PostgreSQL + Sequelize:** modelo relacional con migraciones y control de esquema.
-- **Flask IA Panel:** servicio aislado para funcionalidades IA, protegido por permisos.
+- **Flask IA Panel:** servicio aislado para funcionalidades IA de PoC, protegido por permisos.
+- **FastAPI Risk Scoring:** microservicio proyectado para scoring de riesgo con Random Forest.
+  - Especificacion tecnica: [risk_scoring_microservice.md](risk_scoring_microservice.md).
 - **Docker Compose:** reproducibilidad y despliegue consistente.
 
 ### 3.2 Diagrama de componentes
@@ -207,7 +212,8 @@ erDiagram
   - Faltan pruebas E2E completas.
   - UI de auditoría puede enriquecerse con filtros avanzados.
 
-- **Trabajo futuro**
+ - **Trabajo futuro**
+  - Microservicio de scoring de riesgo con IA (Random Forest) y validación de identidades sintéticas.
   - Observabilidad avanzada (tracing/metrics).
   - Automatización CI/CD completa.
   - Política de retención de auditoría.

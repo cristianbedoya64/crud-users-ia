@@ -1,5 +1,9 @@
 # 📑 Alcance y Límites / Scope & Limits
 
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
+> **Universidad Santiago de Cali**<br>
+> **Enfoque:** optimización de la seguridad en el registro de usuarios mediante capas predictivas de riesgo.
+
 ---
 
 ## 1.3 Alcance No Funcional / Non-Functional Scope
@@ -8,6 +12,8 @@
 - Trazabilidad: logs de auditoría, historial de acciones y cambios.
 - Disponibilidad operativa: despliegue reproducible en Docker/Codespaces.
 - Documentación: guías de despliegue, restauración y API.
+- Capa predictiva (fase de grado): scoring de riesgo con IA integrado a RBAC.
+- Permisos propuestos: `view_risk_score` (consulta) y `manage_risk_models` (versionamiento/modelos).
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Minimum security: JWT, RBAC, CORS, rate limit.
@@ -22,6 +28,7 @@
 - No incluye: MFA, SSO, multi‑tenant, flujos de aprobación, SIEM real, hardening enterprise completo.
 - No contempla integración con sistemas externos empresariales.
 - No cubre monitoreo avanzado ni alertas automáticas.
+- El dataset y la validación de identidades sintéticas se plantean como trabajo de investigación y no como producto final.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - Does not include: MFA, SSO, multi‑tenant, approval flows, real SIEM, full enterprise hardening.
@@ -37,6 +44,7 @@
 - Asignación y validación de roles/permisos.
 - Visualización y filtrado de logs de auditoría.
 - Acceso y uso del panel IA.
+- Consulta controlada del scoring de riesgo (fase de grado).
 - Validación de restricciones y errores controlados.
 - Backup/restauración y consulta de documentación.
 <br><br>

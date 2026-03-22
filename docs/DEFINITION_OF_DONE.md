@@ -1,7 +1,7 @@
-# ✅ Definition of Done (Hardening final)
+# ✅ Criterios de cierre (Prototipo)
 
 **Fecha:** 2026‑02‑04  
-**Tag de defensa:** `defense-2026-02-04`
+**Tag de referencia:** `defense-2026-02-04`
 
 ---
 
@@ -29,7 +29,7 @@
   - Evidencia: [backend/tests/api.test.js](backend/tests/api.test.js)
 - [x] **Docs reproducibles**
   - Evidencia: [docs/PAQUETE_JURADO.md](docs/PAQUETE_JURADO.md), [docs/DEPLOY.md](docs/DEPLOY.md)
-- [x] **Demo guionizada con fallback**
+- [x] **Plan de validación con fallback**
   - Evidencia: [docs/DEFENSA_DEMO_QA.md](docs/DEFENSA_DEMO_QA.md)
 
 ---

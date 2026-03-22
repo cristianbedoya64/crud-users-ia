@@ -1,10 +1,14 @@
 # 📄 Resumen Ejecutivo / Executive Summary
 
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
+> **Universidad Santiago de Cali**<br>
+> **Enfoque:** optimización de la seguridad en el registro de usuarios mediante capas predictivas de riesgo.
+
 ---
 
 ## 1.3 Alcance No Funcional / Non-Functional Scope
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-El sistema garantiza seguridad mínima (JWT, RBAC, CORS, rate limit), trazabilidad completa por auditoría (logs de acciones y cambios), disponibilidad operativa en entornos Docker/Codespaces y documentación reproducible para despliegue y restauración. La arquitectura modular y los controles de acceso permiten adaptabilidad y defensa académica ante jueces evaluadores.
+El sistema garantiza seguridad mínima (JWT, RBAC, CORS, rate limit), trazabilidad completa por auditoría (logs de acciones y cambios), disponibilidad operativa en entornos Docker/Codespaces y documentación reproducible para despliegue y restauración. La arquitectura modular y los controles de acceso permiten integrar una capa predictiva de riesgo para el registro de usuarios.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 The system ensures minimum security (JWT, RBAC, CORS, rate limit), full traceability via audit logs (actions and changes), operational availability in Docker/Codespaces environments, and reproducible documentation for deployment and restore. Modular architecture and access controls enable adaptability and strong academic defense before evaluators.
@@ -13,7 +17,7 @@ The system ensures minimum security (JWT, RBAC, CORS, rate limit), full traceabi
 
 ## 1.4 Límites Explícitos / Explicit Limits
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-El sistema NO incluye aún: autenticación multifactor (MFA), inicio de sesión único (SSO), soporte multi‑tenant, flujos de aprobación, integración SIEM real, ni hardening enterprise completo. Estas capacidades quedan fuera del alcance actual y se documentan como oportunidades de mejora futura.
+El sistema NO incluye aún: autenticación multifactor (MFA), inicio de sesión único (SSO), soporte multi‑tenant, flujos de aprobación, integración SIEM real, ni hardening enterprise completo. El microservicio de scoring de riesgo con IA se define como objetivo principal de la fase de grado.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 The system does NOT yet include: multi-factor authentication (MFA), single sign-on (SSO), multi‑tenant support, approval flows, real SIEM integration, or full enterprise hardening. These features are out of current scope and documented as future improvement opportunities.

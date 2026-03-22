@@ -1,18 +1,18 @@
 
 # 🗒️ Changelog de Documentación / Documentation Changelog
 
-> **Proyecto de Grado – Ingeniería de Sistemas (Modalidad Virtual)**<br>
+> **Trabajo de Grado – Facultad de Ingeniería**<br>
 > **Universidad Santiago de Cali**<br>
-> **Destinatario:** Jueces evaluadores del “proyecto integrador profesional”<br>
+> **Enfoque:** propuesta de investigación y desarrollo tecnológico con IA para scoring de riesgo.<br>
 >
-> Documento técnico orientado a evaluación académica: registra la evolución de la documentación y cambios funcionales relevantes reportados, aportando trazabilidad y evidencia de madurez del proyecto.
+> Documento técnico de trazabilidad: registra la evolución de la documentación y cambios funcionales relevantes para la evaluación académica.
 
 ---
 
-## 🎓 Contexto Académico y Destinatario / Academic Context & Audience
-<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este registro facilita la evaluación al mostrar el avance de documentación, despliegue, configuración y mejoras del sistema que impactan seguridad, auditoría y experiencia de usuario.
+## 🎓 Contexto Académico / Academic Context
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:** Este registro facilita la evaluación al mostrar el avance de documentación, despliegue, configuración y mejoras del sistema que impactan seguridad, auditoría y el enfoque de investigación.
 <br><br>
-<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This log supports evaluation by documenting documentation/deployment/config evolution and system improvements affecting security, auditing, and UX.
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:** This log supports evaluation by documenting documentation/deployment/config evolution and system improvements affecting security, auditing, and the research focus.
 
 ---
 
@@ -28,6 +28,17 @@
 ---
 
 ## 📌 Historial / History
+
+### 2026-03-22
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Reescritura de documentación para enfoque de propuesta de investigación y desarrollo tecnológico.
+- README y docs alineados con microservicio de scoring de riesgo con IA (Random Forest) y RBAC.
+- Anteproyecto (borrador) agregado para planteamiento del problema y justificación.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Documentation rewritten to align with the research and technological development proposal.
+- README and docs aligned with the AI risk-scoring microservice (Random Forest) and RBAC.
+- Draft anteproyecto added for problem statement and justification.
 
 ### 2025-12-31
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
