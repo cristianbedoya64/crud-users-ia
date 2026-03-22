@@ -39,6 +39,7 @@ User onboarding security benefits from preventive mechanisms that complement RBA
 - [Base de datos](db.md)
 - [Seguridad y configuración](security.md)
 - [Microservicio de Scoring de Riesgo](risk_scoring_microservice.md)
+- [Informe Tecnico UARP-IA](informe_tecnico_uarp_ia.md)
 - [Uso de IA (Copilot)](ai_assistance.md)
 - [Trazabilidad de Prompts (IA)](ai_traceability/README.md)
 - [Despliegue DigitalOcean](DEPLOY.md)
