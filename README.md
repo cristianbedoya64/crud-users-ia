@@ -8,7 +8,7 @@
 ---
 
 ## Título del Proyecto (Grado)
-**UARP-IA: Microservicio de Scoring de Riesgo con IA para Fintechs Colombianas, integrado a un sistema RBAC de gestión de usuarios.**
+**Integración de una capa de IA con patrón BFF en la plataforma Uarp**
 
 ## Resumen Técnico
 UARP-IA es una propuesta de investigación aplicada que parte de un sistema funcional de gestión de usuarios con RBAC, autenticación JWT y auditoría. Sobre esta base se proyecta un microservicio de scoring de riesgo con IA (Random Forest) para apoyar el registro seguro, la detección de identidades sintéticas y el control preventivo de fraude, manteniendo trazabilidad operativa y gobernanza de permisos.
