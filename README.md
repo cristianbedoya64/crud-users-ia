@@ -58,6 +58,45 @@ UARP-IA es una propuesta de investigación aplicada que parte de un sistema func
 - [Uso de IA (Copilot)](docs/ai_assistance.md)
 - [Changelog](docs/CHANGELOG.md)
 
+## Ejecución local sin Docker
+
+Docker y Docker Compose se conservan como alternativa para despliegues reproducibles,
+pero el proyecto también puede ejecutarse directamente en Windows para demostraciones
+locales:
+
+1. Instala y ejecuta PostgreSQL con la base `uarp_ai`, usuario `postgres` y contraseña
+   `NoHayMas` (o ajusta las variables del script).
+2. Instala las dependencias:
+
+   ```powershell
+   cd backend
+   npm ci
+   cd ..\frontend
+   npm ci
+   cd ..
+   ```
+
+3. Ejecuta el lanzador:
+
+   ```powershell
+   .\scripts\start-local.ps1
+   ```
+
+   Desde una terminal PowerShell integrada también puedes ejecutar el acceso directo
+   de la raíz:
+
+   ```powershell
+   .\start.sh
+   ```
+
+El lanzador ejecuta la migración y el seed, y abre el backend, el servicio IA y el
+frontend en procesos separados. Las URLs locales son `http://localhost:5173`,
+`http://localhost:3000` y `http://localhost:5001`. El panel IA expone su estado en
+la raíz y recibe predicciones mediante `POST /ia-panel`.
+
+El script Docker original permanece en [`scripts/start.sh`](scripts/start.sh) y se
+usa como alternativa para el despliegue con Docker Compose.
+
 ---
 
 ## Política de Documentación y Trazabilidad

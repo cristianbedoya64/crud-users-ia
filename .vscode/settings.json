@@ -1,4 +1,8 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    "terminal.integrated.defaultProfile.windows": "Windows PowerShell",
+    "terminal.integrated.env.windows": {
+        "Path": "${workspaceFolder};${env:Path}"
+    }
 }

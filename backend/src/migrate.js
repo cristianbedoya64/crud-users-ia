@@ -1,6 +1,27 @@
 // migrate.js
 // Script para sincronizar modelos y crear tablas en PostgreSQL
 const { sequelize } = require('./models');
+const { DataTypes } = require('sequelize');
+
+async function ensureAuditLogColumns() {
+  const queryInterface = sequelize.getQueryInterface();
+  const columns = await queryInterface.describeTable('AuditLogs');
+
+  if (!columns.createdBy) {
+    await queryInterface.addColumn('AuditLogs', 'createdBy', {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    });
+  }
+
+  if (!columns.updatedAt) {
+    await queryInterface.addColumn('AuditLogs', 'updatedAt', {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+    });
+  }
+}
 
 async function migrate() {
   try {
@@ -11,8 +32,10 @@ async function migrate() {
       if (isProduction) {
         throw new Error('Sync no permitido en producción. Usa migraciones.');
       }
-      await sequelize.sync({ alter: true });
-      console.log('Database migrated successfully (sync/alter).');
+      const useAlter = process.env.MIGRATE_ALTER !== 'false';
+      await sequelize.sync(useAlter ? { alter: true } : {});
+      await ensureAuditLogColumns();
+      console.log(`Database migrated successfully (sync${useAlter ? '/alter' : ''}).`);
       return;
     }
 

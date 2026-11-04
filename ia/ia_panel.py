@@ -6,6 +6,15 @@ import pandas as pd
 
 app = Flask(__name__)
 
+@app.get('/')
+def health():
+    return jsonify({
+        'service': 'UARP-AI IA Panel',
+        'status': 'ok',
+        'endpoint': '/ia-panel',
+        'method': 'POST'
+    })
+
 
 @app.route('/ia-panel', methods=['POST'])
 def ia_panel():
