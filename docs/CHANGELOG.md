@@ -29,6 +29,42 @@
 
 ## 📌 Historial / History
 
+### 2026-11-04
+<img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
+- Consolidado el contrato de `GET /api/dashboard/summary` (protegido con `view_audit`) en `users { total, active, inactive, recent }`, `roles`, `audit { recent, byAction, failedAccess }`, `activity` y `services`; `generatedAt` conserva la marca temporal de generación.
+- Las consultas y listas del resumen tienen límites explícitos y no exponen contraseñas ni secretos. `/api/dashboard/top-permissions` y `/api/demo/*` conservan su contrato.
+- El frontend del dashboard consume `GET /api/dashboard/summary` con `authFetch`, incluye estados de carga, error y vacío, y dejó de consultar endpoints CRUD/auditoría o datos demo para completar el panel.
+- El dashboard actualiza el resumen automáticamente cada 30 segundos y ofrece actualización manual; evita solicitudes superpuestas, muestra la última actualización y conserva los últimos datos válidos si falla un refresco posterior.
+- Validación integral: backend 4 suites/9 pruebas, frontend 3 archivos/4 pruebas, build Vite exitoso, health/readiness reales correctos, resumen real validado con administrador y acceso rechazado con 403 para usuario sin `view_audit`.
+- Corregido el conteo paginado de usuarios con múltiples roles usando `distinct`, evitando que `/api/users` reporte duplicados frente al resumen del dashboard.
+- Auditoría viva: `GET /api/audit` ahora usa consultas Sequelize paginadas (máximo 100), conserva sus filtros, resuelve el ejecutor mediante `User`, sanitiza detalles y entrega acción, recurso, resultado y fecha para la vista.
+- `AuditView` consume el contrato paginado y muestra filtros, paginación y estados de carga, error y vacío.
+- Documentación consolidada: se identifican explícitamente los endpoints `/api/demo/*` que el dashboard actual dejó de consumir y que permanecen solo por compatibilidad; se documentan sus reemplazos reales y la semántica de `top-permissions`.
+- Corregido el título de la gráfica de actividad: ahora muestra `Actividad de Auditoría por Fecha`, alineado con los datos diarios reales de `AuditLogs`.
+- Implementada `moduleActivity` en el resumen del dashboard, agrupando acciones reales de auditoría por módulo y reemplazando el estado vacío de la tarjeta.
+- Los inicios de sesión exitosos ahora se registran en `AuditLogs`; el resumen expone los cinco eventos más recientes mediante `lastLogins` y el dashboard los muestra en “Últimos accesos”.
+- Separado el “Historial de Cambios” de “Alertas de Seguridad”: los accesos rechazados ya no se presentan como cambios.
+- Traducidas las acciones técnicas de auditoría en el dashboard y en la vista de auditoría mediante etiquetas comprensibles para usuarios finales.
+- Reforzada la actualización automática del dashboard cada 30 segundos, incluyendo permisos, últimos accesos y auditoría, con cuenta regresiva visible hasta el siguiente refresco.
+- Añadidas gráficas reales para nuevos usuarios, actividad de seguridad y actividad por módulo; se incorporó ECharts como tecnología de visualización y todas las métricas respetan el polling existente.
+- Añadido hero 3D opcional con React Three Fiber, carga diferida, fallback 2D, soporte para movimiento reducido, pausa por pestaña oculta y una única bandera de configuración.
+<br><br>
+<img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
+- Consolidated the `GET /api/dashboard/summary` contract (protected by `view_audit`) as `users { total, active, inactive, recent }`, `roles`, `audit { recent, byAction, failedAccess }`, `activity`, and `services`; `generatedAt` remains the generation timestamp.
+- Summary queries and lists have explicit limits and never expose passwords or secrets. `/api/dashboard/top-permissions` and `/api/demo/*` keep their contract.
+- The frontend dashboard now consumes `GET /api/dashboard/summary` through `authFetch`, with loading, error, and empty states, without CRUD/audit or demo requests.
+- The dashboard refreshes the summary every 30 seconds and provides manual refresh, prevents overlapping requests, displays the last update, and preserves the last valid data when a later refresh fails.
+- Full validation completed: 4 backend suites/9 tests, 3 frontend files/4 tests, successful Vite build, real health/readiness checks, admin summary validated, and a 403 confirmed for a user without `view_audit`.
+- Documentation consolidated: the `/api/demo/*` endpoints no longer consumed by the current dashboard are explicitly marked as compatibility-only, with their real replacements and the `top-permissions` semantics documented.
+- Corrected the activity chart title to `Actividad de Auditoría por Fecha`, matching the real daily `AuditLogs` data.
+- Added `moduleActivity` to the dashboard summary, grouping real audit actions by module and replacing the card's empty state.
+- Successful logins are now recorded in `AuditLogs`; the summary exposes the five most recent events through `lastLogins`, and the dashboard displays them in “Últimos accesos”.
+- Separated “Historial de Cambios” from “Alertas de Seguridad”: rejected accesses are no longer presented as changes.
+- Translated technical audit actions in the dashboard and audit view using user-facing labels.
+- Reinforced automatic dashboard refresh every 30 seconds, including permissions, recent logins, and audit data, with a visible countdown to the next refresh.
+- Added real charts for new users, security activity, and module activity; ECharts was introduced as the visualization technology and all metrics use the existing polling.
+- Added an optional lazy-loaded React Three Fiber hero with a 2D fallback, reduced-motion support, visibility pause, and a single feature flag.
+
 ### 2026-03-22
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - Reescritura de documentación para enfoque de propuesta de investigación y desarrollo tecnológico.

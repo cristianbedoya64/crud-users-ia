@@ -1,218 +1,173 @@
-
-import { useEffect, useState } from 'react';
-// import AssignPermissionsForm from '../components/AssignPermissionsForm';
-import { Card, Title, Text, Loader, Box, Stack, SimpleGrid } from '@mantine/core';
+import { lazy, useEffect, useRef, useState } from 'react';
+import { Title, Text, Loader, Box, Stack, SimpleGrid, Group, Button } from '@mantine/core';
 import DashboardSummary from '../components/DashboardSummary';
 import UserStatusSummary from '../components/UserStatusSummary';
 import UsersByRoleChart from '../components/UsersByRoleChart';
 import UserGrowthChart from '../components/UserGrowthChart';
 import ModuleAccessChart from '../components/ModuleAccessChart';
+import Chart3DWrapper from '../components/Chart3DWrapper';
 import LastLogins from '../components/LastLogins';
 import SecurityAlerts from '../components/SecurityAlerts';
 import ChangeHistory from '../components/ChangeHistory';
 import SystemStatus from '../components/SystemStatus';
 import RecentActivity from '../components/RecentActivity';
 import TopPermissions from '../components/TopPermissions';
+import SecurityActivityChart from '../components/SecurityActivityChart';
+import UserRegistrationChart from '../components/UserRegistrationChart';
 import AIPanel from '../components/AIPanel';
+import DashboardHero from '../components/DashboardHero';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-import { getAccessToken } from '../auth';
+
+const ModuleActivity3D = lazy(() => import('../components/ModuleActivity3D'));
+
+const emptySummary = {
+  users: { total: 0, active: 0, inactive: 0, recent: [] },
+  roles: [],
+  audit: { recent: [], byAction: [], failedAccess: 0 },
+  moduleActivity: [],
+  lastLogins: [],
+  userActivity: [],
+  activity: [],
+  services: {}
+};
+
+const emptyAI = { suggestions: '', anomalies: '', predictions: '' };
+const POLLING_INTERVAL_MS = 30_000;
+const CHANGE_ACTIONS = new Set([
+  'create_user',
+  'update_user',
+  'delete_user',
+  'restore_user',
+  'create_role',
+  'update_role',
+  'delete_role',
+  'create_permission',
+  'update_permission',
+  'delete_permission',
+  'assign_role',
+  'remove_role',
+  'assign_permission',
+  'remove_permission'
+]);
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
 
 export default function DashboardView() {
   const [loading, setLoading] = useState(true);
-  const [totals, setTotals] = useState({ users: 0, roles: 0, permissions: 0, logs: 0 });
-  const [usersByRole, setUsersByRole] = useState([]);
-  const [recentLogs, setRecentLogs] = useState([]);
-  const [topPerms, setTopPerms] = useState([]);
-  // Paneles demo (datos de ejemplo)
-  const [userStatus, setUserStatus] = useState({ active: 0, inactive: 0, pending: 0 });
-  const [lastLogins, setLastLogins] = useState([]);
-  const [securityAlerts, setSecurityAlerts] = useState([]);
-  const [changeHistory, setChangeHistory] = useState([]);
-  const [systemStatus, setSystemStatus] = useState({ api: 'online', ia: 'online', cloud: 'online' });
-  const [userGrowth, setUserGrowth] = useState([]);
-  const [moduleAccess, setModuleAccess] = useState([]);
-  const [aiData, setAIData] = useState({
-    suggestions: '',
-    anomalies: '',
-    predictions: ''
-  });
+  const [summary, setSummary] = useState(emptySummary);
+  const [topPermissions, setTopPermissions] = useState([]);
+  const [permissionsError, setPermissionsError] = useState(null);
+  const [aiData, setAIData] = useState(emptyAI);
   const [aiStatus, setAIStatus] = useState({ status: 'available', message: '', isDemo: false });
   const [error, setError] = useState(null);
+  const [refreshError, setRefreshError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [nextRefreshIn, setNextRefreshIn] = useState(POLLING_INTERVAL_MS / 1000);
+  const requestInFlight = useRef(false);
+  const refreshDashboard = useRef(null);
+
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
+    let active = true;
+
+    async function fetchData(isInitial = false) {
+      if (requestInFlight.current) return;
+      requestInFlight.current = true;
+      if (active) setNextRefreshIn(POLLING_INTERVAL_MS / 1000);
+      if (isInitial) setLoading(true);
+      else setRefreshing(true);
+
       try {
-        const toArray = (val) => Array.isArray(val) ? val : [];
-        // Fetch users
-        const usersRes = await authFetch(`${API_BASE}/api/users`);
-        const usersData = await usersRes.json();
-        const users = Array.isArray(usersData) ? usersData : toArray(usersData.users);
-        // Fetch roles
-        const rolesRes = await authFetch(`${API_BASE}/api/roles`);
-        const roles = toArray(await rolesRes.json());
-        // Fetch permissions
-        const permsRes = await authFetch(`${API_BASE}/api/permissions`);
-        const perms = toArray(await permsRes.json());
-        // Fetch logs (real)
-        let logs = [];
-        try {
-          const logsRes = await authFetch(`${API_BASE}/api/audit`);
-          const maybeLogs = await logsRes.json();
-          logs = toArray(maybeLogs);
-        } catch (err) {
-          logs = [];
-        }
-
-        // Totales
-        setTotals({
-          users: users.length,
-          roles: roles.length,
-          permissions: perms.length,
-          logs: logs.length
-        });
-
-        // Estado de usuarios (real, si hay campos)
-        let active = 0, inactive = 0, pending = 0;
-        users.forEach(u => {
-          if (u.status === 'active') active++;
-          else if (u.status === 'inactive') inactive++;
-          else pending++;
-        });
-        setUserStatus({ active, inactive, pending });
-
-        // Últimos accesos (real, si hay campo lastLogin)
-        setLastLogins(
-          users
-            .filter(u => u.lastLogin)
-            .sort((a, b) => new Date(b.lastLogin) - new Date(a.lastLogin))
-            .slice(0, 5)
-            .map(u => ({ user: u.name, date: u.lastLogin }))
-        );
-
-        // Alertas de seguridad (demo)
-        try {
-          const alertsRes = await authFetch(`${API_BASE}/api/demo/security-alerts`);
-          const alerts = toArray(await alertsRes.json());
-          setSecurityAlerts(alerts);
-        } catch {
-          setSecurityAlerts([]);
-        }
-
-        // Historial de cambios (demo)
-        try {
-          const changesRes = await authFetch(`${API_BASE}/api/demo/change-history`);
-          const changes = toArray(await changesRes.json());
-          setChangeHistory(changes);
-        } catch {
-          setChangeHistory([]);
-        }
-
-        // Estado del sistema (demo)
-        try {
-          const statusRes = await authFetch(`${API_BASE}/api/demo/system-status`);
-          const status = await statusRes.json();
-          setSystemStatus(status);
-        } catch {
-          setSystemStatus({ api: 'online', ia: 'online', cloud: 'online' });
-        }
-
-        // Tendencia de usuarios (demo)
-        try {
-          const growthRes = await authFetch(`${API_BASE}/api/demo/user-growth`);
-          const growth = toArray(await growthRes.json());
-          setUserGrowth(growth);
-        } catch {
-          setUserGrowth([]);
-        }
-
-        // Accesos por módulo (demo)
-        try {
-          const moduleRes = await authFetch(`${API_BASE}/api/demo/module-access`);
-          const moduleData = toArray(await moduleRes.json());
-          setModuleAccess(moduleData);
-        } catch {
-          setModuleAccess([]);
-        }
-
-        // Users by role (real)
-        const roleMap = {};
-        roles.forEach(r => { roleMap[r.name] = 0; });
-        let noRoleCount = 0;
-        users.forEach(u => {
-          const userRoles = u.Roles || u.roles || [];
-          if (!Array.isArray(userRoles) || userRoles.length === 0) {
-            noRoleCount += 1;
-            return;
-          }
-          userRoles.forEach(r => {
-            const roleName = r?.name || r;
-            if (!roleName) return;
-            if (!(roleName in roleMap)) roleMap[roleName] = 0;
-            roleMap[roleName] += 1;
+        const response = await authFetch(`${API_BASE}/api/dashboard/summary`);
+        const data = await response.json();
+        if (active) {
+          setSummary({
+            ...emptySummary,
+            ...data,
+            users: { ...emptySummary.users, ...(data?.users || {}) },
+            audit: { ...emptySummary.audit, ...(data?.audit || {}) },
+            moduleActivity: asArray(data?.moduleActivity),
+            lastLogins: asArray(data?.lastLogins),
+            userActivity: asArray(data?.userActivity),
+            roles: asArray(data?.roles),
+            activity: asArray(data?.activity)
           });
-        });
-        if (noRoleCount > 0) {
-          roleMap['Sin rol'] = noRoleCount;
-        }
-        setUsersByRole(Object.entries(roleMap).map(([role, value]) => ({ role, value })));
-
-        // Recent logs
-        setRecentLogs(logs);
-
-        // Top permissions (real)
-        try {
-          const topPermsRes = await authFetch(`${API_BASE}/api/dashboard/top-permissions`);
-          const topPermsData = toArray(await topPermsRes.json());
-          setTopPerms(topPermsData);
-        } catch {
-          setTopPerms(perms.map(p => ({ name: p.name, count: 0 })));
-        }
-
-        // Panel IA real (fallback silencioso)
-        try {
-          const accessToken = getAccessToken();
-          const iaRes = await fetch(`${API_BASE}/api/ia-panel`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {})
-            },
-            body: JSON.stringify({})
-          });
-          if (!iaRes.ok) {
-            const errData = await iaRes.json().catch(() => ({}));
-            const details = errData?.details || errData?.error || '';
-            const isMissingModel = typeof details === 'string' && details.includes('ia_model');
-            setAIStatus({
-              status: 'unavailable',
-              message: isMissingModel
-                ? 'IA no disponible: modelo demo no cargado.'
-                : 'IA no disponible temporalmente.',
-              isDemo: isMissingModel
-            });
-            setAIData({ suggestions: '', anomalies: '', predictions: '' });
-          } else {
-            const iaPanel = await iaRes.json();
-            setAIData(iaPanel);
-            setAIStatus({ status: 'available', message: '', isDemo: false });
-          }
-        } catch {
-          setAIStatus({ status: 'unavailable', message: 'IA no disponible temporalmente.', isDemo: false });
-          setAIData({ suggestions: '', anomalies: '', predictions: '' });
+          setLastUpdated(new Date());
+          setError(null);
+          setRefreshError(null);
         }
       } catch (err) {
-        setError('Error al cargar el panel. Intenta recargar la página.');
-        setTotals({ users: 0, roles: 0, permissions: 0, logs: 0 });
-        setUsersByRole([]);
-        setRecentLogs([]);
-        setTopPerms([]);
+        if (active) {
+          const message = err?.message || 'No se pudo cargar el resumen del panel.';
+          if (isInitial) setError(message);
+          else setRefreshError(message);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+          setRefreshing(false);
+        }
       }
-      finally {
-        setLoading(false);
+
+      try {
+        const response = await authFetch(`${API_BASE}/api/dashboard/top-permissions?limit=5`);
+        const data = await response.json();
+        if (active) {
+          setTopPermissions(asArray(data));
+          setPermissionsError(null);
+        }
+      } catch (err) {
+        if (active) {
+          setTopPermissions([]);
+          setPermissionsError(err?.message || 'No se pudieron cargar los permisos.');
+        }
       }
+
+      // La IA es opcional; authFetch centraliza el JWT y su renovación.
+      try {
+        const response = await authFetch(`${API_BASE}/api/ia-panel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        const data = await response.json();
+        if (active) {
+          setAIData(data);
+          setAIStatus({ status: 'available', message: '', isDemo: false });
+        }
+      } catch (err) {
+        if (active) {
+          const details = err?.data?.details || err?.data?.error || '';
+          setAIStatus({
+            status: 'unavailable',
+            message: String(details).includes('ia_model')
+              ? 'IA no disponible: modelo no cargado.'
+              : 'IA no disponible temporalmente.',
+            isDemo: false
+          });
+          setAIData(emptyAI);
+        }
+      }
+
+      requestInFlight.current = false;
     }
-    fetchData();
+
+    refreshDashboard.current = () => fetchData(false);
+    fetchData(true);
+    const intervalId = window.setInterval(() => fetchData(false), POLLING_INTERVAL_MS);
+    const countdownId = window.setInterval(() => {
+      setNextRefreshIn(seconds => seconds <= 1 ? POLLING_INTERVAL_MS / 1000 : seconds - 1);
+    }, 1000);
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+      window.clearInterval(countdownId);
+      requestInFlight.current = false;
+      refreshDashboard.current = null;
+    };
   }, []);
 
   if (loading) {
@@ -227,47 +182,90 @@ export default function DashboardView() {
   if (error) {
     return (
       <Box maw={600} mx="auto" py="xl" style={{ textAlign: 'center' }}>
-        <Text color="red" size="lg" fw={700}>
-          {error}
-        </Text>
-        <Text mt="md" color="dimmed">Si el problema persiste, revisa la consola o contacta soporte.</Text>
+        <Text color="red" size="lg" fw={700}>{error}</Text>
+        <Text mt="md" color="dimmed">No se muestran datos parciales. Intenta recargar la página.</Text>
       </Box>
     );
   }
 
+  const users = summary.users || emptySummary.users;
+  const audit = summary.audit || emptySummary.audit;
+  const recentAudit = asArray(audit.recent);
+  const auditByAction = asArray(audit.byAction);
+  const failedAudit = recentAudit.filter((entry) => entry.action === 'failed_access');
+  const recentChanges = recentAudit.filter((entry) => CHANGE_ACTIONS.has(entry.action));
+  const activity = asArray(summary.activity);
+  const moduleActivity = asArray(summary.moduleActivity);
+  const lastLogins = asArray(summary.lastLogins);
+  const userActivity = asArray(summary.userActivity);
+  const roles = asArray(summary.roles);
+  const services = summary.services || {};
+  const formattedLastUpdated = lastUpdated
+    ? lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    : 'sin datos';
+
   return (
     <Box maw={1000} mx="auto" px={{ base: 12, sm: 24, md: 32 }} py="xl" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Title order={2} mb="md" align="center">Panel de Control</Title>
+      <Group justify="space-between" align="center" mb="md">
+        <Box>
+          <Title order={2}>Panel de Control</Title>
+          <Text size="sm" c="dimmed">
+            Última actualización: {formattedLastUpdated} · Actualización automática en {nextRefreshIn}s
+          </Text>
+        </Box>
+        <Button onClick={() => refreshDashboard.current?.()} loading={refreshing} variant="light">
+          Actualizar
+        </Button>
+      </Group>
+      <DashboardHero />
+      {refreshError && (
+        <Text c="red" size="sm" mb="md">
+          No se pudo actualizar el panel: {refreshError}. Se conservan los últimos datos válidos.
+        </Text>
+      )}
       <Stack spacing="md">
+        <DashboardSummary totals={{
+          users: users.total,
+          roles: roles.length,
+          permissions: null,
+          logs: recentAudit.length,
+          userSparkline: userActivity.map(item => item.count),
+          roleSparkline: roles.map(item => item.count),
+          permissionSparkline: topPermissions.map(item => item.count),
+          auditSparkline: auditByAction.map(item => item.count)
+        }} />
+        <UserStatusSummary active={users.active} inactive={users.inactive} pending={0} />
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <DashboardSummary totals={totals || { users: 0, roles: 0, permissions: 0, logs: 0 }} />
-          <UserStatusSummary
-            active={(userStatus && userStatus.active) || 0}
-            inactive={(userStatus && userStatus.inactive) || 0}
-            pending={(userStatus && userStatus.pending) || 0}
+          <UsersByRoleChart data={roles.map((item) => ({ role: item.role, value: item.count }))} />
+          <UserRegistrationChart data={userActivity} />
+        </SimpleGrid>
+        <UserGrowthChart data={activity} />
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
+          <SecurityActivityChart data={auditByAction} />
+          <Chart3DWrapper
+            lazy3D={<ModuleActivity3D data={moduleActivity} />}
+            fallback={<ModuleAccessChart data={moduleActivity} />}
           />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <UsersByRoleChart data={usersByRole || []} />
-          <UserGrowthChart data={userGrowth || []} isDemo />
+          <SystemStatus status={{
+            api: services.api?.status || 'no disponible',
+            ia: services.ia?.status || 'no disponible',
+            database: services.database?.status || 'no disponible'
+          }} />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <ModuleAccessChart data={moduleAccess || []} isDemo />
-          <SystemStatus status={systemStatus || { api: 'online', ia: 'online', cloud: 'online' }} isDemo />
+          <RecentActivity logs={recentAudit} />
+          <TopPermissions permissions={topPermissions} error={permissionsError} />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <RecentActivity logs={recentLogs || []} />
-          <TopPermissions permissions={topPerms || []} />
+          <LastLogins logins={lastLogins} />
+          <SecurityAlerts alerts={failedAudit} />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <LastLogins logins={lastLogins || []} />
-          <SecurityAlerts alerts={securityAlerts || []} isDemo />
+          <ChangeHistory changes={recentChanges} />
+          <AIPanel data={aiData} status={aiStatus.status} message={aiStatus.message} isDemo={false} />
         </SimpleGrid>
-        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
-          <ChangeHistory changes={changeHistory || []} isDemo />
-          <AIPanel data={aiData || { suggestions: '', anomalies: '', predictions: '' }} status={aiStatus.status} message={aiStatus.message} isDemo={aiStatus.isDemo} />
-        </SimpleGrid>
-          {/* El formulario de asignar permisos se movió a PermissionsView */}
       </Stack>
     </Box>
   );

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { User, Role, RefreshToken } = require('../models');
+const { User, Role, RefreshToken, AuditLog } = require('../models');
 
 const ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL || '15m';
 const REFRESH_TOKEN_TTL = process.env.REFRESH_TOKEN_TTL || '7d';
@@ -69,6 +69,12 @@ module.exports = {
       if (!isMatch) return res.status(401).json({ error: 'Credenciales inválidas.' });
 
       const { accessToken, refreshToken, roleNames, expiresAt } = await generateTokens(user);
+      await AuditLog.create({
+        userId: user.id,
+        action: 'login',
+        details: 'Inicio de sesión exitoso.',
+        createdBy: user.id
+      });
       res.json({
         tokenType: 'Bearer',
         accessToken,

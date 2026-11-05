@@ -29,7 +29,8 @@ module.exports = {
         attributes: { exclude: ['password'] },
         include: [{ model: Role, through: { attributes: [] } }],
         offset,
-        limit: parseInt(limit)
+        limit: parseInt(limit),
+        distinct: true
       });
       res.json({
         total: count,

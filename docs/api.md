@@ -128,11 +128,11 @@ Onboarding security requires complementing RBAC with a predictive risk layer. Th
 ## 🧾 Auditoría / Audit
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
 - POST `/api/audit` – Auth – Body `{ userId, action, details? }` → 201 (registra evento)
-- GET `/api/audit` – Permiso `view_audit` – Query `userId?, action?, from?, to?` → lista logs
+- GET `/api/audit` – Permiso `view_audit` – Query `userId?, action?, from?, to?, page?, limit?` (máximo 100) → `{ total, page, limit, pages, logs }`. Cada log expone acción, ejecutor sin contraseña, recurso, resultado (`success`/`failed`), fecha y detalles sanitizados; no expone IPs ni secretos.
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
 - POST `/api/audit` – Auth – Body `{ userId, action, details? }` → 201 (registers event)
-- GET `/api/audit` – Permission `view_audit` – Query `userId?, action?, from?, to?` → logs list
+- GET `/api/audit` – Permission `view_audit` – Query `userId?, action?, from?, to?, page?, limit?` (maximum 100) → `{ total, page, limit, pages, logs }`. Logs expose a password-free executor, resource, result, date and sanitized details; IPs and secrets are excluded.
 
 ---
 
@@ -171,33 +171,81 @@ Onboarding security requires complementing RBAC with a predictive risk layer. Th
 
 ---
 
-## 📊 Dashboard (demo / backoffice)
+## 📊 Endpoints demo conservados / Retained demo endpoints
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- GET `/api/audit` – Ver sección Auditoría (usado por dashboard)
-- GET `/api/demo/security-alerts` – Demo (auth)
-- GET `/api/demo/change-history` – Demo
-- GET `/api/demo/system-status` – Demo
-- GET `/api/demo/user-growth` – Demo
-- GET `/api/demo/module-access` – Demo
+- GET `/api/demo/security-alerts` – Demo, conservado para compatibilidad; no lo consume el dashboard actual
+- GET `/api/demo/change-history` – Demo, conservado para compatibilidad; no lo consume el dashboard actual
+- GET `/api/demo/system-status` – Demo, conservado para compatibilidad; no lo consume el dashboard actual
+- GET `/api/demo/user-growth` – Demo, conservado para compatibilidad; no lo consume el dashboard actual
+- GET `/api/demo/module-access` – Demo, conservado para compatibilidad; no lo consume el dashboard actual
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- GET `/api/audit` – See Audit section (used by dashboard)
-- GET `/api/demo/security-alerts` – Demo (auth)
-- GET `/api/demo/change-history` – Demo
-- GET `/api/demo/system-status` – Demo
-- GET `/api/demo/user-growth` – Demo
-- GET `/api/demo/module-access` – Demo
+- GET `/api/demo/security-alerts` – Demo, retained for compatibility; not consumed by the current dashboard
+- GET `/api/demo/change-history` – Demo, retained for compatibility; not consumed by the current dashboard
+- GET `/api/demo/system-status` – Demo, retained for compatibility; not consumed by the current dashboard
+- GET `/api/demo/user-growth` – Demo, retained for compatibility; not consumed by the current dashboard
+- GET `/api/demo/module-access` – Demo, retained for compatibility; not consumed by the current dashboard
+
+The current dashboard replaces these demo sources with `GET /api/dashboard/summary` and
+the live paginated `GET /api/audit` endpoint. The demo routes remain only to avoid breaking
+older clients and may be removed in a future breaking release.
 
 ---
 
 ## 📈 Dashboard (real)
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**
-- GET `/api/dashboard/top-permissions` – Agregación real de permisos más usados
+- GET `/api/dashboard/summary` – Resumen real (contrato: `users { total, active, inactive, recent }`, `roles`, `audit { recent, byAction, failedAccess }`, `moduleActivity`, `lastLogins`, `userActivity`, `activity`, `services`). Requiere JWT y el permiso `view_audit`.
+- GET `/api/dashboard/top-permissions` – Agregación real de permisos más asignados por rol (compatibilidad)
 <br><br>
 <img src="https://flagcdn.com/us.svg" alt="English" width="20" height="13"> **English:**
-- GET `/api/dashboard/top-permissions` – Real aggregation of most used permissions
+- GET `/api/dashboard/summary` – Real summary using the stable `users { total, active, inactive, recent }`, `roles`, `audit { recent, byAction, failedAccess }`, `moduleActivity`, `lastLogins`, `userActivity`, `activity`, and `services` contract. Requires JWT and the `view_audit` permission.
+- GET `/api/dashboard/top-permissions` – Real aggregation of permissions assigned to roles (compatibility)
 
 ---
+
+### Contrato JSON / JSON contract
+
+`GET /api/dashboard/summary` returns:
+
+```json
+{
+  "generatedAt": "2026-11-04T17:33:12.975Z",
+  "users": {
+    "total": 4,
+    "active": 3,
+    "inactive": 1,
+    "recent": [{ "id": 1, "name": "Ana", "email": "ana@example.com", "status": "active", "createdAt": "2026-11-04T00:00:00.000Z" }]
+  },
+  "roles": [{ "roleId": 1, "role": "admin", "count": 3 }],
+  "audit": {
+    "recent": [{ "id": 1, "userId": 1, "action": "login", "createdAt": "2026-11-04T00:00:00.000Z" }],
+    "byAction": [{ "action": "login", "count": 2 }],
+    "failedAccess": 1
+  },
+  "moduleActivity": [{ "module": "Usuarios", "access": 24 }],
+  "lastLogins": [{ "id": 8, "user": "Ana", "date": "2026-11-04T00:00:00.000Z" }],
+  "userActivity": [{ "date": "2026-11-04", "count": 2 }],
+  "activity": [{ "date": "2026-11-04", "count": 2 }],
+  "services": {
+    "api": { "status": "online" },
+    "database": { "status": "online" },
+    "ia": { "status": "offline" }
+  }
+}
+```
+
+`recent` users and audit entries are bounded lists; `activity` is the daily
+audit count for the last 30 days; `byAction` is grouped audit count; and
+`failedAccess` counts all `failed_access` audit records. `moduleActivity` groups audit
+actions into application modules and is not a screen-navigation metric. `lastLogins` contains
+the five most recent successful login events recorded in `AuditLogs`; `userActivity` contains
+daily user registrations from the last 30 days. `generatedAt` is the generation timestamp.
+No password data is returned.
+
+The frontend dashboard consumes this endpoint as its single data source (plus the optional
+authenticated IA panel), without using `/api/demo/*` or duplicating CRUD/audit requests.
+It refreshes the summary every 30 seconds and also provides a manual refresh control. If a
+later refresh fails, the frontend keeps the last valid data and shows the refresh error.
 
 ## 🧷 Matriz de permisos (base) / Base Permission Matrix
 <img src="https://flagcdn.com/es.svg" alt="Español" width="20" height="13"> **Español:**

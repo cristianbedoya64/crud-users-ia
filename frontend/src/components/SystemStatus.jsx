@@ -1,21 +1,26 @@
-import { Card, Title, Group, ThemeIcon, Text, Badge } from '@mantine/core';
-import { IconServer, IconCloud, IconRobot } from '@tabler/icons-react';
+import { Title, Group, Badge, Tooltip } from '@mantine/core';
+import { IconServer, IconDatabase, IconRobot } from '@tabler/icons-react';
+import GlassCard from './GlassCard';
+import StatusDot from './StatusDot';
 
 export default function SystemStatus({ status, isDemo = false }) {
   return (
-    <Card shadow="md" radius="md" withBorder mb="xl">
+    <GlassCard mb="xl">
       <Group justify="space-between" align="center" mb="md">
         <Title order={4}>Estado del Sistema</Title>
         {isDemo && <Badge color="gray" variant="light">Demo</Badge>}
       </Group>
-      <Group wrap="wrap">
-        <ThemeIcon color={status.api === 'online' ? 'green' : 'red'} radius="xl"><IconServer size={22} /></ThemeIcon>
-        <Text>API: {status.api}</Text>
-        <ThemeIcon color={status.ia === 'online' ? 'green' : 'red'} radius="xl"><IconRobot size={22} /></ThemeIcon>
-        <Text>IA: {status.ia}</Text>
-        <ThemeIcon color={status.cloud === 'online' ? 'green' : 'red'} radius="xl"><IconCloud size={22} /></ThemeIcon>
-        <Text>Cloud: {status.cloud}</Text>
+      <Group wrap="wrap" gap="xl">
+        <Tooltip label={`Estado de la API: ${status.api}`} withArrow>
+          <Group gap="xs"><IconServer size={20} /><StatusDot status={status.api} label={`API · ${status.api}`} /></Group>
+        </Tooltip>
+        <Tooltip label={`Estado de la IA: ${status.ia}`} withArrow>
+          <Group gap="xs"><IconRobot size={20} /><StatusDot status={status.ia} label={`IA · ${status.ia}`} /></Group>
+        </Tooltip>
+        <Tooltip label={`Estado de la base de datos: ${status.database}`} withArrow>
+          <Group gap="xs"><IconDatabase size={20} /><StatusDot status={status.database} label={`Base de datos · ${status.database}`} /></Group>
+        </Tooltip>
       </Group>
-    </Card>
+    </GlassCard>
   );
 }

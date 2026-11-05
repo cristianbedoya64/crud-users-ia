@@ -2,9 +2,15 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const permission = require('../middleware/permission');
+const { VIEW_AUDIT } = require('../constants/permissionMatrix');
+const dashboardController = require('../controllers/dashboardController');
 const { Permission, RolePermission, sequelize } = require('../models');
 
 router.use(auth());
+
+// El resumen incluye auditoría y conserva el permiso existente para consultar auditoría.
+router.get('/summary', permission(VIEW_AUDIT), dashboardController.summary);
 
 // Top permissions based on role-permission assignments
 router.get('/top-permissions', async (req, res) => {

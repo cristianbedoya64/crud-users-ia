@@ -1,45 +1,37 @@
-import { Card, Group, Text, Box, ThemeIcon, SimpleGrid } from '@mantine/core';
+import { Group, Text, Box, ThemeIcon, SimpleGrid } from '@mantine/core';
 import { IconUsers, IconShield, IconKey, IconHistory } from '@tabler/icons-react';
+import GlassCard from './GlassCard';
+import AnimatedCounter from './AnimatedCounter';
+import Sparkline from './Sparkline';
 
 export default function DashboardSummary({ totals }) {
+  const cards = [
+    { key: 'users', label: 'Usuarios', icon: IconUsers, color: 'var(--dashboard-electric)', values: totals.userSparkline },
+    { key: 'roles', label: 'Roles', icon: IconShield, color: 'var(--dashboard-cyan)', values: totals.roleSparkline },
+    { key: 'permissions', label: 'Permisos', icon: IconKey, color: 'var(--dashboard-violet)', values: totals.permissionSparkline },
+    { key: 'logs', label: 'Auditoría', icon: IconHistory, color: 'var(--dashboard-warning)', values: totals.auditSparkline }
+  ];
+
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="lg" mb="xl">
-      <Card shadow="md" radius="md" withBorder>
-        <Group>
-          <ThemeIcon color="blue" size={40} radius="md"><IconUsers size={28} /></ThemeIcon>
-          <Box>
-            <Text size="lg" fw={700}>{totals.users}</Text>
-            <Text size="sm" color="dimmed">Usuarios</Text>
-          </Box>
-        </Group>
-      </Card>
-      <Card shadow="md" radius="md" withBorder>
-        <Group>
-          <ThemeIcon color="teal" size={40} radius="md"><IconShield size={28} /></ThemeIcon>
-          <Box>
-            <Text size="lg" fw={700}>{totals.roles}</Text>
-            <Text size="sm" color="dimmed">Roles</Text>
-          </Box>
-        </Group>
-      </Card>
-      <Card shadow="md" radius="md" withBorder>
-        <Group>
-          <ThemeIcon color="violet" size={40} radius="md"><IconKey size={28} /></ThemeIcon>
-          <Box>
-            <Text size="lg" fw={700}>{totals.permissions}</Text>
-            <Text size="sm" color="dimmed">Permisos</Text>
-          </Box>
-        </Group>
-      </Card>
-      <Card shadow="md" radius="md" withBorder>
-        <Group>
-          <ThemeIcon color="orange" size={40} radius="md"><IconHistory size={28} /></ThemeIcon>
-          <Box>
-            <Text size="lg" fw={700}>{totals.logs}</Text>
-            <Text size="sm" color="dimmed">Auditoría</Text>
-          </Box>
-        </Group>
-      </Card>
+      {cards.map(({ key, label, icon: Icon, color, values }) => (
+        <GlassCard key={key} className="dashboard-kpi-card">
+          <Group justify="space-between" align="flex-start" wrap="nowrap">
+            <Group gap="sm" wrap="nowrap">
+              <ThemeIcon className="dashboard-kpi-icon" style={{ '--dashboard-kpi-color': color }} size={42} radius="md">
+                <Icon size={24} />
+              </ThemeIcon>
+              <Box>
+                <Text className="dashboard-kpi-value" size="xl" fw={800}>
+                  <AnimatedCounter value={totals[key]} />
+                </Text>
+                <Text size="sm" c="dimmed">{label}</Text>
+              </Box>
+            </Group>
+            <Sparkline values={values} color={color} />
+          </Group>
+        </GlassCard>
+      ))}
     </SimpleGrid>
   );
 }

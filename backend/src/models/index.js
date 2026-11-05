@@ -19,6 +19,9 @@ Permission.belongsToMany(Role, { through: RolePermission, foreignKey: 'permissio
 
 RefreshToken.belongsTo(User, { foreignKey: 'userId' });
 User.hasMany(RefreshToken, { foreignKey: 'userId' });
+AuditLog.belongsTo(User, { as: 'user', foreignKey: 'userId' });
+AuditLog.belongsTo(User, { as: 'executor', foreignKey: 'createdBy' });
+User.hasMany(AuditLog, { as: 'auditLogs', foreignKey: 'userId' });
 
 module.exports = {
   sequelize,
