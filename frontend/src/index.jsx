@@ -3,10 +3,11 @@ import '@mantine/notifications/styles.css';
 import './index.css';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { MantineProvider, createTheme, ColorSchemeScript } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
+import ThemeToggle from './components/ThemeToggle';
 import dashboardTokens from './theme/dashboardTokens';
 import { getAccessToken, getRefreshToken, refreshTokens, logout as authLogout, getStoredUser, setStoredUser, clearStoredUser } from './auth';
 
@@ -138,7 +139,9 @@ const theme = createTheme({
 });
 root.render(
   <React.StrictMode>
-    <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
+    <ColorSchemeScript defaultColorScheme="dark" />
+    <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <ThemeToggle />
       <Notifications position="top-center" zIndex={9999} />
       <BrowserRouter>
         <App />

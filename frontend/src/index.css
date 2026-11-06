@@ -8,6 +8,15 @@ html, body, #root {
 }
 
 :root {
+	--dashboard-radius-sm: 10px;
+	--dashboard-radius-md: 16px;
+	--dashboard-radius-lg: 22px;
+	--dashboard-font-body: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--dashboard-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+	--dashboard-motion-ambient: 18s;
+}
+
+:root[data-mantine-color-scheme="dark"] {
 	--dashboard-night: #07111f;
 	--dashboard-surface: #0d1b2e;
 	--dashboard-surface-raised: #132943;
@@ -26,13 +35,52 @@ html, body, #root {
 	--dashboard-border-strong: rgba(112, 167, 255, 0.55);
 	--dashboard-overlay: rgba(7, 17, 31, 0.72);
 	--ib-color: var(--dashboard-electric);
-	--dashboard-radius-sm: 10px;
-	--dashboard-radius-md: 16px;
-	--dashboard-radius-lg: 22px;
-	--dashboard-font-body: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-	--dashboard-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-	--dashboard-motion-ambient: 18s;
+	--dashboard-ambient-gradient-1: rgba(77, 141, 255, 0.16);
+	--dashboard-ambient-gradient-2: rgba(155, 140, 255, 0.12);
+	--dashboard-bg-overlay-1: rgba(7, 17, 31, 0.9);
+	--dashboard-bg-overlay-2: rgba(7, 17, 31, 0.96);
+	--dashboard-card-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+	--dashboard-card-glow: 0 0 28px rgba(112, 167, 255, 0.2);
+	--dashboard-header-gradient: linear-gradient(135deg, #17396f 0%, #2457a6 52%, #3f78c9 100%);
+	--dashboard-soft-surface: color-mix(in srgb, var(--dashboard-surface-raised) 78%, transparent);
+	--dashboard-soft-surface: color-mix(in srgb, var(--dashboard-surface-raised) 78%, transparent);
+	--dashboard-paper-bg: rgba(255,255,255,0.16);
+	--dashboard-soft-surface: color-mix(in srgb, var(--dashboard-surface-raised) 78%, transparent);
 	color-scheme: dark;
+}
+
+:root[data-mantine-color-scheme="light"] {
+	--dashboard-night: #f8fafc;
+	--dashboard-surface: #ffffff;
+	--dashboard-surface-raised: #f1f5f9;
+	--dashboard-surface-interactive: #e2e8f0;
+	--dashboard-electric: #2563eb;
+	--dashboard-cyan: #0891b2;
+	--dashboard-violet: #7c3aed;
+	--dashboard-success: #16a34a;
+	--dashboard-warning: #ca8a04;
+	--dashboard-danger: #dc2626;
+	--dashboard-text: #0f172a;
+	--dashboard-text-secondary: #475569;
+	--dashboard-muted: #94a3b8;
+	--dashboard-grid: rgba(0, 0, 0, 0.05);
+	--dashboard-border: rgba(0, 0, 0, 0.1);
+	--dashboard-border-strong: rgba(37, 99, 235, 0.4);
+	--dashboard-overlay: rgba(255, 255, 255, 0.8);
+	--ib-color: var(--dashboard-electric);
+	--dashboard-ambient-gradient-1: rgba(37, 99, 235, 0.08);
+	--dashboard-ambient-gradient-2: rgba(124, 58, 237, 0.06);
+	--dashboard-card-shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
+	--dashboard-card-glow: 0 0 28px rgba(37, 99, 235, 0.08);
+	--dashboard-header-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 52%, #60a5fa 100%);
+	--dashboard-soft-surface: color-mix(in srgb, var(--dashboard-surface-raised) 78%, transparent);
+	--dashboard-soft-surface: color-mix(in srgb, var(--dashboard-surface-raised) 78%, transparent);
+	--dashboard-paper-bg: rgba(0,0,0,0.06);
+	--dashboard-bg-overlay-1: rgba(248, 250, 252, 0.85);
+	--dashboard-bg-overlay-2: rgba(248, 250, 252, 0.95);
+	--dashboard-card-shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
+	--dashboard-card-glow: 0 0 28px rgba(37, 99, 235, 0.08);
+	color-scheme: light;
 }
 
 html {
@@ -42,7 +90,7 @@ html {
 body {
 	font-family: var(--dashboard-font-body);
 	background:
-		linear-gradient(rgba(7, 17, 31, 0.9), rgba(7, 17, 31, 0.96)),
+		linear-gradient(var(--dashboard-bg-overlay-1), var(--dashboard-bg-overlay-2)),
 		linear-gradient(90deg, transparent 49%, var(--dashboard-grid) 50%, transparent 51%),
 		linear-gradient(0deg, transparent 49%, var(--dashboard-grid) 50%, transparent 51%);
 	background-size: auto, 48px 48px, 48px 48px;
@@ -63,14 +111,14 @@ body::after {
 
 body::before {
 	background:
-		radial-gradient(circle at 16% 12%, rgba(77, 141, 255, 0.16), transparent 28%),
-		radial-gradient(circle at 84% 78%, rgba(155, 140, 255, 0.12), transparent 26%);
+		radial-gradient(circle at 16% 12%, var(--dashboard-ambient-gradient-1), transparent 28%),
+		radial-gradient(circle at 84% 78%, var(--dashboard-ambient-gradient-2), transparent 26%);
 	filter: blur(18px);
 	animation: dashboard-ambient-drift var(--dashboard-motion-ambient, 18s) ease-in-out infinite alternate;
 }
 
 body::after {
-	background: radial-gradient(circle at center, transparent 42%, rgba(0, 0, 0, 0.24) 100%);
+	background: radial-gradient(circle at center, transparent 42%, color-mix(in srgb, var(--dashboard-text) 12%, transparent) 100%);
 }
 
 * {
@@ -79,12 +127,12 @@ body::after {
 
 .mantine-Card-root:hover {
 	transform: translateY(-2px);
-	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+	box-shadow: 0 12px 24px color-mix(in srgb, var(--dashboard-text) 18%, transparent);
 }
 
 .dashboard-page .mantine-Card-root,
 .dashboard-glass-card {
-	background: linear-gradient(145deg, rgba(19, 41, 67, 0.3), rgba(10, 25, 43, 0.16)) !important;
+	background: linear-gradient(145deg, color-mix(in srgb, var(--dashboard-surface-raised) 70%, transparent), color-mix(in srgb, var(--dashboard-surface) 55%, transparent)) !important;
 	border: 1px solid var(--dashboard-border);
 	box-shadow: var(--dashboard-card-shadow), var(--dashboard-card-glow);
 	backdrop-filter: blur(18px);
@@ -131,7 +179,7 @@ body::after {
 }
 
 .screen-page .mantine-Card-root {
-	background: linear-gradient(145deg, rgba(19, 41, 67, 0.78), rgba(10, 25, 43, 0.58));
+	background: linear-gradient(145deg, color-mix(in srgb, var(--dashboard-surface-raised) 90%, transparent), color-mix(in srgb, var(--dashboard-surface) 78%, transparent));
 }
 
 .dashboard-page .mantine-Card-root:hover,
@@ -193,10 +241,10 @@ body::after {
 	padding: 18px 24px;
 	overflow: hidden;
 	position: relative;
-	border: 1px solid rgba(77, 141, 255, 0.24);
+	border: 1px solid var(--dashboard-border-strong);
 	border-radius: var(--dashboard-radius-lg);
-	background: linear-gradient(110deg, rgba(13, 27, 46, 0.94), rgba(31, 39, 82, 0.72));
-	box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2), 0 0 30px rgba(77, 141, 255, 0.1);
+	background: linear-gradient(110deg, color-mix(in srgb, var(--dashboard-surface) 94%, transparent), color-mix(in srgb, var(--dashboard-violet) 22%, var(--dashboard-surface)));
+	box-shadow: var(--dashboard-card-shadow), var(--dashboard-card-glow);
 }
 
 .dashboard-hero::before {
@@ -274,7 +322,7 @@ body::after {
 .dashboard-chart-skeleton {
 	height: 290px;
 	border-radius: var(--dashboard-radius-md);
-	background: linear-gradient(110deg, rgba(18, 36, 59, 0.6) 25%, rgba(77, 141, 255, 0.16) 37%, rgba(18, 36, 59, 0.6) 63%);
+	background: linear-gradient(110deg, color-mix(in srgb, var(--dashboard-surface-raised) 72%, transparent) 25%, color-mix(in srgb, var(--dashboard-electric) 16%, transparent) 37%, color-mix(in srgb, var(--dashboard-surface-raised) 72%, transparent) 63%);
 	background-size: 400% 100%;
 	animation: dashboard-skeleton-shimmer 1.4s ease infinite;
 }
@@ -330,7 +378,7 @@ body::after {
 	height: var(--bar-height);
 	min-height: 10px;
 	border-radius: 6px 6px 2px 2px;
-	background: linear-gradient(180deg, #8cb7ff, var(--bar-color));
+	background: linear-gradient(180deg, color-mix(in srgb, var(--dashboard-electric) 72%, white), var(--bar-color));
 	box-shadow: 0 0 18px color-mix(in srgb, var(--bar-color) 45%, transparent);
 	transform: scaleY(0);
 	transform-origin: bottom;
@@ -348,7 +396,7 @@ body::after {
 	width: 7px;
 	height: 100%;
 	border-radius: 0 4px 4px 0;
-	background: color-mix(in srgb, var(--bar-color) 55%, #07111f);
+	background: color-mix(in srgb, var(--bar-color) 55%, var(--dashboard-night));
 	content: '';
 	transform: skewY(-35deg);
 	transform-origin: top;

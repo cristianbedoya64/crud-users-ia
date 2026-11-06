@@ -65,7 +65,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
           px="md"
           py={{ base: 'xs', sm: 0 }}
           style={{
-            background: 'linear-gradient(135deg, #17396f 0%, #2457a6 52%, #3f78c9 100%)',
+            background: 'var(--dashboard-header-gradient)',
             display: 'flex',
             alignItems: 'center',
             boxShadow: '0 6px 20px rgba(37, 99, 235, 0.25)'
@@ -81,7 +81,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
                 px="sm"
                 py={6}
                 style={{
-                  background: 'rgba(255,255,255,0.16)',
+                  background: 'var(--dashboard-paper-bg)',
                   border: '1px solid rgba(255,255,255,0.3)',
                   backdropFilter: 'blur(8px)',
                   boxShadow: '0 6px 18px rgba(15,23,42,0.25)'
@@ -103,7 +103,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
                 px="sm"
                 py={6}
                 style={{
-                  background: 'rgba(255,255,255,0.16)',
+                  background: 'var(--dashboard-paper-bg)',
                   border: '1px solid rgba(255,255,255,0.3)',
                   backdropFilter: 'blur(8px)',
                   boxShadow: '0 6px 18px rgba(15,23,42,0.25)',
