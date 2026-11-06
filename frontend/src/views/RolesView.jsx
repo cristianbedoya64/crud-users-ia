@@ -8,6 +8,7 @@ import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { getStoredUser } from '../auth';
 import { hasPermission } from '../utils/permissions';
+import ScreenBackground from '../components/ScreenBackground';
 
 
 export default function RolesView() {
@@ -392,18 +393,21 @@ export default function RolesView() {
 
   if (!canManageRoles) {
     return (
-      <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
-        <Card shadow="md" padding="lg" radius="md" withBorder>
-          <Title order={3} mb="sm">Roles</Title>
-          <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
-        </Card>
-      </Box>
+      <ScreenBackground effect="roles">
+        <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+          <Card shadow="md" padding="lg" radius="md" withBorder>
+            <Title order={3} mb="sm">Roles</Title>
+            <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
+          </Card>
+        </Box>
+      </ScreenBackground>
     );
   }
 
   return (
-    <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
-      <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
+    <ScreenBackground effect="roles">
+      <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+        <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Roles</Title>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="md">
           <TextInput
@@ -514,7 +518,8 @@ export default function RolesView() {
           />
           <Button color="blue" onClick={handleUpdateRole}>Guardar</Button>
         </Stack>
-      </Modal>
-    </Box>
+        </Modal>
+      </Box>
+    </ScreenBackground>
   );
 }

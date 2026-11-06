@@ -1,11 +1,13 @@
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import './index.css';
 import React, { useEffect, useState } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
+import dashboardTokens from './theme/dashboardTokens';
 import { getAccessToken, getRefreshToken, refreshTokens, logout as authLogout, getStoredUser, setStoredUser, clearStoredUser } from './auth';
 
 function App() {
@@ -72,15 +74,15 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const theme = createTheme({
   primaryColor: 'blue',
   defaultRadius: 'md',
-  fontFamily: 'Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif',
+  fontFamily: dashboardTokens.typography.body,
   headings: {
-    fontFamily: 'Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif',
+    fontFamily: dashboardTokens.typography.body,
     fontWeight: '600'
   },
   colors: {
     blue: [
-      '#e7f0ff', '#cfe0ff', '#a7c2ff', '#7aa0ff', '#5687ff',
-      '#3d74ff', '#2f6bff', '#1958e3', '#1249bf', '#0a3a9a'
+      '#edf4ff', '#d8e8ff', '#bfd7ff', '#a0c3ff', '#70a7ff',
+      '#5d96f5', '#4a84e4', '#376fc4', '#28599f', '#1d467d'
     ]
   },
   components: {
@@ -88,9 +90,10 @@ const theme = createTheme({
       defaultProps: { shadow: 'md', radius: 'md', withBorder: true },
       styles: theme => ({
         root: {
-          backgroundColor: '#ffffff',
-          borderColor: theme.colors.gray[2],
-          transition: 'transform 120ms ease, box-shadow 120ms ease'
+          backgroundColor: dashboardTokens.colors.surface,
+          borderColor: dashboardTokens.colors.border,
+          color: dashboardTokens.colors.text,
+          transition: `transform ${dashboardTokens.motion.fast} ${dashboardTokens.motion.ease}, box-shadow ${dashboardTokens.motion.fast} ${dashboardTokens.motion.ease}`
         }
       })
     },
@@ -98,7 +101,7 @@ const theme = createTheme({
       defaultProps: { radius: 'md' },
       styles: () => ({
         root: {
-          transition: 'transform 120ms ease, box-shadow 120ms ease'
+          transition: `transform ${dashboardTokens.motion.fast} ${dashboardTokens.motion.ease}, box-shadow ${dashboardTokens.motion.fast} ${dashboardTokens.motion.ease}`
         }
       })
     },
@@ -119,7 +122,7 @@ const theme = createTheme({
           overflow: 'hidden'
         },
         thead: {
-          backgroundColor: theme.colors.gray[0]
+          backgroundColor: dashboardTokens.colors.surfaceRaised
         }
       })
     },

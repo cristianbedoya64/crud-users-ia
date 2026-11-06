@@ -17,7 +17,6 @@ export default function UserRegistrationChart({ data = [] }) {
           style={{ height: 220, width: '100%' }}
           option={{
             tooltip: { trigger: 'axis' },
-            grid: { left: 36, right: 16, top: 16, bottom: 32 },
             grid: { left: 36, right: 16, top: 16, bottom: 32, containLabel: true },
             xAxis: { type: 'category', data: dates, axisLabel: { color: dashboardTokens.colors.muted } },
             yAxis: { type: 'value', minInterval: 1, axisLabel: { color: dashboardTokens.colors.muted }, splitLine: { lineStyle: { color: dashboardTokens.colors.grid } } },

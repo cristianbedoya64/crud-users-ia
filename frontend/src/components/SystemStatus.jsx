@@ -1,4 +1,4 @@
-import { Title, Group, Badge, Tooltip } from '@mantine/core';
+import { Title, Group, Badge, Tooltip, Text } from '@mantine/core';
 import { IconServer, IconDatabase, IconRobot } from '@tabler/icons-react';
 import GlassCard from './GlassCard';
 import StatusDot from './StatusDot';
@@ -21,6 +21,9 @@ export default function SystemStatus({ status, isDemo = false }) {
           <Group gap="xs"><IconDatabase size={20} /><StatusDot status={status.database} label={`Base de datos · ${status.database}`} /></Group>
         </Tooltip>
       </Group>
+      {Object.values(status).some(value => value === 'no disponible') && (
+        <Text size="xs" c="dimmed" mt="md">No disponible en el resumen actual.</Text>
+      )}
     </GlassCard>
   );
 }

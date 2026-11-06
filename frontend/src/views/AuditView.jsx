@@ -4,6 +4,7 @@ import { Card, Title, Text, List, Loader, TextInput, Select, Button, Group, Simp
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
 import { getAuditActionLabel, getAuditActionOptions } from '../utils/auditLabels';
+import ScreenBackground from '../components/ScreenBackground';
 
 export default function AuditView() {
   const [logs, setLogs] = useState([]);
@@ -71,7 +72,8 @@ export default function AuditView() {
   }, [users]);
 
   return (
-    <Card shadow="md" padding={{ base: 'sm', sm: 'lg' }} radius="md" withBorder maw={900} mx="auto" px={{ base: 'xs', sm: 'md' }} mt="xl">
+    <ScreenBackground effect="audit">
+      <Card shadow="md" padding={{ base: 'sm', sm: 'lg' }} radius="md" withBorder maw={900} mx="auto" px={{ base: 'xs', sm: 'md' }} mt="xl">
       <Title order={3} mb="md">Auditoría</Title>
       <Box mb="md">
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="sm">
@@ -151,6 +153,7 @@ export default function AuditView() {
           fetchLogs({ userId, action, from, to }, value);
         }} />
       )}
-    </Card>
+      </Card>
+    </ScreenBackground>
   );
 }

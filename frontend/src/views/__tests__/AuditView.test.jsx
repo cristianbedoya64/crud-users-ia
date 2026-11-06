@@ -26,7 +26,7 @@ vi.mock('../../apiClient', () => ({
 describe('AuditView', () => {
   it('renders the paginated, safe audit contract', async () => {
     render(<MantineProvider><AuditView /></MantineProvider>);
-    await waitFor(() => expect(screen.getByText('failed access')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getAllByText('Acceso rechazado').length).toBeGreaterThan(0));
     expect(screen.getByText(/Usuario: Operator/)).toBeInTheDocument();
     expect(screen.getByText('Fallido')).toBeInTheDocument();
     expect(screen.getByText(/Recurso: users/)).toBeInTheDocument();

@@ -1,11 +1,10 @@
-import { lazy, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Title, Text, Loader, Box, Stack, SimpleGrid, Group, Button } from '@mantine/core';
 import DashboardSummary from '../components/DashboardSummary';
 import UserStatusSummary from '../components/UserStatusSummary';
 import UsersByRoleChart from '../components/UsersByRoleChart';
 import UserGrowthChart from '../components/UserGrowthChart';
 import ModuleAccessChart from '../components/ModuleAccessChart';
-import Chart3DWrapper from '../components/Chart3DWrapper';
 import LastLogins from '../components/LastLogins';
 import SecurityAlerts from '../components/SecurityAlerts';
 import ChangeHistory from '../components/ChangeHistory';
@@ -16,10 +15,9 @@ import SecurityActivityChart from '../components/SecurityActivityChart';
 import UserRegistrationChart from '../components/UserRegistrationChart';
 import AIPanel from '../components/AIPanel';
 import DashboardHero from '../components/DashboardHero';
+import InteractiveBackground from '../components/InteractiveBackground';
 import { API_BASE } from '../apiConfig';
 import { authFetch } from '../apiClient';
-
-const ModuleActivity3D = lazy(() => import('../components/ModuleActivity3D'));
 
 const emptySummary = {
   users: { total: 0, active: 0, inactive: 0, recent: [] },
@@ -205,7 +203,15 @@ export default function DashboardView() {
     : 'sin datos';
 
   return (
-    <Box maw={1000} mx="auto" px={{ base: 12, sm: 24, md: 32 }} py="xl" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box className="dashboard-page" w="100%" px={{ base: 12, sm: 24, md: 32 }} py="xl" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <InteractiveBackground
+        variant="hex"
+        density={1}
+        intensity={0.45}
+        radius={1}
+        autoplay={false}
+      />
+      <Box className="dashboard-page-content">
       <Group justify="space-between" align="center" mb="md">
         <Box>
           <Title order={2}>Panel de Control</Title>
@@ -242,10 +248,7 @@ export default function DashboardView() {
         <UserGrowthChart data={activity} />
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <SecurityActivityChart data={auditByAction} />
-          <Chart3DWrapper
-            lazy3D={<ModuleActivity3D data={moduleActivity} />}
-            fallback={<ModuleAccessChart data={moduleActivity} />}
-          />
+          <ModuleAccessChart data={moduleActivity} />
         </SimpleGrid>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
           <SystemStatus status={{
@@ -267,6 +270,7 @@ export default function DashboardView() {
           <AIPanel data={aiData} status={aiStatus.status} message={aiStatus.message} isDemo={false} />
         </SimpleGrid>
       </Stack>
+      </Box>
     </Box>
   );
 }

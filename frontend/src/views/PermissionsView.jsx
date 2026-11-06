@@ -11,6 +11,7 @@ import { notifyError, notifyWarning } from '../utils/notify';
 import { useMediaQuery } from '@mantine/hooks';
 import { getStoredUser } from '../auth';
 import { hasPermission } from '../utils/permissions';
+import ScreenBackground from '../components/ScreenBackground';
 
 export default function PermissionsView() {
   const currentUser = getStoredUser();
@@ -232,18 +233,21 @@ export default function PermissionsView() {
 
   if (!canManageRoles) {
     return (
-      <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
-        <Card shadow="md" padding="lg" radius="md" withBorder>
-          <Title order={3} mb="sm">Permisos</Title>
-          <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
-        </Card>
-      </Box>
+      <ScreenBackground effect="permissions">
+        <Box maw={900} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+          <Card shadow="md" padding="lg" radius="md" withBorder>
+            <Title order={3} mb="sm">Permisos</Title>
+            <Text color="dimmed">No autorizado. Requiere permiso <b>manage_roles</b>.</Text>
+          </Card>
+        </Box>
+      </ScreenBackground>
     );
   }
 
   return (
-    <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
-      <PermissionsReferenceTable />
+    <ScreenBackground effect="permissions">
+      <Box maw={1200} mx="auto" px={{ base: 'xs', sm: 'md', md: 'xl' }} mt="xl">
+        <PermissionsReferenceTable />
       <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Permisos</Title>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="md">
@@ -358,7 +362,8 @@ export default function PermissionsView() {
           />
           <Button color="blue" onClick={handleUpdate}>Guardar</Button>
         </Stack>
-      </Modal>
-    </Box>
+        </Modal>
+      </Box>
+    </ScreenBackground>
   );
 }

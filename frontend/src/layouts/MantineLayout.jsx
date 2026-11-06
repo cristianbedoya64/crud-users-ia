@@ -32,7 +32,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
       navbar={{ width: 240, breakpoint: 'md', collapsed: { mobile: !opened } }}
       header={{ height: { base: 92, sm: 64 } }}
     >
-      <AppShell.Navbar p="md" style={{ background: '#f8fafc' }}>
+      <AppShell.Navbar p="md" style={{ background: 'var(--dashboard-surface)', borderRight: '1px solid var(--dashboard-border)' }}>
         <Box mb="md" style={{ display: 'flex', justifyContent: 'center' }}>
           <Group gap="xs">
             <Avatar radius="md" color="blue">UA</Avatar>
@@ -65,7 +65,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
           px="md"
           py={{ base: 'xs', sm: 0 }}
           style={{
-            background: 'linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%)',
+            background: 'linear-gradient(135deg, #17396f 0%, #2457a6 52%, #3f78c9 100%)',
             display: 'flex',
             alignItems: 'center',
             boxShadow: '0 6px 20px rgba(37, 99, 235, 0.25)'
@@ -126,7 +126,7 @@ export default function MantineLayout({ view, setView, user, onLogout, children 
         </Box>
       </AppShell.Header>
       <AppShell.Main>
-        <Box p={{ base: 'xs', sm: 'md' }} style={{ background: '#f1f5f9', minHeight: 'calc(100vh - 64px)' }}>
+        <Box p={{ base: 'xs', sm: 'md' }} style={{ background: 'var(--dashboard-night)', minHeight: 'calc(100vh - 64px)', width: '100%' }}>
           {children}
         </Box>
       </AppShell.Main>

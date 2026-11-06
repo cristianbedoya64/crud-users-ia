@@ -1,6 +1,6 @@
 # UARP-IA — contexto técnico para agentes de IA
 
-> **Auditoría del repositorio:** 4 de noviembre de 2026  
+> **Auditoría del repositorio:** 5 de noviembre de 2026  
 > **Alcance:** estado observable en el código de `crud-users-ia`. Este documento no sustituye los archivos ejecutables ni convierte el roadmap en funcionalidad.
 
 ## 1. Propósito y estado
@@ -113,21 +113,34 @@ usa el mismo cliente autenticado. Después de la carga inicial, el resumen se ac
 polling automático cada 30 segundos, incluyendo permisos asignados, últimos accesos y auditoría;
 la interfaz muestra una cuenta regresiva hasta el siguiente refresco y conserva los datos válidos
 si una actualización falla.
-La visualización de actividad por módulo tiene un modo 3D CSS opcional cargado de forma diferida;
-si WebGL no está disponible, se prefiere `prefers-reduced-motion` o la pestaña está oculta, se
-mantiene la gráfica 2D existente. No se usa `echarts-gl` porque el proyecto mantiene ECharts 6.
+La visualización de actividad por módulo usa actualmente la gráfica 2D existente. Se eliminó el
+modo 3D porque algunos controladores locales anunciaban WebGL, pero no podían crear el renderer
+de Three.js, provocando errores en el panel. No se usa `echarts-gl` porque el proyecto mantiene
+ECharts 6.
 Las tarjetas de alertas, actividad, accesos e historial comparten un timeline visual con fechas
 relativas; el estado de API, IA y base de datos usa indicadores semánticos con tooltip y pulso
 visual para servicios disponibles.
-El encabezado del dashboard incluye un hero 3D opcional cargado con React Three Fiber. Se controla
-con `frontend/src/config/dashboardFeatures.js` (`enableHero3D`), tiene fallback 2D cuando WebGL no
-está disponible o se solicita movimiento reducido, y pausa su animación cuando la pestaña queda oculta.
-polling controlado cada 30 segundos; también existe un botón de actualización manual. Las
+El encabezado del dashboard usa actualmente un hero 2D estático con la identidad visual SOC. El
+hero 3D, `Chart3DWrapper`, `ModuleActivity3D` y la configuración `dashboardFeatures.js` fueron
+eliminados; tampoco se mantienen las dependencias `three`, `@react-three/fiber` ni
+`@react-three/drei`.
+El sistema visual central vive en `frontend/src/theme/dashboardTokens.js` y se refleja en variables
+CSS globales: fondo azul noche con malla y ambiente animado, superficies glassmorphism, tipografía
+tabular para métricas, glows semánticos y reducción global de movimiento mediante
+`prefers-reduced-motion`.
+El fondo interactivo del dashboard está implementado en
+[`InteractiveBackground.jsx`](../frontend/src/components/InteractiveBackground.jsx) con Canvas 2D
+nativo. Acepta las variantes `grid` y `constellation`, usa `requestAnimationFrame`, limita el
+`devicePixelRatio` a 2, observa cambios de tamaño, escucha el puntero sin bloquear clics,
+respeta `prefers-reduced-motion`, pausa con `document.hidden` y limpia listeners/frames al
+desmontar. Si `getContext('2d')` no existe, como ocurre en `jsdom` sin soporte Canvas, abandona
+la inicialización sin romper el dashboard.
+El polling está controlado cada 30 segundos; también existe un botón de actualización manual. Las
 solicitudes se serializan para evitar que un intervalo lento genere peticiones superpuestas.
 Si una actualización posterior falla, se conserva la última respuesta válida y se muestra el
 error explícitamente.
 
-Validación realizada el 4 de noviembre de 2026:
+Validación realizada el 5 de noviembre de 2026:
 
 - Backend: 4 suites y 9 pruebas exitosas.
 - Frontend: 3 archivos de prueba y 4 pruebas exitosas.
@@ -143,6 +156,15 @@ Validación realizada el 4 de noviembre de 2026:
 - Se corrigió el conteo de `/api/users` con `distinct: true`, porque la inclusión de varios
   roles podía contar la misma persona más de una vez; el total real quedó consistente con el
   resumen del dashboard.
+- Frontend: `npm test -- --run` terminó con 3 archivos y 4 pruebas exitosas.
+- Frontend: `npm run build` terminó correctamente con Vite 7. El build aún informa advertencias no
+  bloqueantes de Browserslist y de chunks grandes.
+- Se añadió en [`frontend/src/setupTests.js`](../frontend/src/setupTests.js) un fallback de
+  `HTMLCanvasElement.getContext` exclusivo para pruebas, evitando el ruido de `jsdom` sin instalar
+  el paquete `canvas`.
+- Se comprobó el dashboard autenticado en `http://localhost:5173/dashboard` con el usuario demo:
+  el resumen, las gráficas 2D, el Canvas interactivo y el estado de servicios cargaron sin errores
+  de consola después de retirar Three.js.
 
 ### Autenticación
 
@@ -231,7 +253,49 @@ Variables principales: `NODE_ENV`, `PORT`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_
 - Lighthouse: `npm run lighthouse` requiere navegador/configuración LHCI.
 - No existe suite automatizada equivalente para Flask/modelo IA; validar manualmente `GET /` y `POST /ia-panel` y disponibilidad de `ia_model.pkl`.
 
-## 9. Discrepancias y riesgos observados
+## 9. Estado para ejecutar el sistema completo
+
+### Implementado y operativo
+
+- Backend Express conectado a PostgreSQL y expuesto en el puerto `3000`.
+- Frontend React/Vite servido en el puerto `5173`.
+- Servicio Flask IA disponible en el puerto `5001`.
+- Autenticación demo mediante `admin@demo.com` y la contraseña definida por el seed local.
+- Dashboard autenticado con resumen agregado, auditoría real, actividad por módulo, últimos
+  accesos, permisos asignados, estado de servicios, panel IA opcional y actualización automática.
+- Visualización SOC con tokens centralizados, glassmorphism, tarjetas KPI, timelines, gráficas 2D
+  y fondo Canvas interactivo.
+- Fallback seguro para Canvas en pruebas y ausencia completa de renderizado/dependencias 3D.
+
+### Pasos que todavía deben cumplirse en una instalación nueva
+
+1. Instalar y arrancar PostgreSQL, creando la base `uarp_ai` y configurando las variables de
+   `backend/.env`.
+2. Ejecutar `npm ci` dentro de `backend` y `frontend`.
+3. Ejecutar `node src/migrate.js` y `node src/seed.js` desde `backend` cuando la base esté vacía.
+4. Instalar las dependencias Python de `ia/` y confirmar que existe `ia_model.pkl` si se quiere
+   usar el panel IA.
+5. Iniciar los tres servicios con [`scripts/start-local.ps1`](../scripts/start-local.ps1), o
+   iniciarlos manualmente en los puertos documentados.
+6. Abrir `http://localhost:5173`, iniciar sesión y comprobar que el usuario tenga `view_audit`;
+   sin ese permiso el endpoint agregado responde `403` por diseño.
+7. Si se cambia el host o puerto del backend, actualizar `VITE_API_URL`, `IA_PANEL_URL`,
+   `CORS_ORIGINS` y cualquier configuración equivalente antes de iniciar.
+
+### Pendientes técnicos conocidos
+
+- No existe una suite automatizada para el servicio Flask y el modelo IA; falta cubrir sus
+  contratos, errores de carga y disponibilidad con pruebas.
+- El build frontend mantiene advertencias de Browserslist desactualizado y chunks grandes; debe
+  optimizarse solo después de medir el impacto real.
+- Los endpoints `/api/demo/*` siguen disponibles por compatibilidad, aunque el dashboard ya no los
+  consume; pueden retirarse cuando no existan consumidores externos.
+- El scoring FastAPI/Random Forest continúa siendo roadmap; no debe configurarse como si fuera el
+  servicio IA actual.
+- Deben sustituirse las credenciales y secretos de ejemplo antes de cualquier despliegue no local.
+- La validación visual en móvil/tablet y Lighthouse debe repetirse en el entorno objetivo.
+
+## 10. Discrepancias y riesgos observados
 
 1. La documentación raíz presenta el scoring FastAPI/Random Forest como objetivo o “vigente”, pero el código actual es Flask + modelo de anomalías de tres features.
 2. `docs/api.md`, `docs/db.md` y otros documentos pueden describir contratos más amplios que las rutas/modelos actuales; ante conflicto, prevalecen `server.js`, rutas, controladores y pruebas.
@@ -243,7 +307,7 @@ Variables principales: `NODE_ENV`, `PORT`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_
 8. El seed demo incluye credenciales conocidas (`Password1!`) y usuarios con rol admin; limitarlo a desarrollo/demostración.
 9. No confundir las rutas `/api/demo/*` con datos de negocio: son respuestas de dashboard demostrativas.
 
-## 10. Reglas de mantenimiento para futuros modelos
+## 11. Reglas de mantenimiento para futuros modelos
 
 1. Antes de afirmar que una capacidad existe, verificar código, configuración y prueba; marcarla **Implementado**, **Parcial** o **Planificado**.
 2. Al cambiar una ruta, variable, puerto, modelo, asociación, migración o comando, actualizar esta página y los documentos especializados enlazados.
@@ -252,3 +316,65 @@ Variables principales: `NODE_ENV`, `PORT`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_
 5. No documentar secretos, tokens, contraseñas reales, datos personales ni IPs de producción como valores operativos.
 6. Para una integración IA nueva, actualizar simultáneamente contrato request/response, autenticación/RBAC, health/readiness, Docker, pruebas, auditoría y versión del modelo.
 7. Después de cambios, ejecutar las pruebas mínimas del área afectada y anotar limitaciones o fallos conocidos aquí.
+
+## 12. Instrucciones de traspaso para Claude Code: fondo interactivo del dashboard
+
+### Pretensión final
+
+El dashboard debe conservar un fondo visual tipo SOC, futurista y discreto, basado únicamente en
+Canvas 2D nativo. El fondo es una capa ambiental detrás del contenido: debe aportar profundidad,
+movimiento y reacción al puntero sin competir con las métricas, tablas, botones ni gráficas.
+Debe sentirse como una malla de vigilancia/constelación tecnológica, no como una animación
+decorativa invasiva.
+
+La implementación objetivo está en
+[`InteractiveBackground.jsx`](../frontend/src/components/InteractiveBackground.jsx) y se monta
+desde [`DashboardView.jsx`](../frontend/src/views/DashboardView.jsx). Actualmente se usa la
+variante `constellation`; la variante `grid` debe seguir disponible para reutilización.
+
+### Trabajo que Claude Code debe auditar y terminar
+
+1. Leer `InteractiveBackground.jsx`, `DashboardView.jsx`, `index.css`, `dashboardTokens.js`,
+   `useReducedMotion.js` y `setupTests.js` antes de cambiar código.
+2. Confirmar que el Canvas:
+   - está detrás del contenido, con `pointer-events: none` y z-index inferior;
+   - no altera clics, teclado, scroll, formularios, tablas ni gráficos;
+   - usa el color del tema Mantine y se adapta a tema claro/oscuro;
+   - soporta `grid` y `constellation`, `density`, `interactionRadius`, `color`, `className`
+     y `style`;
+   - limita el `devicePixelRatio` a 2 y recalcula correctamente al cambiar tamaño;
+   - limpia `ResizeObserver`, listeners y `requestAnimationFrame` al desmontar;
+   - pausa con `document.hidden`;
+   - muestra una malla estática y no procesa interacción con `prefers-reduced-motion`;
+   - no provoca errores si `getContext('2d')` devuelve `null` en `jsdom`.
+3. Revisar rendimiento: evitar `setState` por frame, limitar partículas, evitar cálculos
+   cuadráticos innecesarios y comprobar que el fondo no cause repaints excesivos.
+4. Auditar visualmente escritorio, tablet y móvil. Mantener suficiente contraste y legibilidad
+   en todas las tarjetas.
+5. Ejecutar y corregir únicamente lo necesario para que pasen:
+   - `cd frontend; npm test -- --run`
+   - `cd frontend; npm run build`
+6. Comprobar manualmente `http://localhost:5173/dashboard` con una sesión válida y verificar:
+   carga inicial, refresh automático, botón `Actualizar`, cambio de tamaño, navegación, pestaña
+   oculta, movimiento reducido y ausencia de errores en consola.
+7. Actualizar este documento si se modifica el contrato del componente, su integración o algún
+   requisito operativo.
+
+### Restricciones no negociables
+
+- No reinstalar ni reintroducir `three`, `@react-three/fiber`, `@react-three/drei`,
+  `echarts-gl`, tsParticles ni otra dependencia solo para este fondo.
+- No crear objetos 3D ni reactivar el hero 3D o la gráfica 3D; fueron eliminados deliberadamente.
+- No cambiar API, autenticación, permisos, rutas, modelos, polling de 30 segundos ni contratos
+  del backend.
+- No reemplazar Canvas 2D por CSS pesado o una librería de partículas.
+- No usar Tailwind.
+- No ocultar errores con catches amplios ni introducir valores ficticios.
+- Mantener los datos y componentes actuales del dashboard.
+
+### Resultado esperado
+
+Claude Code debe entregar una auditoría breve de hallazgos, cambios mínimos aplicados y comandos
+ejecutados. La implementación se considera terminada cuando el fondo funciona como capa ambiental
+interactiva, es accesible y degradable, no bloquea la interfaz, no genera errores de consola,
+los tests pasan y el build de producción finaliza correctamente.

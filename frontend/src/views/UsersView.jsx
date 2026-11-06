@@ -9,6 +9,7 @@ import { authFetch } from '../apiClient';
 import { isValidEmail, isValidPassword } from '../utils/validation';
 import { getStoredUser } from '../auth';
 import { hasPermission } from '../utils/permissions';
+import ScreenBackground from '../components/ScreenBackground';
 
 export default function UsersView() {
   const currentUser = getStoredUser();
@@ -247,18 +248,21 @@ export default function UsersView() {
 
   if (!canReadUsers) {
     return (
-      <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
-        <Card shadow="md" padding="lg" radius="md" withBorder>
-          <Title order={3} mb="sm">Usuarios</Title>
-          <Text color="dimmed">No autorizado. Requiere permiso <b>read_user</b>.</Text>
-        </Card>
-      </Box>
+      <ScreenBackground effect="users">
+        <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
+          <Card shadow="md" padding="lg" radius="md" withBorder>
+            <Title order={3} mb="sm">Usuarios</Title>
+            <Text color="dimmed">No autorizado. Requiere permiso <b>read_user</b>.</Text>
+          </Card>
+        </Box>
+      </ScreenBackground>
     );
   }
 
   return (
-    <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
-      <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
+    <ScreenBackground effect="users">
+      <Box maw={900} mx="auto" px={{ base: 16, sm: 32, md: 48 }} mt="xl" role="main" aria-label="Gestión de usuarios">
+        <Card shadow="md" padding="lg" radius="md" withBorder mb="lg">
         <Title order={3} mb="md">Gestión de Usuarios</Title>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm" mb="sm">
           <TextInput label="Documento" name="documentId" value={form.documentId} onChange={handleChange} placeholder="Número de documento" aria-label="Documento" w="100%" />
@@ -378,7 +382,8 @@ export default function UsersView() {
             </Group>
           </Stack>
         </Modal>
-      </Card>
-    </Box>
+        </Card>
+      </Box>
+    </ScreenBackground>
   );
 }

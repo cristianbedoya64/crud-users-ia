@@ -12,3 +12,7 @@ if (!window.matchMedia) {
 		dispatchEvent: () => false
 	});
 }
+
+if (HTMLCanvasElement.prototype.getContext) {
+	HTMLCanvasElement.prototype.getContext = () => null;
+}
