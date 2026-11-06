@@ -82,8 +82,9 @@ body::after {
 	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
+.dashboard-page .mantine-Card-root,
 .dashboard-glass-card {
-	background: linear-gradient(145deg, rgba(18, 36, 59, 0.64), rgba(10, 25, 43, 0.42));
+	background: linear-gradient(145deg, rgba(19, 41, 67, 0.3), rgba(10, 25, 43, 0.16)) !important;
 	border: 1px solid var(--dashboard-border);
 	box-shadow: var(--dashboard-card-shadow), var(--dashboard-card-glow);
 	backdrop-filter: blur(18px);
@@ -133,9 +134,10 @@ body::after {
 	background: linear-gradient(145deg, rgba(19, 41, 67, 0.78), rgba(10, 25, 43, 0.58));
 }
 
+.dashboard-page .mantine-Card-root:hover,
 .dashboard-glass-card:hover {
-	border-color: rgba(77, 141, 255, 0.42);
-	box-shadow: var(--dashboard-card-shadow), 0 0 34px rgba(77, 141, 255, 0.26);
+	border-color: var(--dashboard-border-strong);
+	box-shadow: var(--dashboard-card-shadow), 0 0 34px rgba(112, 167, 255, 0.26);
 }
 
 .dashboard-kpi-card {
