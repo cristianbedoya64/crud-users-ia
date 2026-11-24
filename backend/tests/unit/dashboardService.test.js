@@ -35,7 +35,8 @@ describe('dashboardService', () => {
     AuditLog.findAll
       .mockResolvedValueOnce([{ id: 1, userId: 1, action: 'login', createdAt: new Date() }])
       .mockResolvedValueOnce([{ action: 'login', count: '2' }])
-      .mockResolvedValueOnce([{ date: '2026-11-04', count: '2' }]);
+      .mockResolvedValueOnce([{ date: '2026-11-04', count: '2' }])
+      .mockResolvedValueOnce([]); // últimos inicios de sesión (getLastLogins)
     AuditLog.count.mockResolvedValue(1);
     sequelize.authenticate.mockResolvedValue();
     axios.post.mockResolvedValue({ status: 200 });

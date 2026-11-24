@@ -300,7 +300,7 @@ Variables principales: `NODE_ENV`, `PORT`, `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_
 1. La documentación raíz presenta el scoring FastAPI/Random Forest como objetivo o “vigente”, pero el código actual es Flask + modelo de anomalías de tres features.
 2. `docs/api.md`, `docs/db.md` y otros documentos pueden describir contratos más amplios que las rutas/modelos actuales; ante conflicto, prevalecen `server.js`, rutas, controladores y pruebas.
 3. El `Dockerfile` del frontend copia `.env` y `.env.production` y hornea `VITE_*`; revisar que existan y que no contengan secretos.
-4. `docker-compose.yml` contiene credenciales PostgreSQL de ejemplo (`NoHayMas`) y `backend/db.js` tiene defaults equivalentes: deben sobrescribirse en despliegues reales.
+4. `docker-compose.yml` contiene credenciales PostgreSQL de ejemplo (ya retiradas; usar variables de entorno) y `backend/db.js` tiene defaults equivalentes: deben sobrescribirse en despliegues reales.
 5. El servicio IA carga pickle con `pickle.load`; solo debe usarse con artefactos confiables y la imagen IA no debería publicarse directamente.
 6. La caché RBAC es por proceso y puede conservar permisos hasta el TTL después de cambios; no es una caché distribuida.
 7. El backend confía en proxy (`trust proxy=1`); ajustar la topología antes de exponerlo a Internet.

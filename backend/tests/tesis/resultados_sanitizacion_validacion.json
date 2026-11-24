@@ -1,0 +1,122 @@
+[
+  {
+    "id": "V1",
+    "tipo": "sensible",
+    "desc": "Clave \"user_password\"",
+    "oculto": true
+  },
+  {
+    "id": "V2",
+    "tipo": "sensible",
+    "desc": "Clave \"Contraseña\" con tilde",
+    "oculto": true
+  },
+  {
+    "id": "V3",
+    "tipo": "sensible",
+    "desc": "Clave \"numero_documento\"",
+    "oculto": true
+  },
+  {
+    "id": "V4",
+    "tipo": "sensible",
+    "desc": "Clave \"correoElectronico\"",
+    "oculto": true
+  },
+  {
+    "id": "V5",
+    "tipo": "sensible",
+    "desc": "Clave \"phoneNumber\"",
+    "oculto": true
+  },
+  {
+    "id": "V6",
+    "tipo": "sensible",
+    "desc": "Clave \"apellidos\"",
+    "oculto": true
+  },
+  {
+    "id": "V7",
+    "tipo": "sensible",
+    "desc": "IP en texto \"IP 10.1.1.1\"",
+    "oculto": true
+  },
+  {
+    "id": "V8",
+    "tipo": "sensible",
+    "desc": "Correo en mayúsculas en texto",
+    "oculto": true
+  },
+  {
+    "id": "V9",
+    "tipo": "sensible",
+    "desc": "Texto \"celular: 3001234567\"",
+    "oculto": true
+  },
+  {
+    "id": "V10",
+    "tipo": "sensible",
+    "desc": "Clave \"nit\"",
+    "oculto": true
+  },
+  {
+    "id": "V11",
+    "tipo": "sensible",
+    "desc": "Teléfono con espacios en texto libre",
+    "oculto": false
+  },
+  {
+    "id": "V12",
+    "tipo": "sensible",
+    "desc": "Dirección IPv6 en texto",
+    "oculto": false
+  },
+  {
+    "id": "V13",
+    "tipo": "sensible",
+    "desc": "Nombre de usuario en clave \"username\"",
+    "oculto": false
+  },
+  {
+    "id": "V14",
+    "tipo": "sensible",
+    "desc": "Pasaporte en clave \"pasaporte\"",
+    "oculto": false
+  },
+  {
+    "id": "V15",
+    "tipo": "sensible",
+    "desc": "Token en clave \"refresh_token\"",
+    "oculto": true
+  },
+  {
+    "id": "W1",
+    "tipo": "neutro",
+    "desc": "Fecha en texto",
+    "conservado": true
+  },
+  {
+    "id": "W2",
+    "tipo": "neutro",
+    "desc": "Clave \"zipStatus\"",
+    "conservado": true
+  },
+  {
+    "id": "W3",
+    "tipo": "neutro",
+    "desc": "Monto de 7 dígitos",
+    "conservado": false
+  },
+  {
+    "id": "W4",
+    "tipo": "neutro",
+    "desc": "Clave \"module\"",
+    "conservado": true
+  },
+  {
+    "id": "W5",
+    "tipo": "neutro",
+    "desc": "Clave \"permissionName\"",
+    "conservado": false
+  }
+]

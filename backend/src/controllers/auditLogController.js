@@ -4,30 +4,7 @@ const { Op } = require('sequelize');
 
 const MAX_LIMIT = 100;
 const DEFAULT_LIMIT = 20;
-const SENSITIVE_KEYS = /password|token|secret|authorization|cookie|ip|address|document/i;
-
-function safeDetails(value) {
-  if (!value) return null;
-  let parsed = value;
-  if (typeof value === 'string') {
-    try { parsed = JSON.parse(value); } catch {
-      return value.slice(0, 500).replace(/(password|token|secret|authorization|cookie|ip|address)\s*[:=]\s*[^\s,;]+/gi, '$1: [redacted]');
-    }
-  }
-  if (!parsed || typeof parsed !== 'object') return String(parsed).slice(0, 500);
-  const cleanValue = (item) => {
-    if (Array.isArray(item)) return item.slice(0, 20).map(cleanValue);
-    if (item && typeof item === 'object') {
-      const clean = {};
-      Object.entries(item).forEach(([key, nested]) => {
-        if (!SENSITIVE_KEYS.test(key)) clean[key] = cleanValue(nested);
-      });
-      return clean;
-    }
-    return typeof item === 'string' ? item.slice(0, 300) : item;
-  };
-  return cleanValue(parsed);
-}
+const { safeDetails } = require('../utils/sanitize');
 
 function resourceFor(log, details) {
   if (details && typeof details === 'object') {
@@ -102,7 +79,7 @@ module.exports = {
       res.json({ total: count, page, limit, pages: Math.ceil(count / limit), logs: rows.map(serialize) });
     } catch (err) {
       console.error('Error audit list:', err);
-      res.status(500).json({ error: 'Error al consultar auditoría.', details: err.message });
+      res.status(500).json({ error: 'Error al consultar auditoría.' });
     }
   }
 };

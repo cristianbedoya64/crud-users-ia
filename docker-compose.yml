@@ -8,7 +8,7 @@ services:
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_USER=postgres
-      - DB_PASS=NoHayMas
+      - DB_PASS=${DB_PASS}
       - DB_NAME=uarp_ai
       - NODE_ENV=production
       - CORS_ALLOW_ALL=false
@@ -34,7 +34,7 @@ services:
     environment:
       POSTGRES_DB: uarp_ai
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: NoHayMas
+      POSTGRES_PASSWORD: ${DB_PASS}
     # ports:
     #   - "5432:5432"  # Solo exponer en desarrollo local si es necesario
     volumes:

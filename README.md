@@ -65,7 +65,7 @@ pero el proyecto también puede ejecutarse directamente en Windows para demostra
 locales:
 
 1. Instala y ejecuta PostgreSQL con la base `uarp_ai`, usuario `postgres` y contraseña
-   `NoHayMas` (o ajusta las variables del script).
+   `change_me` (o ajusta las variables del script).
 2. Instala las dependencias:
 
    ```powershell

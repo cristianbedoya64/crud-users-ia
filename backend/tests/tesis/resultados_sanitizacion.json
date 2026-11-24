@@ -1,0 +1,213 @@
+[
+  {
+    "id": "F1",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"password\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F2",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"token\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F3",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"accessToken\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F4",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"secret\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F5",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"authorization\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F6",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"cookie\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F7",
+    "tipo": "sensible",
+    "cat": "Red",
+    "desc": "Clave \"ip\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F8",
+    "tipo": "sensible",
+    "cat": "Red",
+    "desc": "Clave \"ipAddress\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F9",
+    "tipo": "sensible",
+    "cat": "Ubicación",
+    "desc": "Clave \"address\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F10",
+    "tipo": "sensible",
+    "cat": "Identificación",
+    "desc": "Clave \"documentId\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F11",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Password anidado en objeto",
+    "oculto": true
+  },
+  {
+    "id": "F12",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Token dentro de un arreglo",
+    "oculto": true
+  },
+  {
+    "id": "F13",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Texto libre \"password=...\"",
+    "oculto": true
+  },
+  {
+    "id": "F14",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Texto libre \"token: ...\"",
+    "oculto": true
+  },
+  {
+    "id": "F15",
+    "tipo": "sensible",
+    "cat": "Red",
+    "desc": "Texto libre \"ip=...\"",
+    "oculto": true
+  },
+  {
+    "id": "F16",
+    "tipo": "sensible",
+    "cat": "Contacto",
+    "desc": "Clave \"email\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F17",
+    "tipo": "sensible",
+    "cat": "Identidad",
+    "desc": "Clave \"name\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F18",
+    "tipo": "sensible",
+    "cat": "Contacto",
+    "desc": "Clave \"telefono\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F19",
+    "tipo": "sensible",
+    "cat": "Identificación",
+    "desc": "Clave \"cedula\" en JSON",
+    "oculto": true
+  },
+  {
+    "id": "F20",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"clave\" (en español)",
+    "oculto": true
+  },
+  {
+    "id": "F21",
+    "tipo": "sensible",
+    "cat": "Credencial",
+    "desc": "Clave \"pwd\"",
+    "oculto": true
+  },
+  {
+    "id": "F22",
+    "tipo": "sensible",
+    "cat": "Contacto",
+    "desc": "Correo en texto libre",
+    "oculto": true
+  },
+  {
+    "id": "F23",
+    "tipo": "sensible",
+    "cat": "Red",
+    "desc": "IP en texto libre sin etiqueta",
+    "oculto": true
+  },
+  {
+    "id": "F24",
+    "tipo": "sensible",
+    "cat": "Identificación",
+    "desc": "Cédula en texto libre",
+    "oculto": true
+  },
+  {
+    "id": "F25",
+    "tipo": "sensible",
+    "cat": "Contacto",
+    "desc": "Correo en un valor con clave neutra",
+    "oculto": true
+  },
+  {
+    "id": "N1",
+    "tipo": "neutro",
+    "desc": "Clave \"action\"",
+    "conservado": true
+  },
+  {
+    "id": "N2",
+    "tipo": "neutro",
+    "desc": "Clave \"resource\"",
+    "conservado": true
+  },
+  {
+    "id": "N3",
+    "tipo": "neutro",
+    "desc": "Clave \"description\"",
+    "conservado": true
+  },
+  {
+    "id": "N4",
+    "tipo": "neutro",
+    "desc": "Clave \"roleId\"",
+    "conservado": true
+  },
+  {
+    "id": "N5",
+    "tipo": "neutro",
+    "desc": "Clave \"permission\"",
+    "conservado": true
+  },
+  {
+    "id": "N6",
+    "tipo": "neutro",
+    "desc": "Clave \"recipient\" (sistema)",
+    "conservado": true
+  }
+]

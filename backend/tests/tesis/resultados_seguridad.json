@@ -1,0 +1,114 @@
+[
+  {
+    "id": "S1",
+    "caso": "Petición sin token",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S2",
+    "caso": "Encabezado \"Bearer\" sin token",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S3",
+    "caso": "Token firmado con una clave distinta",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S4",
+    "caso": "Token con rol \"admin\" insertado manualmente",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S5",
+    "caso": "Token sin firma (algoritmo \"none\")",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S6",
+    "caso": "Token vencido",
+    "esperado": 401,
+    "obtenido": 401,
+    "ok": true
+  },
+  {
+    "id": "S7",
+    "caso": "Token válido",
+    "esperado": 200,
+    "obtenido": 200,
+    "ok": true
+  },
+  {
+    "id": "S8",
+    "caso": "Usuario sin rol requerido",
+    "esperado": 403,
+    "obtenido": 403,
+    "ok": true
+  },
+  {
+    "id": "S9",
+    "caso": "Usuario con rol requerido",
+    "esperado": 200,
+    "obtenido": 200,
+    "ok": true
+  },
+  {
+    "id": "S10",
+    "caso": "Consulta a la IA sin token (¿se llama al servicio?)",
+    "esperado": "401 / no",
+    "obtenido": "401 / no",
+    "ok": true
+  },
+  {
+    "id": "S11",
+    "caso": "Consulta a la IA con token inválido (¿se llama al servicio?)",
+    "esperado": "401 / no",
+    "obtenido": "401 / no",
+    "ok": true
+  },
+  {
+    "id": "S12",
+    "caso": "Consulta a la IA con token válido",
+    "esperado": "200 / sí",
+    "obtenido": "200 / sí",
+    "ok": true
+  },
+  {
+    "id": "S13",
+    "caso": "Servicio de IA caído: ¿la respuesta revela datos internos?",
+    "esperado": "no",
+    "obtenido": "no",
+    "ok": true
+  },
+  {
+    "id": "S14",
+    "caso": "Datos personales enviados por el cliente llegan a la IA",
+    "esperado": "ninguno",
+    "obtenido": "ninguno",
+    "ok": true
+  },
+  {
+    "id": "S15",
+    "caso": "Indicadores enviados por el cliente son ignorados (se calculan en el servidor)",
+    "esperado": "sí",
+    "obtenido": "sí",
+    "ok": true
+  },
+  {
+    "id": "S16",
+    "caso": "Usuario sin rol admin pide el análisis de otro usuario",
+    "esperado": "se analiza solo a sí mismo",
+    "obtenido": "se analiza solo a sí mismo",
+    "ok": true
+  }
+]
